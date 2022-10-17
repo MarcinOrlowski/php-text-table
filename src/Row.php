@@ -20,7 +20,7 @@ class Row implements \ArrayAccess, \IteratorAggregate
 {
     public function __construct(array|null $cells = null)
     {
-        $this->cells = new Cells();
+        $this->cells = new CellsContainer();
 
         if (!empty($cells)) {
             foreach ($cells as $columnKey => $cell) {
@@ -31,13 +31,16 @@ class Row implements \ArrayAccess, \IteratorAggregate
 
     /* ****************************************************************************************** */
 
-    protected Cells $cells;
+    protected CellsContainer $cells;
 
-    public function getCells(): Cells
+    public function getCells(): CellsContainer
     {
         return $this->cells;
     }
 
+    /**
+     * @param array<string|int, Cell|string|int> $cells
+     */
     public function addCells(array $cells): self
     {
         foreach ($cells as $columnKey => $cell) {
@@ -48,16 +51,13 @@ class Row implements \ArrayAccess, \IteratorAggregate
     }
 
     public function addCell(string|int      $columnKey,
-                            Cell|int|string $cell,
+                            Cell|string|int $cell,
                             Align           $align = Align::AUTO,
                             Span|int        $columnSpan = Span::NONE): self
     {
-        if (\is_string($cell)) {
+        if (!($cell instanceof Cell)) {
             $cell = new Cell($cell, $align, $columnSpan);
-        } else if (\is_numeric($cell)) {
-            $cell = new Cell((string)$cell, $align, $columnSpan);
         }
-
         $this->cells->add($columnKey, $cell);
 
         return $this;
