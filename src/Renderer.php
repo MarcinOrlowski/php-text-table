@@ -38,7 +38,15 @@ class Renderer
                 $writer->write($this->renderRow($columns, $row));
             }
         } else {
-            $writer->write('NO DATA');
+            $label = 'NO DATA';
+            if (\strlen($label) > $table->getTotalWidth()) {
+                $label = \substr($label, 0, $table->getTotalWidth() - 1) . '…';
+            } else {
+                $label = \str_pad($label, $table->getTotalWidth(), ' ', \STR_PAD_BOTH);
+
+            }
+            $noData = \sprintf('| %s |', $label);
+            $writer->write($noData);
         }
         $writer->write($sep);
     }
@@ -97,7 +105,8 @@ class Renderer
                 $result .= self::HEADER_PAD_LEFT;
             }
 
-            $result .= $this->pad($columns, $columnKey, $column->getTitle());
+            $align = $this->getColumnTitleAlign($columns, $columnKey);
+            $result .= $this->pad($columns, $columnKey, $column->getTitle(), $align);
 
             $result .= ($columnOffset === $cnt - 1)
                 ? self::HEADER_PAD_RIGHT
@@ -147,26 +156,30 @@ class Renderer
 
     /* ****************************************************************************************** */
 
-    protected function pad(ColumnsContainer $columns, string|int $columnKey, string $value): string
+    protected function pad(ColumnsContainer $columns,
+                           string|int       $columnKey,
+                           string           $value,
+                           ?Align           $align = null): string
     {
-        $width = $this->getColumnWidth($columns, $columnKey, $value);
-        $align = $this->getColumnAlign($columns, $columnKey);
-        return $this->padRaw($value, $width, $align);
-    }
+        // If no custom align specified, inherit column's default align.
+        $align ??= $this->getColumnAlign($columns, $columnKey);
+        $maxWidth = $this->getColumnWidth($columns, $columnKey, $value);
 
-    protected function padRaw(string $string,
-                              int    $minWidth,
-                              Align  $align = Align::RIGHT,
-                              string $padding = ' '): string
-    {
         $padType = match ($align) {
-            Align::LEFT => \STR_PAD_RIGHT,
             Align::RIGHT => \STR_PAD_LEFT,
+            Align::LEFT => \STR_PAD_RIGHT,
             Align::CENTER => \STR_PAD_BOTH,
             Align::AUTO => \STR_PAD_RIGHT,
         };
 
-        return \str_pad($string, \max(\strlen($string), $minWidth), $padding, $padType);
+        $strLen = \strlen($value);
+
+        // Clip the string if it is longer that max allowed column width
+        if ($strLen > $maxWidth) {
+            $value = \substr($value, 0, $maxWidth - 1) . '…';
+        }
+
+        return \str_pad($value, $maxWidth, ' ', $padType);
     }
 
     /* ****************************************************************************************** */
@@ -174,7 +187,7 @@ class Renderer
     protected function getColumnWidth(ColumnsContainer $columns, string|int $columnIdx, string $value): int
     {
         $columnMeta = $columns->get($columnIdx);
-        return \max($columnMeta->getWidth(), \strlen($value));
+        return $columnMeta->getWidth();
     }
 
     protected function getColumnAlign(ColumnsContainer $columns, string|int $columnIdx): Align
@@ -182,6 +195,10 @@ class Renderer
         return $columns->get($columnIdx)->getAlign();
     }
 
+    protected function getColumnTitleAlign(ColumnsContainer $columns, string|int $columnIdx): Align
+    {
+        return $columns->get($columnIdx)->getTitleAlign();
+    }
     /* ****************************************************************************************** */
 
 }

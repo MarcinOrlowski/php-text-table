@@ -102,6 +102,26 @@ class AsciiTable
 
     /* ****************************************************************************************** */
 
+
+    public function getColumns(): ColumnsContainer
+    {
+        return $this->columns;
+    }
+
+    public function addColumn(string|int $columnIdx, Column|string $columnVal): self
+    {
+        if (\is_string($columnVal)) {
+            $columnVal = new Column($columnVal);
+        } else if (!($columnVal instanceof Column)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnIdx));
+        }
+
+        $this->columns->add($columnIdx, $columnVal);
+
+        return $this;
+    }
+
     public function addColumns(array $columns): self
     {
         foreach ($columns as $columnIdx => $columnVal) {
@@ -112,37 +132,13 @@ class AsciiTable
                 $targetColumnIdx = $columnIdx;
             }
 
-            if (\is_string($columnVal)) {
-                $columnVal = new Column($columnVal);
-            } else if (!($columnVal instanceof Column)) {
-                throw new \InvalidArgumentException(
-                    "Unsupported column type: " . \get_debug_type($columnVal));
-            }
-
             $this->addColumn($targetColumnIdx, $columnVal);
         }
 
         return $this;
     }
 
-    public function addColumn(string|int $columnIdx, Column|string $column): self
-    {
-        if (\is_string($column)) {
-            $column = new Column($column);
-        } else if (!($column instanceof Column)) {
-            throw new \InvalidArgumentException(
-                \sprintf('Unsupported column type (%s): %s', \get_debug_type($column), $columnIdx));
-        }
-
-        $this->columns->add($columnIdx, $column);
-
-        return $this;
-    }
-
-    public function getColumns(): ColumnsContainer
-    {
-        return $this->columns;
-    }
+    /* ****************************************************************************************** */
 
     public function render(?OutputContract $writer = null): void
     {
@@ -152,6 +148,30 @@ class AsciiTable
 
         $renderer = new Renderer();
         $renderer->render($this, $writer);
+    }
+
+    public function setColumnAlign(string|int $columnKey, Align $align): self
+    {
+        $this->columns->get($columnKey)->setAlign($align);
+
+        return $this;
+    }
+
+    public function setColumnWidth(string|int $columnKey, int $width): self
+    {
+        $this->columns->get($columnKey)->setMaxWidth($width);
+
+        return $this;
+    }
+
+    public function getTotalWidth(): int
+    {
+        $totalWidth = 0;
+        foreach ($this->getColumns() as $column) {
+            $totalWidth += $column->getWidth();
+        }
+
+        return $totalWidth;
     }
 
 }
