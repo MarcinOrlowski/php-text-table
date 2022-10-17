@@ -16,10 +16,9 @@ namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
-use MarcinOrlowski\AsciiTable\Exceptions\InvalidColumnType;
 use Traversable;
 
-class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, ArrayableContract
+class ColumnsContainer implements ContainerContract
 {
     /** @var Column[] $columns */
     protected array $columns = [];

@@ -16,10 +16,9 @@ namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
-use MarcinOrlowski\AsciiTable\Exceptions\InvalidCellType;
 use Traversable;
 
-class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, ArrayableContract
+class CellsContainer implements ContainerContract
 {
     /** @var Cell[] $cells */
     protected array $cells = [];
@@ -59,6 +58,7 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function count(): int
     {
         return \count($this->cells);
@@ -66,6 +66,7 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function offsetExists(mixed $offset): bool
     {
         /** @var string|int $offset */
@@ -101,6 +102,7 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
         }
     }
 
+    /** @inheritDoc */
     public function offsetUnset(mixed $offset): void
     {
         /** @var string|int $offset */
@@ -109,6 +111,7 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->cells);
@@ -116,6 +119,7 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function toArray(): array
     {
         return $this->cells;

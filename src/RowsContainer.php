@@ -23,6 +23,7 @@ class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, Arr
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function count(): int
     {
         return \count($this->rows);
@@ -30,6 +31,7 @@ class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, Arr
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->rows);
@@ -37,18 +39,25 @@ class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, Arr
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function offsetExists(mixed $offset): bool
     {
         /** @var string|int $offset */
         return \array_key_exists($offset, $this->rows);
     }
 
+    /** @inheritDoc */
     public function offsetGet(mixed $offset): mixed
     {
         /** @var string|int $offset */
         return $this->rows[ $offset ];
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @throws \InvalidArgumentException
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!($value instanceof Row)) {
@@ -64,6 +73,7 @@ class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, Arr
         }
     }
 
+    /** @inheritDoc */
     public function offsetUnset(mixed $offset): void
     {
         /** @var string|int $offset */
@@ -72,6 +82,7 @@ class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, Arr
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function toArray(): array
     {
         return $this->rows;

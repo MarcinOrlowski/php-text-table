@@ -16,7 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 use Traversable;
 
-class Row implements \ArrayAccess, \IteratorAggregate
+class Row implements ContainerContract
 {
     public function __construct(array|null $cells = null)
     {
@@ -64,18 +64,33 @@ class Row implements \ArrayAccess, \IteratorAggregate
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
+    public function count(): int
+    {
+        return $this->cells->count();
+    }
+
+    /* ****************************************************************************************** */
+
+    /** @inheritDoc */
     public function offsetExists(mixed $offset): bool
     {
         /** @var string|int $offset */
         return $this->cells->offsetExists($offset);
     }
 
+    /** @inheritDoc */
     public function offsetGet(mixed $offset): mixed
     {
         /** @var string|int $offset */
         return $this->cells->offsetGet($offset);
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @throws \InvalidArgumentException
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!($value instanceof Cell)) {
@@ -87,6 +102,7 @@ class Row implements \ArrayAccess, \IteratorAggregate
         $this->cells->offsetSet($offset, $value);
     }
 
+    /** @inheritDoc */
     public function offsetUnset(mixed $offset): void
     {
         /** @var string|int $offset */
@@ -95,6 +111,7 @@ class Row implements \ArrayAccess, \IteratorAggregate
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function getIterator(): Traversable
     {
         return $this->cells->getIterator();
