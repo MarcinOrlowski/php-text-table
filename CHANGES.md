@@ -9,6 +9,10 @@ Fast and flexible PHP library rendering plain ASCII tables.
 * v1.2.0 (2022-10-17)
   * Main class name changed to `AsciiTable`.
   * Added option to configure column default align.
+  * Added option to separately control table column title align.
+  * Custom column max width is now correctly handled.
+  * Too long column labels values are now truncated with ellipsis.
+  * more tests.
 
 * v1.1.0 (2022-10-17)
   * Corrected `\ArrayAccess` implementation.
