@@ -14,9 +14,9 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable\Output\Writers;
 
-use MarcinOrlowski\AsciiTable\Output\OutputContract;
+use MarcinOrlowski\AsciiTable\Output\WriterContract;
 
-class EchoWriter implements OutputContract
+class EchoWriter implements WriterContract
 {
     /**
      * @inheritDoc

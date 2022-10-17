@@ -16,7 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Exceptions\UnsupportedColumnType;
-use MarcinOrlowski\AsciiTable\Output\OutputContract;
+use MarcinOrlowski\AsciiTable\Output\WriterContract;
 use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
 use MarcinOrlowski\AsciiTable\Renderers\DefaultRenderer;
 
@@ -207,7 +207,7 @@ class AsciiTable
 
     /* ****************************************************************************************** */
 
-    public function render(?OutputContract $writer = null): void
+    public function render(?WriterContract $writer = null): void
     {
         if ($writer === null) {
             $writer = new EchoWriter();

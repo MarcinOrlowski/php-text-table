@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable\Output;
 
-interface OutputContract
+interface WriterContract
 {
     /**
      * @param string|string[] $text

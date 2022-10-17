@@ -15,7 +15,7 @@ declare(strict_types=1);
 namespace MarcinOrlowski\AsciiTable\Renderers;
 
 use MarcinOrlowski\AsciiTable\AsciiTable;
-use MarcinOrlowski\AsciiTable\Output\OutputContract;
+use MarcinOrlowski\AsciiTable\Output\WriterContract;
 
 interface RendererContract
 {
@@ -23,7 +23,7 @@ interface RendererContract
      * Renders provided `Table` using provided output writer.
      *
      * @param AsciiTable     $table  Instance of `AsciiTable` to render.
-     * @param OutputContract $writer Output writer to use.
+     * @param WriterContract $writer Output writer to use.
      */
-    public function render(AsciiTable $table, OutputContract $writer): void;
+    public function render(AsciiTable $table, WriterContract $writer): void;
 }

@@ -19,13 +19,13 @@ use MarcinOrlowski\AsciiTable\AsciiTable;
 use MarcinOrlowski\AsciiTable\Cell;
 use MarcinOrlowski\AsciiTable\Column;
 use MarcinOrlowski\AsciiTable\ColumnsContainer;
-use MarcinOrlowski\AsciiTable\Output\OutputContract;
+use MarcinOrlowski\AsciiTable\Output\WriterContract;
 use MarcinOrlowski\AsciiTable\Row;
 
 class DefaultRenderer implements RendererContract
 {
     /** @inheritDoc */
-    public function render(AsciiTable $table, OutputContract $writer): void
+    public function render(AsciiTable $table, WriterContract $writer): void
     {
         $columns = $table->getColumns();
 
