@@ -6,7 +6,7 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ## Changes
 
-* @dev
+* 1.3.0 (2022-10-18)
   * Improved code documentation.
   * Renamed `OutputContract` to `WriterContract`.
   * Added own exceptions for most critical errors.
