@@ -39,7 +39,7 @@ class Row implements ContainerContract
     }
 
     /**
-     * @param array<string|int, Cell|string|int> $cells
+     * @param array<string|int, Cell|string|int|float|bool|null> $cells
      */
     public function addCells(array $cells): self
     {
