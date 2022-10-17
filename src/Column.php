@@ -16,10 +16,10 @@ namespace MarcinOrlowski\AsciiTable;
 
 class Column
 {
-    public function __construct(string $title, int $width = 0, Align $align = Align::AUTO)
+    public function __construct(string $title, Align $align = Align::AUTO, int $maxWidth = 0)
     {
         $this->setTitle($title);
-        $this->setMaxWidth($width);
+        $this->setMaxWidth($maxWidth);
         $this->setAlign($align);
     }
 
