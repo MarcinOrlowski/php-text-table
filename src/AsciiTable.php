@@ -38,40 +38,64 @@ class AsciiTable
     /** Table column definitions and meta data */
     protected ColumnsContainer $columns;
 
+    /**
+     * Returns table column definitions and meta data container.
+     */
     public function getColumns(): ColumnsContainer
     {
         return $this->columns;
     }
 
-    public function addColumn(string|int $columnIdx, Column|string $columnVal): self
+    /**
+     * Adds new column with specific index. Note columns are registered in the order they are added.
+     *
+     * @param string|int    $columnKey Unique column key to be assigned to this column
+     * @param Column|string $columnVal Either instance of `Column` or string to be used as column title
+     *                                 (for which instance of `Column` will be automatically created).
+     */
+    public function addColumn(string|int $columnKey, Column|string $columnVal): self
     {
         if (\is_string($columnVal)) {
             $columnVal = new Column($columnVal);
         } else if (!($columnVal instanceof Column)) {
             throw new \InvalidArgumentException(
-                \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnIdx));
+                \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnKey));
         }
 
-        $this->columns->add($columnIdx, $columnVal);
+        $this->columns->add($columnKey, $columnVal);
 
         return $this;
     }
 
+    /**
+     * Adds multiple columns at once. Note columns are registered in the order they are present in source
+     * array.
+     *
+     * Note that this method **auto-creates** column keys for all **non-string** table keys. For such
+     * case the key will be derived either from passed `string` for from `Column` instance' title string.
+     * All explicitely specified `string` keys will be preserved and used.
+     *
+     * @param string[]|Column[] $columns List of columns to be added, given either via instance of `Column`
+     *                                   or as string to be used as column title (for which instance of
+     *                                   `Column` will be automatically created).
+     *
+     * @return $this
+     */
     public function addColumns(array $columns): self
     {
-        foreach ($columns as $columnIdx => $columnVal) {
-            if (\is_int($columnIdx)) {
+        foreach ($columns as $columnKey => $columnVal) {
+            if (\is_int($columnKey)) {
                 if (\is_string($columnVal)) {
-                    $columnIdx = $columnVal;
+                    $columnKey = $columnVal;
                 } else if ($columnVal instanceof Column) {
-                    $columnIdx = $columnVal->getTitle();
+                    $columnKey = $columnVal->getTitle();
                 } else {
                     throw new \InvalidArgumentException(
                         'Unsupported column data type: ' . \get_debug_type($columnVal));
                 }
             }
 
-            $this->addColumn($columnIdx, $columnVal);
+            $this->addColumn($columnKey, $columnVal);
         }
 
         return $this;
@@ -79,23 +103,15 @@ class AsciiTable
 
     /* ****************************************************************************************** */
 
+    /** Holds all table rows */
     protected RowsContainer $rows;
 
+    /**
+     * Returns table rows container.
+     */
     public function getRows(): RowsContainer
     {
         return $this->rows;
-    }
-
-    /**
-     * @param Row[]|array[] $rows
-     */
-    public function addRows(array $rows): self
-    {
-        foreach ($rows as $row) {
-            $this->addRow($row);
-        }
-
-        return $this;
     }
 
     /**
@@ -157,7 +173,10 @@ class AsciiTable
                     \sprintf('Cannot add cell #%d. Unknown column key: %s', $columnOffset, $columnKey));
             }
 
-            $this->calculateMaxColumnWidth($columnKey, $cell);
+            // Stretch the column width (if needed and possible) to fit the cell content.
+            $columnMeta = $this->columns->get($columnKey);
+            $columnMeta->updateMaxWidth(\strlen($cell->getValue()));
+
             $columnOffset++;
         }
 
@@ -166,16 +185,17 @@ class AsciiTable
         return $this;
     }
 
-
-    protected function calculateMaxColumnWidth(string|int $columnKey, Cell $cell): void
+    /**
+     * Adds multiple rows in a batch.
+     * @param Row[]|array[] $rows
+     */
+    public function addRows(array $rows): self
     {
-        $columnMeta = $this->columns->get($columnKey);
-        $columnMeta->updateMaxWidth(\strlen($cell->getValue()));
-    }
+        foreach ($rows as $row) {
+            $this->addRow($row);
+        }
 
-    public function getRowCount(): int
-    {
-        return \count($this->getRows());
+        return $this;
     }
 
     /* ****************************************************************************************** */
@@ -192,7 +212,7 @@ class AsciiTable
 
     public function setColumnAlign(string|int $columnKey, Align $align): self
     {
-        $this->columns->get($columnKey)->setAlign($align);
+        $this->columns->get($columnKey)->setDefaultColumnAlign($align);
 
         return $this;
     }

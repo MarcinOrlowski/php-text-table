@@ -16,6 +16,9 @@ namespace MarcinOrlowski\AsciiTable;
 
 interface ArrayableContract
 {
+    /**
+     * Returns array representation of the object.
+     */
     public function toArray(): array;
 
 }

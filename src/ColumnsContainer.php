@@ -21,34 +21,55 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
     /** @var Column[] $columns */
     protected array $columns = [];
 
-    public function get(string|int $columnIdx): Column
+    /**
+     * Returns instance of `Column` for given key, or throws exception is no such column exists.
+     *
+     * @param string|int $columnKey Column key we are going to populate.
+     */
+    public function get(string|int $columnKey): Column
     {
-        if (!$this->columnExists($columnIdx)) {
-            throw new \OutOfBoundsException("Unknown column index: {$columnIdx}");
+        if (!$this->columnExists($columnKey)) {
+            throw new \OutOfBoundsException("Unknown column index: {$columnKey}");
         }
-        return $this->columns[ $columnIdx ];
+        return $this->columns[ $columnKey ];
     }
 
-    public function columnExists(string|int $columnIdx): bool
+    /**
+     * @param string|int $columnKey Column key we are going to populate.
+     *
+     * @return bool
+     */
+    public function columnExists(string|int $columnKey): bool
     {
-        return \array_key_exists($columnIdx, $this->columns);
+        return \array_key_exists($columnKey, $this->columns);
     }
 
-    public function add(string|int $columnIdx, Column $column): self
+    /**
+     * Adds new column definition to the container.
+     *
+     * @param string|int $columnKey Column key we are going to populate.
+     * @param Column     $column
+     *
+     * @return $this
+     */
+    public function add(string|int $columnKey, Column $column): self
     {
-        if (\array_key_exists($columnIdx, $this->columns)) {
-            throw new \InvalidArgumentException("Column index already exists: {$columnIdx}");
+        if (\array_key_exists($columnKey, $this->columns)) {
+            throw new \InvalidArgumentException("Column index already exists: {$columnKey}");
         }
 
-        $this->columns[ $columnIdx ] = $column;
+        $this->columns[ $columnKey ] = $column;
 
-        $this->get($columnIdx)->updateMaxWidth(\strlen($column->getTitle()));
+        $this->get($columnKey)->updateMaxWidth(\strlen($column->getTitle()));
 
         return $this;
     }
 
     /* ****************************************************************************************** */
 
+    /**
+     * Returns total number of columns in the container.
+     */
     public function count(): int
     {
         return \count($this->columns);
@@ -56,6 +77,7 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function offsetExists(mixed $offset): bool
     {
         /** @var string|int $offset */
@@ -71,6 +93,7 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
         return $this->columns[ $offset ];
     }
 
+    /** @inheritDoc */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!($value instanceof Column)) {
@@ -85,6 +108,7 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
         }
     }
 
+    /** @inheritDoc */
     public function offsetUnset(mixed $offset): void
     {
         /** @var string|int $offset */
@@ -93,6 +117,7 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->columns);
@@ -100,6 +125,7 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
 
     /* ****************************************************************************************** */
 
+    /** @inheritDoc */
     public function toArray(): array
     {
         return $this->columns;

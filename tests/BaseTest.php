@@ -90,7 +90,6 @@ class BaseTest extends TestCase
 
         $renderedTable = $this->render($table);
 
-        Assert::assertEquals($rowCnt, $table->getRowCount());
         Assert::assertEquals($expected, $renderedTable);
     }
 
