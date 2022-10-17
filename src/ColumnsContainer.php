@@ -41,6 +41,9 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
         }
 
         $this->columns[ $columnIdx ] = $column;
+
+        $this->get($columnIdx)->updateMaxWidth(\strlen($column->getTitle()));
+
         return $this;
     }
 
