@@ -28,13 +28,15 @@ $ composer require marcin-orlowski/ascii-table
 
 ## Usage examples
 
+Simples possible usage:
+
+
 ```php
 $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
-$table->setColumnAlign('SCORE', Align::RIGHT);
 $table->addRows([
     [1, 'John', 12],
     [2, 'Tommy', 15],
-])
+]);
 $table->render();
 ```
 
@@ -44,9 +46,34 @@ would produce nice ASCII table:
 +----+-------+-------+
 | ID | NAME  | SCORE |
 +----+-------+-------+
-| 1  | John  |    12 |
-| 2  | Tommy |    15 |
+| 1  | John  | 12    |
+| 2  | Tommy | 15    |
 +----+-------+-------+
+```
+
+---
+
+More advanced cell content formatting applied:
+
+```php
+$table = new AsciiTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
+$table->setColumnAlign('SCORE', Align::RIGHT);
+$table->addRows([
+    [1, 'John', 12],
+    [2, 'Tommy', 15],
+]);
+$table->render();
+```
+
+would produce nice ASCII table:
+
+```php
++----+----------------------+-------+
+| ID |         NAME         | SCORE |
++----+----------------------+-------+
+| 1  | John                 |    12 |
+| 2  | Tommy                |    15 |
++----+----------------------+-------+
 ```
 
 ---
@@ -54,4 +81,5 @@ would produce nice ASCII table:
 ## License
 
 * Written and copyrighted &copy;2022 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* ASCII Table is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+* ASCII Table is open-sourced software licensed under
+  the [MIT license](http://opensource.org/licenses/MIT)
