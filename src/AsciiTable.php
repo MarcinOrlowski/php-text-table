@@ -256,7 +256,7 @@ class AsciiTable
      *
      * @throws ColumnKeyNotFound
      */
-    public function setColumnAlign(string|int $columnKey, Align $align): self
+    public function setDefaultColumnAlign(string|int $columnKey, Align $align): self
     {
         $this->columns->get($columnKey)->setDefaultColumnAlign($align);
 

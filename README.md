@@ -30,7 +30,6 @@ $ composer require marcin-orlowski/ascii-table
 
 Simples possible usage:
 
-
 ```php
 $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
 $table->addRows([
@@ -56,23 +55,24 @@ would produce nice ASCII table:
 More advanced cell content formatting applied:
 
 ```php
+
 $table = new AsciiTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
-$table->setColumnAlign('SCORE', Align::RIGHT);
+$table->setDefaultColumnAlign('SCORE', Align::RIGHT);
 $table->addRows([
     [1, 'John', 12],
-    [2, 'Tommy', 15],
+    [2, new Cell('Tommy', Align::CENTER), 15],
 ]);
 $table->render();
 ```
 
-would produce nice ASCII table:
+would produce this nicely formatted ASCII table:
 
 ```php
 +----+----------------------+-------+
-| ID |         NAME         | SCORE |
+| ID | NAME                 | SCORE |
 +----+----------------------+-------+
 | 1  | John                 |    12 |
-| 2  | Tommy                |    15 |
+| 2  |        Tommy         |    15 |
 +----+----------------------+-------+
 ```
 
