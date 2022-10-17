@@ -21,6 +21,12 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
     /** @var Cell[] $cells */
     protected array $cells = [];
 
+    /**
+     * Adds new cell to the row's cell container. Throws exception if cell with given key already exists.
+     *
+     * @param string|int $columnKey Key of the column we want this cell to belong to.
+     * @param Cell       $cell      Instance of `Cell` to be added.
+     */
     public function add(string|int $columnKey, Cell $cell): self
     {
         if (\array_key_exists($columnKey, $this->cells)) {
@@ -31,6 +37,11 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
         return $this;
     }
 
+    /**
+     * Returns cell for given column key. Throws exception if cell with given key does not exist.
+     *
+     * @param string|int $columnKey Key of the column we want this cell to belong to.
+     */
     public function get(string|int $columnKey): Cell
     {
         if (!$this->offsetExists($columnKey)) {
