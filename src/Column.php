@@ -16,10 +16,10 @@ namespace MarcinOrlowski\AsciiTable;
 
 class Column
 {
-    public function __construct(string $title, Span|int $width = Span::AUTO, Align $align = Align::AUTO)
+    public function __construct(string $title, int $width = 0, Align $align = Align::AUTO)
     {
         $this->setTitle($title);
-        $this->setWidth($width);
+        $this->setMaxWidth($width);
         $this->setAlign($align);
     }
 
@@ -40,17 +40,31 @@ class Column
         return $this;
     }
 
+    protected Align $titleAlign = Align::LEFT;
+
+    public function getTitleAlign(): Align
+    {
+        return $this->titleAlign;
+    }
+
+    public function setTitleAlign(Align $align): self
+    {
+        $this->titleAlign = $align;
+
+        return $this;
+    }
+
     /* ****************************************************************************************** */
 
-    protected Span|int $width;
+    protected int $width = 0;
 
     public function getWidth(): int
     {
-        // FIXME Span support
+        // FIXME Width support
         return $this->getMaxWidth();
     }
 
-    protected function setWidth(Span|int $width): self
+    protected function setWidth(int $width): self
     {
         $this->width = $width;
         return $this;
@@ -58,16 +72,16 @@ class Column
 
     /* ****************************************************************************************** */
 
-    protected Align $padding = Align::AUTO;
+    protected Align $align = Align::AUTO;
 
     public function getAlign(): Align
     {
-        return $this->padding;
+        return $this->align;
     }
 
-    protected function setAlign(Align $align): self
+    public function setAlign(Align $align): self
     {
-        $this->padding = $align;
+        $this->align = $align;
         return $this;
     }
 
@@ -80,12 +94,14 @@ class Column
         return $this->maxWidth;
     }
 
-    public function updateMaxWidth(Span|int $width): self
+    public function setMaxWidth(int $width): self
     {
-        if ($width instanceof Span) {
-            throw new \InvalidArgumentException('Not supported yet');
-        }
+        $this->maxWidth = $width;
+        return $this;
+    }
 
+    public function updateMaxWidth(int $width): self
+    {
         if ($width > $this->maxWidth) {
             $this->maxWidth = $width;
         }
