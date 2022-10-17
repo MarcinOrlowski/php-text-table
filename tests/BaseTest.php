@@ -1,4 +1,5 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTableTests;
@@ -11,6 +12,8 @@ use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+
+/** @noinspection PhpUnhandledExceptionInspection */
 
 class BaseTest extends TestCase
 {
@@ -127,7 +130,7 @@ class BaseTest extends TestCase
 
     /* ****************************************************************************************** */
 
-    public function testCustomIndex()
+    public function testCustomIndex(): void
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
@@ -149,7 +152,7 @@ class BaseTest extends TestCase
 
     /* ****************************************************************************************** */
 
-    public function testRowCellsAutoAssign()
+    public function testRowCellsAutoAssign(): void
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
@@ -169,7 +172,7 @@ class BaseTest extends TestCase
 
     /* ****************************************************************************************** */
 
-    public function testTableColumnAutoKey()
+    public function testTableColumnAutoKey(): void
     {
         $table = new AsciiTable(['ID', new Column('SCORE')]);
         $table->addRows([

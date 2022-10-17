@@ -14,13 +14,18 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
 use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
-use Traversable;
 
 class Row implements ContainerContract
 {
     use ArrayAccessTrait;
 
+    /**
+     * @param array|null $cells Optional list of cells to be added to the newly created row.
+     *
+     * @throws DuplicateColumnKey
+     */
     public function __construct(array|null $cells = null)
     {
         $this->container = new CellsContainer();
@@ -43,6 +48,8 @@ class Row implements ContainerContract
 
     /**
      * @param array<string|int, Cell|string|int|float|bool|null> $cells
+     *
+     * @throws DuplicateColumnKey
      */
     public function addCells(array $cells): self
     {
@@ -53,6 +60,14 @@ class Row implements ContainerContract
         return $this;
     }
 
+    /**
+     * @param string|int      $columnKey
+     * @param Cell|string|int $cell
+     * @param Align           $align
+     *
+     * @return $this
+     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey
+     */
     public function addCell(string|int      $columnKey,
                             Cell|string|int $cell,
                             Align           $align = Align::AUTO): self

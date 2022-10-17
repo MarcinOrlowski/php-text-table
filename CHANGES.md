@@ -12,6 +12,7 @@ Fast and flexible PHP library rendering plain ASCII tables.
   * Added own exceptions for most critical errors.
   * Added support for individual cell alignment.
   * Added more tests.
+  
 
 * v1.2.0 (2022-10-17)
   * Main class name changed to `AsciiTable`.
@@ -22,9 +23,11 @@ Fast and flexible PHP library rendering plain ASCII tables.
   * Improved code creating row cells from plain string arrays.
   * Added more tests.
 
+
 * v1.1.0 (2022-10-17)
   * Corrected `\ArrayAccess` implementation.
   * Added more tests.
+
 
 * v1.0.0 (2022-10-17)
   * Initial public release.

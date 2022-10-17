@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
 use MarcinOrlowski\AsciiTable\Exceptions\UnsupportedColumnType;
 use MarcinOrlowski\AsciiTable\Output\WriterContract;
 use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
@@ -22,11 +23,27 @@ use MarcinOrlowski\AsciiTable\Renderers\DefaultRenderer;
 
 class AsciiTable
 {
+    /**
+     * @param array $headerColumns Optional array of column headers to be created.
+     *
+     * @throws ColumnKeyNotFound
+     * @throws DuplicateColumnKey
+     * @throws UnsupportedColumnType
+     */
     public function __construct(array $headerColumns = [])
     {
         $this->init($headerColumns);
     }
 
+    /**
+     * @param array $headerColumns Optional array of column headers to be created.
+     *
+     * @return self
+     *
+     * @throws ColumnKeyNotFound
+     * @throws DuplicateColumnKey
+     * @throws UnsupportedColumnType
+     */
     public function init(array $headerColumns = []): self
     {
         $this->columns = new ColumnsContainer();
@@ -56,6 +73,10 @@ class AsciiTable
      * @param Column|string $columnVal Either instance of `Column` or string to be used as column title
      *                                 (for which instance of `Column` will be automatically created).
      *
+     * @return self
+     *
+     * @throws ColumnKeyNotFound
+     * @throws DuplicateColumnKey
      * @throws UnsupportedColumnType
      */
     public function addColumn(string|int $columnKey, Column|string $columnVal): self
@@ -78,13 +99,17 @@ class AsciiTable
      *
      * Note that this method **auto-creates** column keys for all **non-string** table keys. For such
      * case the key will be derived either from passed `string` for from `Column` instance' title string.
-     * All explicitely specified `string` keys will be preserved and used.
+     * All explicitly specified `string` keys will be preserved and used.
      *
      * @param string[]|Column[] $columns List of columns to be added, given either via instance of `Column`
      *                                   or as string to be used as column title (for which instance of
      *                                   `Column` will be automatically created).
      *
-     * @return $this
+     * @return self
+     *
+     * @throws ColumnKeyNotFound
+     * @throws DuplicateColumnKey
+     * @throws UnsupportedColumnType
      */
     public function addColumns(array $columns): self
     {
@@ -135,7 +160,10 @@ class AsciiTable
      *                               cases explicit `columnKey` must be given. Passing `null` as `$srcRow`
      *                               causes no effect.
      *
+     * @return self
+     *
      * @throws ColumnKeyNotFound
+     * @throws DuplicateColumnKey
      */
     public function addRow(Row|array|null $srcRow): self
     {
@@ -188,6 +216,9 @@ class AsciiTable
      * Adds multiple rows in a batch.
      *
      * @param Row[]|array[] $rows
+     *
+     * @throws ColumnKeyNotFound
+     * @throws DuplicateColumnKey
      */
     public function addRows(array $rows): self
     {
@@ -200,6 +231,13 @@ class AsciiTable
 
     /* ****************************************************************************************** */
 
+    /**
+     * Renders given table and outputs it via provided writer.
+     *
+     * @param WriterContract|null $writer
+     *
+     * @throws ColumnKeyNotFound
+     */
     public function render(?WriterContract $writer = null): void
     {
         if ($writer === null) {
@@ -210,6 +248,14 @@ class AsciiTable
         $renderer->render($this, $writer);
     }
 
+    /**
+     * @param string|int $columnKey Unique column key to be assigned to this column
+     * @param Align      $align
+     *
+     * @return self
+     *
+     * @throws ColumnKeyNotFound
+     */
     public function setColumnAlign(string|int $columnKey, Align $align): self
     {
         $this->columns->get($columnKey)->setDefaultColumnAlign($align);
@@ -217,6 +263,14 @@ class AsciiTable
         return $this;
     }
 
+    /**
+     * @param string|int $columnKey Unique column key to be assigned to this column
+     * @param int        $width
+     *
+     * @return self
+     *
+     * @throws ColumnKeyNotFound
+     */
     public function setColumnWidth(string|int $columnKey, int $width): self
     {
         $this->columns->get($columnKey)->setMaxWidth($width);

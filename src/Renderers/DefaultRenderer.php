@@ -19,12 +19,17 @@ use MarcinOrlowski\AsciiTable\AsciiTable;
 use MarcinOrlowski\AsciiTable\Cell;
 use MarcinOrlowski\AsciiTable\Column;
 use MarcinOrlowski\AsciiTable\ColumnsContainer;
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Output\WriterContract;
 use MarcinOrlowski\AsciiTable\Row;
 
 class DefaultRenderer implements RendererContract
 {
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     *
+     * @throws ColumnKeyNotFound
+     */
     public function render(AsciiTable $table, WriterContract $writer): void
     {
         $columns = $table->getColumns();
@@ -58,6 +63,14 @@ class DefaultRenderer implements RendererContract
 
     /* ****************************************************************************************** */
 
+    /**
+     * @param ColumnsContainer $columns
+     * @param Row              $row Row to render
+     *
+     * @return string
+     *
+     * @throws ColumnKeyNotFound
+     */
     protected function renderRow(ColumnsContainer $columns, Row $row): string
     {
         $result = '';
@@ -100,6 +113,13 @@ class DefaultRenderer implements RendererContract
     protected const HEADER_PAD_CENTER = ' | ';
     protected const HEADER_PAD_RIGHT  = ' |';
 
+    /**
+     * @param ColumnsContainer $columns
+     *
+     * @return string
+     *
+     * @throws ColumnKeyNotFound
+     */
     protected function renderHeader(ColumnsContainer $columns): string
     {
         $result = '';
@@ -173,6 +193,8 @@ class DefaultRenderer implements RendererContract
      * @param string|int       $columnKey Column key we are going to populate.
      * @param string           $value     Value to pad.
      * @param Align|null       $align     Requested text alignment. If null, column's alignment will be used.
+     *
+     * @throws ColumnKeyNotFound
      */
     protected function pad(ColumnsContainer $columns,
                            string|int       $columnKey,
@@ -181,7 +203,7 @@ class DefaultRenderer implements RendererContract
     {
         // If no custom align specified, inherit column's default align.
         $align ??= $this->getColumnAlign($columns, $columnKey);
-        $maxWidth = $this->getColumnWidth($columns, $columnKey, $value);
+        $maxWidth = $this->getColumnWidth($columns, $columnKey);
 
         $padType = match ($align) {
             Align::RIGHT => \STR_PAD_LEFT,
@@ -207,6 +229,8 @@ class DefaultRenderer implements RendererContract
      *
      * @param ColumnsContainer $columns   Table column definition container.
      * @param string|int       $columnKey Column key we are going to populate.
+     *
+     * @throws ColumnKeyNotFound
      */
     protected function getColumnWidth(ColumnsContainer $columns, string|int $columnKey): int
     {
@@ -218,6 +242,8 @@ class DefaultRenderer implements RendererContract
      *
      * @param ColumnsContainer $columns   Table column definition container.
      * @param string|int       $columnKey Column key we are going to populate.
+     *
+     * @throws ColumnKeyNotFound
      */
     protected function getColumnAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
@@ -229,6 +255,8 @@ class DefaultRenderer implements RendererContract
      *
      * @param ColumnsContainer $columns   Table column definition container.
      * @param string|int       $columnKey Column key we are going to populate.
+     *
+     * @throws ColumnKeyNotFound
      */
     protected function getColumnTitleAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {

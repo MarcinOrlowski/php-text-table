@@ -16,7 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 enum Align: string
 {
-    /** Automated alignment (decied at runtime; default) */
+    /** Automated alignment (decided at runtime; default) */
     case AUTO = 'auto';
 
     /** Content is aligned to left */
