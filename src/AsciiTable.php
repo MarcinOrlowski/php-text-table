@@ -38,6 +38,45 @@ class AsciiTable
     /** Table column definitions and meta data */
     protected ColumnsContainer $columns;
 
+    public function getColumns(): ColumnsContainer
+    {
+        return $this->columns;
+    }
+
+    public function addColumn(string|int $columnIdx, Column|string $columnVal): self
+    {
+        if (\is_string($columnVal)) {
+            $columnVal = new Column($columnVal);
+        } else if (!($columnVal instanceof Column)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnIdx));
+        }
+
+        $this->columns->add($columnIdx, $columnVal);
+
+        return $this;
+    }
+
+    public function addColumns(array $columns): self
+    {
+        foreach ($columns as $columnIdx => $columnVal) {
+            if (\is_int($columnIdx)) {
+                if (\is_string($columnVal)) {
+                    $columnIdx = $columnVal;
+                } else if ($columnVal instanceof Column) {
+                    $columnIdx = $columnVal->getTitle();
+                } else {
+                    throw new \InvalidArgumentException(
+                        'Unsupported column data type: ' . \get_debug_type($columnVal));
+                }
+            }
+
+            $this->addColumn($columnIdx, $columnVal);
+        }
+
+        return $this;
+    }
+
     /* ****************************************************************************************** */
 
     protected RowsContainer $rows;
@@ -137,47 +176,6 @@ class AsciiTable
     public function getRowCount(): int
     {
         return \count($this->getRows());
-    }
-
-    /* ****************************************************************************************** */
-
-    public function getColumns(): ColumnsContainer
-    {
-        return $this->columns;
-    }
-
-    public function addColumn(string|int $columnIdx, Column|string $columnVal): self
-    {
-        if (\is_string($columnVal)) {
-            $columnVal = new Column($columnVal);
-        } else if (!($columnVal instanceof Column)) {
-            throw new \InvalidArgumentException(
-                \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnIdx));
-        }
-
-        $this->columns->add($columnIdx, $columnVal);
-
-        return $this;
-    }
-
-    public function addColumns(array $columns): self
-    {
-        foreach ($columns as $columnIdx => $columnVal) {
-            if (\is_int($columnIdx)) {
-                if (\is_string($columnVal)) {
-                    $columnIdx = $columnVal;
-                } else if ($columnVal instanceof Column) {
-                    $columnIdx = $columnVal->getTitle();
-                } else {
-                    throw new \InvalidArgumentException(
-                        'Unsupported column data type: ' . \get_debug_type($columnVal));
-                }
-            }
-
-            $this->addColumn($columnIdx, $columnVal);
-        }
-
-        return $this;
     }
 
     /* ****************************************************************************************** */
