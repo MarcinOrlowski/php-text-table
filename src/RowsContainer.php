@@ -52,7 +52,8 @@ class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, Arr
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!($value instanceof Row)) {
-            throw new \InvalidArgumentException('Invalid row type: ' . \get_debug_type($value));
+            throw new \InvalidArgumentException(
+                \sprintf('Expected instance of %s, got %s', Row::class, \get_debug_type($value)));
         }
 
         if ($offset === null) {

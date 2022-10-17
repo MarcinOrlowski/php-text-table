@@ -14,6 +14,8 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
+use MarcinOrlowski\AsciiTable\Exceptions\UnsupportedColumnType;
 use MarcinOrlowski\AsciiTable\Output\OutputContract;
 use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
 use MarcinOrlowski\AsciiTable\Renderers\DefaultRenderer;
@@ -53,13 +55,15 @@ class AsciiTable
      * @param string|int    $columnKey Unique column key to be assigned to this column
      * @param Column|string $columnVal Either instance of `Column` or string to be used as column title
      *                                 (for which instance of `Column` will be automatically created).
+     *
+     * @throws UnsupportedColumnType
      */
     public function addColumn(string|int $columnKey, Column|string $columnVal): self
     {
         if (\is_string($columnVal)) {
             $columnVal = new Column($columnVal);
         } else if (!($columnVal instanceof Column)) {
-            throw new \InvalidArgumentException(
+            throw new UnsupportedColumnType(
                 \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnKey));
         }
 
@@ -130,6 +134,8 @@ class AsciiTable
      *                               column definition are **all** using `string` keys. For all the other
      *                               cases explicit `columnKey` must be given. Passing `null` as `$srcRow`
      *                               causes no effect.
+     *
+     * @throws ColumnKeyNotFound
      */
     public function addRow(Row|array|null $srcRow): self
     {
@@ -170,8 +176,7 @@ class AsciiTable
              * @var Cell       $cell
              */
             if (!$columns->offsetExists($columnKey)) {
-                throw new \InvalidArgumentException(
-                    \sprintf('Cannot add cell #%d. Unknown column key: %s', $columnOffset, $columnKey));
+                throw new ColumnKeyNotFound("Cannot add cell #{$columnOffset}. Unknown key: {$columnKey}");
             }
 
             // Stretch the column width (if needed and possible) to fit the cell content.

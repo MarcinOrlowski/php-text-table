@@ -78,6 +78,11 @@ class Row implements \ArrayAccess, \IteratorAggregate
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
+        if (!($value instanceof Cell)) {
+            throw new \InvalidArgumentException(
+                \sprintf('Expected instance of %s, got %s', Cell::class, \get_debug_type($value)));
+        }
+
         /** @var string|int $offset */
         $this->cells->offsetSet($offset, $value);
     }

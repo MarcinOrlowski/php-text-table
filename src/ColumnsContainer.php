@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
+use MarcinOrlowski\AsciiTable\Exceptions\InvalidColumnType;
 use Traversable;
 
 class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, ArrayableContract
@@ -25,11 +28,13 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
      * Returns instance of `Column` for given key, or throws exception is no such column exists.
      *
      * @param string|int $columnKey Column key we are going to populate.
+     *
+     * @throws ColumnKeyNotFound
      */
     public function get(string|int $columnKey): Column
     {
         if (!$this->columnExists($columnKey)) {
-            throw new \OutOfBoundsException("Unknown column index: {$columnKey}");
+            throw new ColumnKeyNotFound("Unknown column key: {$columnKey}");
         }
         return $this->columns[ $columnKey ];
     }
@@ -50,12 +55,15 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
      * @param string|int $columnKey Column key we are going to populate.
      * @param Column     $column
      *
-     * @return $this
+     * @return self
+     *
+     * @throws \MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound
+     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey
      */
     public function add(string|int $columnKey, Column $column): self
     {
         if (\array_key_exists($columnKey, $this->columns)) {
-            throw new \InvalidArgumentException("Column index already exists: {$columnKey}");
+            throw new DuplicateColumnKey("Column index already exists: {$columnKey}");
         }
 
         $this->columns[ $columnKey ] = $column;
@@ -93,11 +101,16 @@ class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, 
         return $this->columns[ $offset ];
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     *
+     * @throws \InvalidArgumentException
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!($value instanceof Column)) {
-            throw new \InvalidArgumentException('Invalid column type: ' . \get_debug_type($value));
+            throw new \InvalidArgumentException(
+                \sprintf('Expected instance of %s, got %s', Column::class, \get_debug_type($value)));
         }
 
         if ($offset === null) {

@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
+use MarcinOrlowski\AsciiTable\Exceptions\InvalidCellType;
 use Traversable;
 
 class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, ArrayableContract
@@ -26,11 +29,13 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
      *
      * @param string|int $columnKey Key of the column we want this cell to belong to.
      * @param Cell       $cell      Instance of `Cell` to be added.
+     *
+     * @throws DuplicateColumnKey
      */
     public function add(string|int $columnKey, Cell $cell): self
     {
         if (\array_key_exists($columnKey, $this->cells)) {
-            throw new \InvalidArgumentException("Column key already exists: {$columnKey}");
+            throw new DuplicateColumnKey("Column key already exists: {$columnKey}");
         }
 
         $this->cells[ $columnKey ] = $cell;
@@ -41,11 +46,13 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
      * Returns cell for given column key. Throws exception if cell with given key does not exist.
      *
      * @param string|int $columnKey Key of the column we want this cell to belong to.
+     *
+     * @throws ColumnKeyNotFound
      */
     public function get(string|int $columnKey): Cell
     {
         if (!$this->offsetExists($columnKey)) {
-            throw new \OutOfBoundsException("Unknown column key: {$columnKey}");
+            throw new ColumnKeyNotFound("Unknown column key: {$columnKey}");
         }
         return $this->cells[ $columnKey ];
     }
@@ -74,10 +81,16 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
         return $this->cells[ $offset ];
     }
 
+    /**
+     * @inheritDoc
+     *
+     * @throws \InvalidArgumentException
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!($value instanceof Cell)) {
-            throw new \InvalidArgumentException('Invalid cell type: ' . \get_debug_type($value));
+            throw new \InvalidArgumentException(
+                \sprintf('Expected instance of %s, got %s', Cell::class, \get_debug_type($value)));
         }
 
         if ($offset === null) {
