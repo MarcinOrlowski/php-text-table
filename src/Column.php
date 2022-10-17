@@ -50,15 +50,6 @@ class Column
         return $this->getMaxWidth();
     }
 
-    public function getWidthRaw(): Span|int
-    {
-//        if ($this->width instanceof Span) {
-//            throw new \RuntimeException('Column width is a Span is not yet supported');
-//        }
-
-        return $this->getMaxWidth();
-    }
-
     protected function setWidth(Span|int $width): self
     {
         $this->width = $width;
@@ -84,7 +75,7 @@ class Column
 
     protected int $maxWidth = 0;
 
-    public function getMaxWidth(): int
+    protected function getMaxWidth(): int
     {
         return $this->maxWidth;
     }

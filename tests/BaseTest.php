@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace MarcinOrlowski\AsciiTableTests;
 
 use MarcinOrlowski\AsciiTable\AsciiTable;
-use MarcinOrlowski\AsciiTable\Output\OutputContract;
 use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use PHPUnit\Framework\Assert;
@@ -12,13 +11,25 @@ use PHPUnit\Framework\TestCase;
 
 class BaseTest extends TestCase
 {
-    protected OutputContract $bufferWriter;
-
     public function setUp(): void
     {
         parent::setUp();
+    }
 
-        $this->bufferWriter = new BufferWriter();
+    protected function render(AsciiTable $table): array
+    {
+        $bufferWriter = new BufferWriter();
+        $table->render($bufferWriter);
+        $renderedTable = $bufferWriter->getBuffer();
+
+        // Strip trailing PHP_EOL to make comparing results
+        // in tests easier.
+        return \array_map(static function(string $line) {
+            if (\substr($line, -1) === PHP_EOL) {
+                $line = \substr($line, 0, -1);
+            }
+            return $line;
+        }, $renderedTable);
     }
 
     public function testSimpleTable(): void
@@ -35,9 +46,7 @@ class BaseTest extends TestCase
             'C' => 'c',
         ]);
 
-        $table->render($this->bufferWriter);
-
-        $result = $this->bufferWriter->getBuffer();
+        $tableRender = $this->render($table);
 
         $expected = [
             '+---+---+---+',
@@ -47,7 +56,7 @@ class BaseTest extends TestCase
             '+---+---+---+',
         ];
 
-        Assert::assertEquals($expected, $result);
+        Assert::assertEquals($expected, $tableRender);
     }
 
     public function testMultiRowTable(): void
@@ -77,11 +86,10 @@ class BaseTest extends TestCase
         }
         $expected[] = '+---+---+---+';
 
-        $table->render($this->bufferWriter);
-        $result = $this->bufferWriter->getBuffer();
+        $tableRender = $this->render($table);
 
         Assert::assertEquals($rowCnt, $table->getRowCount());
-        Assert::assertEquals($expected, $result);
+        Assert::assertEquals($expected, $tableRender);
     }
 
     public function testCustomColumnKeys(): void
@@ -101,8 +109,7 @@ class BaseTest extends TestCase
             $key1 => 'a',
         ]);
 
-        $table->render($this->bufferWriter);
-        $result = $this->bufferWriter->getBuffer();
+        $tableRender = $this->render($table);
 
         $expected = [
             '+---+---+---+',
@@ -112,16 +119,26 @@ class BaseTest extends TestCase
             '+---+---+---+',
         ];
 
-        Assert::assertEquals($expected, $result);
+        Assert::assertEquals($expected, $tableRender);
     }
 
-    public function testX()
+    public function testCustomIndex()
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-            ['ID' => 1, 'NAME' => 'John', 'SCORE' => 12],
-            ['ID' => 2, 'NAME' => 'Tommy', 'SCORE' => 15],
+            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
         ]);
-        $table->render();
+        $tableRender = $this->render($table);
+
+        $expected = [
+            '+----+-------+-------+',
+            '| ID | NAME  | SCORE |',
+            '+----+-------+-------+',
+            '| 1  | John  | 12    |',
+            '| 2  | Tommy | 15    |',
+            '+----+-------+-------+',
+        ];
+        Assert::assertEquals($expected, $tableRender);
     }
 }
