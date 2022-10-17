@@ -116,4 +116,13 @@ class Row implements ContainerContract
     {
         return $this->cells->getIterator();
     }
+
+
+    /* ****************************************************************************************** */
+
+    /** @inheritDoc */
+    public function toArray(): array
+    {
+        return $this->cells;
+    }
 }
