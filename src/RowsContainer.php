@@ -16,7 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 use Traversable;
 
-class Rows implements \Countable, \IteratorAggregate, \ArrayAccess
+class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, ArrayableContract
 {
     /** @var Row[] $rows */
     protected array $rows = [];
@@ -67,5 +67,12 @@ class Rows implements \Countable, \IteratorAggregate, \ArrayAccess
     {
         /** @var string|int $offset */
         unset($this->rows[ $offset ]);
+    }
+
+    /* ****************************************************************************************** */
+
+    public function toArray(): array
+    {
+        return $this->rows;
     }
 }

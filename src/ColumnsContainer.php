@@ -16,7 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 use Traversable;
 
-class Columns implements \Countable, \ArrayAccess, \IteratorAggregate
+class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, ArrayableContract
 {
     /** @var Column[] $columns */
     protected array $columns = [];
@@ -93,5 +93,12 @@ class Columns implements \Countable, \ArrayAccess, \IteratorAggregate
     public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->columns);
+    }
+
+    /* ****************************************************************************************** */
+
+    public function toArray(): array
+    {
+        return $this->columns;
     }
 }
