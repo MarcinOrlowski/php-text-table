@@ -16,12 +16,14 @@ namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
-use Traversable;
+use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
 
 class CellsContainer implements ContainerContract
 {
-    /** @var Cell[] $cells */
-    protected array $cells = [];
+    use ArrayAccessTrait;
+
+    /** @var Cell[] $container */
+    protected array $container = [];
 
     /**
      * Adds new cell to the row's cell container. Throws exception if cell with given key already exists.
@@ -33,11 +35,11 @@ class CellsContainer implements ContainerContract
      */
     public function add(string|int $columnKey, Cell $cell): self
     {
-        if (\array_key_exists($columnKey, $this->cells)) {
+        if (\array_key_exists($columnKey, $this->container)) {
             throw new DuplicateColumnKey("Column key already exists: {$columnKey}");
         }
 
-        $this->cells[ $columnKey ] = $cell;
+        $this->container[ $columnKey ] = $cell;
         return $this;
     }
 
@@ -53,75 +55,9 @@ class CellsContainer implements ContainerContract
         if (!$this->offsetExists($columnKey)) {
             throw new ColumnKeyNotFound("Unknown column key: {$columnKey}");
         }
-        return $this->cells[ $columnKey ];
+        return $this->container[ $columnKey ];
     }
 
     /* ****************************************************************************************** */
 
-    /** @inheritDoc */
-    public function count(): int
-    {
-        return \count($this->cells);
-    }
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
-    public function offsetExists(mixed $offset): bool
-    {
-        /** @var string|int $offset */
-        return \array_key_exists($offset, $this->cells);
-    }
-
-    /**
-     * @return Cell
-     */
-    public function offsetGet(mixed $offset): mixed
-    {
-        /** @var string|int $offset */
-        return $this->cells[ $offset ];
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        if (!($value instanceof Cell)) {
-            throw new \InvalidArgumentException(
-                \sprintf('Expected instance of %s, got %s', Cell::class, \get_debug_type($value)));
-        }
-
-        if ($offset === null) {
-            $this->cells[] = $value;
-        } else {
-            /** @var string|int $offset */
-            $this->cells[ $offset ] = $value;
-        }
-    }
-
-    /** @inheritDoc */
-    public function offsetUnset(mixed $offset): void
-    {
-        /** @var string|int $offset */
-        unset($this->cells[ $offset ]);
-    }
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
-    public function getIterator(): Traversable
-    {
-        return new \ArrayIterator($this->cells);
-    }
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
-    public function toArray(): array
-    {
-        return $this->cells;
-    }
 }

@@ -14,13 +14,16 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
+use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
 use Traversable;
 
 class Row implements ContainerContract
 {
+    use ArrayAccessTrait;
+
     public function __construct(array|null $cells = null)
     {
-        $this->cells = new CellsContainer();
+        $this->container = new CellsContainer();
 
         if (!empty($cells)) {
             foreach ($cells as $columnKey => $cell) {
@@ -31,11 +34,11 @@ class Row implements ContainerContract
 
     /* ****************************************************************************************** */
 
-    protected CellsContainer $cells;
+    protected CellsContainer $container;
 
-    public function getCells(): CellsContainer
+    public function getContainer(): CellsContainer
     {
-        return $this->cells;
+        return $this->container;
     }
 
     /**
@@ -57,72 +60,10 @@ class Row implements ContainerContract
         if (!($cell instanceof Cell)) {
             $cell = new Cell($cell, $align);
         }
-        $this->getCells()->add($columnKey, $cell);
+        $this->getContainer()->add($columnKey, $cell);
 
         return $this;
     }
 
     /* ****************************************************************************************** */
-
-    /** @inheritDoc */
-    public function count(): int
-    {
-        return $this->getCells()->count();
-    }
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
-    public function offsetExists(mixed $offset): bool
-    {
-        /** @var string|int $offset */
-        return $this->getCells()->offsetExists($offset);
-    }
-
-    /** @inheritDoc */
-    public function offsetGet(mixed $offset): mixed
-    {
-        /** @var string|int $offset */
-        return $this->getCells()->offsetGet($offset);
-    }
-
-    /**
-     * @inheritDoc
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        if (!($value instanceof Cell)) {
-            throw new \InvalidArgumentException(
-                \sprintf('Expected instance of %s, got %s', Cell::class, \get_debug_type($value)));
-        }
-
-        /** @var string|int $offset */
-        $this->getCells()->offsetSet($offset, $value);
-    }
-
-    /** @inheritDoc */
-    public function offsetUnset(mixed $offset): void
-    {
-        /** @var string|int $offset */
-        $this->getCells()->offsetUnset($offset);
-    }
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
-    public function getIterator(): Traversable
-    {
-        return $this->getCells()->getIterator();
-    }
-
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
-    public function toArray(): array
-    {
-        return $this->getCells();
-    }
 }

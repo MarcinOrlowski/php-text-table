@@ -61,7 +61,7 @@ class DefaultRenderer implements RendererContract
     protected function renderRow(ColumnsContainer $columns, Row $row): string
     {
         $result = '';
-        $cells = $row->getCells();
+        $cells = $row->getContainer();
         $cnt = \count($cells);
         $columnOffset = 0;
         foreach (\array_keys($columns->toArray()) as $columnKey) {
@@ -76,6 +76,10 @@ class DefaultRenderer implements RendererContract
             }
 
             // Using default column align
+            $align = $cell->getAlign() === Align::AUTO
+                ? $this->getColumnAlign($columns, $columnKey)
+                : $cell->getAlign();
+
             $result .= $this->pad($columns, $columnKey, $cell->getValue());
 
             $result .= ($columnOffset === $cnt - 1)
