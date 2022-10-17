@@ -5,6 +5,7 @@ namespace MarcinOrlowski\AsciiTableTests;
 
 use MarcinOrlowski\AsciiTable\Align;
 use MarcinOrlowski\AsciiTable\AsciiTable;
+use MarcinOrlowski\AsciiTable\Column;
 use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use PHPUnit\Framework\Assert;
@@ -157,6 +158,24 @@ class BaseTest extends TestCase
             '+----+------+-------+',
             '| 1  | John | 12    |',
             '+----+------+-------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    public function testTableColumnAutoKey()
+    {
+        $table = new AsciiTable(['ID', new Column('SCORE')]);
+        $table->addRows([
+            ['ID' => 1, 'SCORE' => 12],
+        ]);
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+----+-------+',
+            '| ID | SCORE |',
+            '+----+-------+',
+            '| 1  | 12    |',
+            '+----+-------+',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }

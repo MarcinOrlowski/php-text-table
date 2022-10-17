@@ -150,14 +150,18 @@ class AsciiTable
     public function addColumns(array $columns): self
     {
         foreach ($columns as $columnIdx => $columnVal) {
-            /** @var string|int $targetColumnIdx */
-            $targetColumnIdx = $columnVal;
-
-            if (\is_string($columnIdx)) {
-                $targetColumnIdx = $columnIdx;
+            if (\is_int($columnIdx)) {
+                if (\is_string($columnVal)) {
+                    $columnIdx = $columnVal;
+                } else if ($columnVal instanceof Column) {
+                    $columnIdx = $columnVal->getTitle();
+                } else {
+                    throw new \InvalidArgumentException(
+                        'Unsupported column data type: ' . \get_debug_type($columnVal));
+                }
             }
 
-            $this->addColumn($targetColumnIdx, $columnVal);
+            $this->addColumn($columnIdx, $columnVal);
         }
 
         return $this;
