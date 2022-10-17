@@ -8,6 +8,8 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 * PHP 8.1+
 
+---
+
 ## Installation
 
 ```bash
@@ -27,9 +29,8 @@ $ composer require marcin-orlowski/ascii-table
 ## Usage examples
 
 ```php
-<?php
-
 $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+$table->setColumnAlign('SCORE', Align::RIGHT);
 $table->addRows([
     [1, 'John', 12],
     [2, 'Tommy', 15],
@@ -43,8 +44,8 @@ would produce nice ASCII table:
 +----+-------+-------+
 | ID | NAME  | SCORE |
 +----+-------+-------+
-| 1  | John  | 12    |
-| 2  | Tommy | 15    |
+| 1  | John  |    12 |
+| 2  | Tommy |    15 |
 +----+-------+-------+
 ```
 
