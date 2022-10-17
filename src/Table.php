@@ -36,9 +36,15 @@ class Table
 
     /** Table column definitions and meta data */
     protected Columns $columns;
-    protected Rows    $rows;
 
     /* ****************************************************************************************** */
+
+    protected Rows $rows;
+
+    public function getRows(): Rows
+    {
+        return $this->rows;
+    }
 
     public function addRow(Row|array|null $srcRow): self
     {
@@ -70,15 +76,16 @@ class Table
         return $this;
     }
 
-    public function getRows(): Rows
-    {
-        return $this->rows;
-    }
 
     protected function calculateMaxColumnWidth(string|int $columnKey, Cell $cell): void
     {
         $columnMeta = $this->columns->get($columnKey);
         $columnMeta->updateMaxWidth(\strlen($cell->getValue()));
+    }
+
+    public function getRowCount(): int
+    {
+        return \count($this->getRows());
     }
 
     /* ****************************************************************************************** */

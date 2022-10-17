@@ -74,8 +74,12 @@ class Columns implements \Countable, \ArrayAccess, \IteratorAggregate
             throw new \InvalidArgumentException('Invalid column type: ' . \get_debug_type($value));
         }
 
-        /** @var string|int $offset */
-        $this->columns[ $offset ] = $value;
+        if ($offset === null) {
+            $this->columns[] = $value;
+        } else {
+            /** @var string|int $offset */
+            $this->columns[ $offset ] = $value;
+        }
     }
 
     public function offsetUnset(mixed $offset): void
