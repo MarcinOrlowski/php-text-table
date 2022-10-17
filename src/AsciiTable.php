@@ -188,6 +188,7 @@ class AsciiTable
 
     /**
      * Adds multiple rows in a batch.
+     *
      * @param Row[]|array[] $rows
      */
     public function addRows(array $rows): self
