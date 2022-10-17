@@ -5,6 +5,7 @@ namespace MarcinOrlowski\AsciiTableTests;
 
 use MarcinOrlowski\AsciiTable\Align;
 use MarcinOrlowski\AsciiTable\AsciiTable;
+use MarcinOrlowski\AsciiTable\Cell;
 use MarcinOrlowski\AsciiTable\Column;
 use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
@@ -208,6 +209,31 @@ class BaseTest extends TestCase
             '|  1 | John  |    12 |',
             '|  2 | Tommy |    15 |',
             '+----+-------+-------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    public function testCellColumnAlign(): void
+    {
+        $table = new AsciiTable(['ID',
+                                 new Column('NAME', maxWidth: 20),
+                                 'SCORE',
+        ]);
+        $table->addRows([
+            [1,
+             new Cell('John', Align::CENTER),
+             12,
+            ],
+        ]);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+----+----------------------+-------+',
+            '| ID | NAME                 | SCORE |',
+            '+----+----------------------+-------+',
+            '| 1  |         John         | 12    |',
+            '+----+----------------------+-------+',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }

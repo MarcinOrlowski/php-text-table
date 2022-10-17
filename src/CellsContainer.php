@@ -35,7 +35,7 @@ class CellsContainer implements ContainerContract
      */
     public function add(string|int $columnKey, Cell $cell): self
     {
-        if (\array_key_exists($columnKey, $this->container)) {
+        if ($this->offsetExists($columnKey)) {
             throw new DuplicateColumnKey("Column key already exists: {$columnKey}");
         }
 

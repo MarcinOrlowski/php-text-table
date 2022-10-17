@@ -80,7 +80,7 @@ class DefaultRenderer implements RendererContract
                 ? $this->getColumnAlign($columns, $columnKey)
                 : $cell->getAlign();
 
-            $result .= $this->pad($columns, $columnKey, $cell->getValue());
+            $result .= $this->pad($columns, $columnKey, $cell->getValue(), $align);
 
             $result .= ($columnOffset === $cnt - 1)
                 ? self::HEADER_PAD_RIGHT

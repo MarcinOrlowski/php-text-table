@@ -169,21 +169,14 @@ class AsciiTable
             }
         }
 
-        $columnOffset = 0;
         foreach ($row as $columnKey => $cell) {
             /**
              * @var string|int $columnKey
              * @var Cell       $cell
              */
-            if (!$columns->offsetExists($columnKey)) {
-                throw new ColumnKeyNotFound("Cannot add cell #{$columnOffset}. Unknown key: {$columnKey}");
-            }
-
             // Stretch the column width (if needed and possible) to fit the cell content.
             $columnMeta = $this->columns->get($columnKey);
             $columnMeta->updateMaxWidth(\strlen($cell->getValue()));
-
-            $columnOffset++;
         }
 
         $this->rows[] = $row;
