@@ -12,14 +12,13 @@ declare(strict_types=1);
  * @link      https://github.com/MarcinOrlowski/php-ascii-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\AsciiTable\Output;
 
 interface OutputContract
 {
     /**
      * @param string|string[] $text
-     * @param string          $end
      */
-    public function write(string|array $text = '', string $end = PHP_EOL): void;
+    public function write(string|array $text = ''): void;
 
 }

@@ -3,14 +3,16 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTableTests;
 
-use MarcinOrlowski\AsciiTable\Table;
+use MarcinOrlowski\AsciiTable\AsciiTable;
+use MarcinOrlowski\AsciiTable\Output\OutputContract;
+use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 class BaseTest extends TestCase
 {
-    protected BufferWriter $bufferWriter;
+    protected OutputContract $bufferWriter;
 
     public function setUp(): void
     {
@@ -21,7 +23,7 @@ class BaseTest extends TestCase
 
     public function testSimpleTable(): void
     {
-        $table = new Table();
+        $table = new AsciiTable();
         $table->addColumns([
             'A',
             'B',
@@ -50,7 +52,7 @@ class BaseTest extends TestCase
 
     public function testMultiRowTable(): void
     {
-        $table = new Table();
+        $table = new AsciiTable();
         $table->addColumns([
             'A',
             'B',
@@ -87,7 +89,7 @@ class BaseTest extends TestCase
         $key1 = Generator::getRandomString('key1');
         $key2 = Generator::getRandomString('key2');
         $key3 = Generator::getRandomString('key3');
-        $table = new Table();
+        $table = new AsciiTable();
         $table->addColumns([
             $key1 => 'A',
             $key2 => 'B',
@@ -111,5 +113,15 @@ class BaseTest extends TestCase
         ];
 
         Assert::assertEquals($expected, $result);
+    }
+
+    public function testX()
+    {
+        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table->addRows([
+            ['ID' => 1, 'NAME' => 'John', 'SCORE' => 12],
+            ['ID' => 2, 'NAME' => 'Tommy', 'SCORE' => 15],
+        ]);
+        $table->render();
     }
 }

@@ -14,7 +14,10 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
-class Table
+use MarcinOrlowski\AsciiTable\Output\OutputContract;
+use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
+
+class AsciiTable
 {
     /* ****************************************************************************************** */
 
@@ -44,6 +47,15 @@ class Table
     public function getRows(): RowsContainer
     {
         return $this->rows;
+    }
+
+    public function addRows(array $rows): self
+    {
+        foreach ($rows as $row) {
+            $this->addRow($row);
+        }
+
+        return $this;
     }
 
     public function addRow(Row|array|null $srcRow): self
@@ -132,8 +144,12 @@ class Table
         return $this->columns;
     }
 
-    public function render(OutputContract $writer): void
+    public function render(?OutputContract $writer = null): void
     {
+        if ($writer === null) {
+            $writer = new EchoWriter();
+        }
+
         $renderer = new Renderer();
         $renderer->render($this, $writer);
     }

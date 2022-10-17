@@ -14,11 +14,13 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
+use MarcinOrlowski\AsciiTable\Output\OutputContract;
+
 class Renderer
 {
     /* ****************************************************************************************** */
 
-    public function render(Table $table, OutputContract $writer): void
+    public function render(AsciiTable $table, OutputContract $writer): void
     {
         $columns = $table->getColumns();
 
@@ -69,6 +71,8 @@ class Renderer
             $columnOffset++;
         }
 
+        $result .= PHP_EOL;
+
         return $result;
     }
 
@@ -102,6 +106,8 @@ class Renderer
             $columnOffset++;
         }
 
+        $result .= PHP_EOL;
+
         return $result;
     }
 
@@ -133,6 +139,8 @@ class Renderer
 
             $columnOffset++;
         }
+
+        $result .= PHP_EOL;
 
         return $result;
     }
