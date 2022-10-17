@@ -6,7 +6,7 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ## Requirements
 
-* PHP 8.1+
+* PHP v8.1+
 
 ---
 
@@ -20,9 +20,9 @@ $ composer require marcin-orlowski/ascii-table
 
 ## Features
 
-1. Simple API, easy to use.
-1. Lightweight (no additional dependencies)
-1. 1. Production ready
+1. Simple API, easy to use,
+1. Lightweight (no additional dependencies),
+1. Production ready.
 
 ---
 
