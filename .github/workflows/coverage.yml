@@ -49,7 +49,7 @@ jobs:
         uses: php-actions/phpunit@v3
         with:
           bootstrap: "vendor/autoload.php"
-          configuration: "phpunit.xml"
+          configuration: "phpunit.xml.dist"
           php_extensions: "xdebug"
           args: --coverage-clover coverage.xml
         env:
