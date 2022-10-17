@@ -49,6 +49,9 @@ class AsciiTable
         return $this->rows;
     }
 
+    /**
+     * @param Row[]|array[] $rows
+     */
     public function addRows(array $rows): self
     {
         foreach ($rows as $row) {
@@ -64,9 +67,31 @@ class AsciiTable
             return $this;
         }
 
-        $row = \is_array($srcRow)
-            ? new Row($srcRow)
-            : $srcRow;
+        $columns = $this->getColumns();
+
+        $row = $srcRow;
+        if (!($srcRow instanceof Row)) {
+            $row = new Row();
+
+            // If source array has only numeric keys, and column definitions are using non-numeric keys,
+            // then it is assumed that source array elements are in sequence and will be automatically
+            // assigned to cell at position matching their index in source array.
+
+            $srcHasNumKeys = \count($srcRow) === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
+            $columnsHasStringKeys = \count($columns) === \count(\array_filter(\array_keys($columns->toArray()), \is_string(...)));
+
+            if ($srcHasNumKeys && $columnsHasStringKeys) {
+                $columnKeys = \array_keys($columns->toArray());
+                $srcIdx = 0;
+                foreach ($srcRow as $cell) {
+                    $columnKey = $columnKeys[ $srcIdx ];
+                    $row->addCell($columnKey, $cell);
+                    $srcIdx++;
+                }
+            } else {
+                $row->addCells($srcRow);
+            }
+        }
 
         $columnOffset = 0;
         foreach ($row as $columnKey => $cell) {
@@ -74,9 +99,9 @@ class AsciiTable
              * @var string|int $columnKey
              * @var Cell       $cell
              */
-            if (!$this->getColumns()->offsetExists($columnKey)) {
+            if (!$columns->offsetExists($columnKey)) {
                 throw new \InvalidArgumentException(
-                    \sprintf('Cannot add cell #%d. Unknown column index: %s', $columnOffset, $columnKey));
+                    \sprintf('Cannot add cell #%d. Unknown column key: %s', $columnOffset, $columnKey));
             }
 
             $this->calculateMaxColumnWidth($columnKey, $cell);

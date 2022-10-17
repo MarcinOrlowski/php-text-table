@@ -143,6 +143,24 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    public function testRowCellsAutoAssign()
+    {
+        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table->addRows([
+            [1, 'John', 12],
+        ]);
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+----+------+-------+',
+            '| ID | NAME | SCORE |',
+            '+----+------+-------+',
+            '| 1  | John | 12    |',
+            '+----+------+-------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
     public function testColumnAlign(): void
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
