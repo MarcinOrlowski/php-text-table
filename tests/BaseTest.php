@@ -200,8 +200,8 @@ class BaseTest extends TestCase
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
         ]);
 
-        $table->setColumnAlign('ID', Align::RIGHT);
-        $table->setColumnAlign('SCORE', Align::RIGHT);
+        $table->setDefaultColumnAlign('ID', Align::RIGHT);
+        $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
 
         $renderedTable = $this->render($table);
 
@@ -280,9 +280,9 @@ class BaseTest extends TestCase
         $table->setColumnWidth('NAME', 5);
         $table->setColumnWidth('SCORE', 25);
 
-        $table->setColumnAlign('ID', Align::RIGHT);
-        $table->setColumnAlign('NAME', Align::CENTER);
-        $table->setColumnAlign('SCORE', Align::RIGHT);
+        $table->setDefaultColumnAlign('ID', Align::RIGHT);
+        $table->setDefaultColumnAlign('NAME', Align::CENTER);
+        $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
 
         $renderedTable = $this->render($table);
 
@@ -340,6 +340,14 @@ class BaseTest extends TestCase
 
         $table = new AsciiTable([$key]);
         $table->setColumnWidth($key, $maxLength);
+
+        $table = new AsciiTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
+        $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
+        $table->addRows([
+            [1, 'John', 12],
+            [2, new Cell('Tommy', Align::CENTER), 15],
+        ]);
+        $table->render();
 
         $renderedTable = $this->render($table);
 
