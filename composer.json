@@ -1,0 +1,43 @@
+{
+    "name": "marcin-orlowski/ascii-table",
+    "description": "Fast and flexible PHP library rendering plain ASCII tables.",
+    "homepage": "https://github.com/MarcinOrlowski/php-ascii-table",
+    "version": "1.0.0",
+    "keywords": [
+        "php",
+        "php8",
+        "table",
+        "ascii",
+        "console",
+        "cli"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcin Orlowski",
+            "homepage": "http://MarcinOrlowski.com/"
+        }
+    ],
+    "support": {
+        "source": "https://github.com/MarcinOrlowski/php-ascii-table/",
+        "issues": "https://github.com/MarcinOrlowski/php-ascii-table/issues"
+    },
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "MarcinOrlowski\\AsciiTable\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MarcinOrlowski\\AsciiTableTests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "phpstan/phpstan": "^1.8"
+    }
+}

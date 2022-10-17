@@ -1,0 +1,16 @@
+##################################################################################
+#
+# Olza Logistic's COD Processor
+#
+# @author    Marcin Orlowski <marcin.orlowski (#) develart (.) cz>
+# @copyright 2022 DevelArt
+#
+##################################################################################
+
+parameters:
+  checkGenericClassInNonGenericObjectType: false
+  level: max
+  checkMissingIterableValueType: false
+  paths:
+    - src/
+    - module/
