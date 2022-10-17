@@ -19,8 +19,6 @@ use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
 
 class AsciiTable
 {
-    /* ****************************************************************************************** */
-
     public function __construct(array $headerColumns = [])
     {
         $this->init($headerColumns);
@@ -61,6 +59,22 @@ class AsciiTable
         return $this;
     }
 
+    /**
+     * Appends row to the end of table.
+     *
+     * @param Row|array|null $srcRow When `array` is given, then it is expected to be the each of the
+     *                               column is the row's cell value. It should be either instance of
+     *                               `Cell` class or `string|int`. If primitive is given, the instance
+     *                               of `Cell` will automatically be created. The `array` elements should
+     *                               be either in form `columnKey => value` or can be all given without
+     *                               own keys and then, the proper `columnKey` will be picked based on
+     *                               table column definitions (i.e. for `$srcRow` being `['a', 'b']`, the
+     *                               `b` value will be put into cell of the 2nd column). This auto-assigment
+     *                               works only when `$srcRow` array uses no custom keys **and** table
+     *                               column definition are **all** using `string` keys. For all the other
+     *                               cases explicit `columnKey` must be given. Passing `null` as `$srcRow`
+     *                               causes no effect.
+     */
     public function addRow(Row|array|null $srcRow): self
     {
         if ($srcRow === null) {
@@ -76,12 +90,12 @@ class AsciiTable
             // If source array has only numeric keys, and column definitions are using non-numeric keys,
             // then it is assumed that source array elements are in sequence and will be automatically
             // assigned to cell at position matching their index in source array.
+            $srcHasNumKeysOnly = \count($srcRow) === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
+            $columnsHasStringKeysOnly = \count($columns) === \count(\array_filter(\array_keys($columns->toArray()), \is_string(...)));
 
-            $srcHasNumKeys = \count($srcRow) === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
-            $columnsHasStringKeys = \count($columns) === \count(\array_filter(\array_keys($columns->toArray()), \is_string(...)));
-
-            if ($srcHasNumKeys && $columnsHasStringKeys) {
+            if ($srcHasNumKeysOnly && $columnsHasStringKeysOnly) {
                 $columnKeys = \array_keys($columns->toArray());
+
                 $srcIdx = 0;
                 foreach ($srcRow as $cell) {
                     $columnKey = $columnKeys[ $srcIdx ];
@@ -126,7 +140,6 @@ class AsciiTable
     }
 
     /* ****************************************************************************************** */
-
 
     public function getColumns(): ColumnsContainer
     {
