@@ -1,0 +1,35 @@
+##################################################################################
+# ASCII Table
+#
+# @package   MarcinOrlowski\AsciiTable
+#
+# @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
+# @copyright 2022 Marcin Orlowski
+# @license   http://www.opensource.org/licenses/mit-license.php MIT
+# @link      https://github.com/MarcinOrlowski/php-ascii-table
+#
+##################################################################################
+
+name: "Markdown Lint"
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master, dev ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout repository..."
+        uses: actions/checkout@v3
+
+      # https://github.com/marketplace/actions/my-markdown-linter
+      - name: "Running markdown linter..."
+        uses: ruzickap/action-my-markdown-linter@v1
+        with:
+          exclude: vendor
+          config_file: .markdownlint.yaml
+

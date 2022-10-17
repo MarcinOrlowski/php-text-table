@@ -4,11 +4,11 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ---
 
-# Requirements
+## Requirements
 
 * PHP 8.1+
 
-# Installation
+## Installation
 
 ```bash
 $ composer require marcin-orlowski/ascii-table

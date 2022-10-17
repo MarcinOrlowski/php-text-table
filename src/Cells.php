@@ -61,8 +61,12 @@ class Cells implements \ArrayAccess, \Countable, \IteratorAggregate
             throw new \InvalidArgumentException('Invalid cell type: ' . \get_debug_type($value));
         }
 
-        /** @var string|int $offset */
-        $this->cells[ $offset ] = $value;
+        if ($offset === null) {
+            $this->cells[] = $value;
+        } else {
+            /** @var string|int $offset */
+            $this->cells[ $offset ] = $value;
+        }
     }
 
     public function offsetUnset(mixed $offset): void

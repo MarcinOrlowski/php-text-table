@@ -1,0 +1,54 @@
+##################################################################################
+# ASCII Table
+#
+# @package   MarcinOrlowski\AsciiTable
+#
+# @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
+# @copyright 2022 Marcin Orlowski
+# @license   http://www.opensource.org/licenses/mit-license.php MIT
+# @link      https://github.com/MarcinOrlowski/php-ascii-table
+#
+##################################################################################
+
+name: "Unit Tests"
+
+on:
+  push:
+    branches:
+    - "master"
+  pull_request:
+    branches:
+    - "master"
+    - "dev"
+
+jobs:
+  tests:
+    strategy:
+      # do not stop the workflow if single run failed
+      fail-fast: false
+      matrix:
+        # quotes are needed it is treated as a number and zero at decimal part is gone at runtime
+        php: ["8.1"]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout repository..."
+        uses: actions/checkout@v2
+
+      # https://github.com/marketplace/actions/composer-php-actions
+      - name: "Installing dependencies..."
+        uses: php-actions/composer@v6
+        with:
+          version: 2
+          php_version: "${{ matrix.php }}"
+          dev: yes
+
+      # https://github.com/marketplace/actions/phpunit-php-actions
+      - name: "Running PHPUnit..."
+        uses: php-actions/phpunit@v3
+        with:
+          bootstrap: "vendor/autoload.php"
+          configuration: "phpunit.xml.dist"
+          memory_limit: "16M"
+          php_version: "${{ matrix.php }}"

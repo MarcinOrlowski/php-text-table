@@ -55,9 +55,12 @@ class Rows implements \Countable, \IteratorAggregate, \ArrayAccess
             throw new \InvalidArgumentException('Invalid row type: ' . \get_debug_type($value));
         }
 
-
-        /** @var string|int $offset */
-        $this->rows[ $offset ] = $value;
+        if ($offset === null) {
+            $this->rows[] = $value;
+        } else {
+            /** @var string|int $offset */
+            $this->rows[ $offset ] = $value;
+        }
     }
 
     public function offsetUnset(mixed $offset): void
