@@ -16,8 +16,13 @@ namespace MarcinOrlowski\AsciiTable;
 
 enum Align: string
 {
+    /** Automated alignment (decided at runtime; default) */
     case AUTO = 'auto';
+
+    /** Content is aligned to left */
     case LEFT = 'left';
+    /** Content is aligned to right */
     case RIGHT = 'right';
-    case CENTER = 'center'; // \STR_PAD_BOTH;
+    /** Content is centered */
+    case CENTER = 'center';
 }

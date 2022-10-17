@@ -12,13 +12,9 @@ declare(strict_types=1);
  * @link      https://github.com/MarcinOrlowski/php-ascii-table
  */
 
-namespace MarcinOrlowski\AsciiTable\Output;
+namespace MarcinOrlowski\AsciiTable;
 
-interface OutputContract
+interface ContainerContract extends \ArrayAccess, \Countable, \IteratorAggregate, ArrayableContract
 {
-    /**
-     * @param string|string[] $text
-     */
-    public function write(string|array $text = ''): void;
 
 }

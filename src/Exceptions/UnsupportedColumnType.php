@@ -12,20 +12,9 @@ declare(strict_types=1);
  * @link      https://github.com/MarcinOrlowski/php-ascii-table
  */
 
-namespace MarcinOrlowski\AsciiTable\Output\Writers;
+namespace MarcinOrlowski\AsciiTable\Exceptions;
 
-use MarcinOrlowski\AsciiTable\Output\WriterContract;
-
-class EchoWriter implements WriterContract
+class UnsupportedColumnType extends \Exception
 {
-    /**
-     * @inheritDoc
-     */
-    public function write(string|array $text = ''): void
-    {
-        foreach ((array)$text as $line) {
-            echo $line;
-        }
-    }
 
 }

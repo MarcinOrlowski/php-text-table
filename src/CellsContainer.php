@@ -14,86 +14,50 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
-use Traversable;
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
+use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
 
-class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, ArrayableContract
+class CellsContainer implements ContainerContract
 {
-    /** @var Cell[] $cells */
-    protected array $cells = [];
+    use ArrayAccessTrait;
 
+    /** @var Cell[] $container */
+    protected array $container = [];
+
+    /**
+     * Adds new cell to the row's cell container. Throws exception if cell with given key already exists.
+     *
+     * @param string|int $columnKey Key of the column we want this cell to belong to.
+     * @param Cell       $cell      Instance of `Cell` to be added.
+     *
+     * @throws DuplicateColumnKey
+     */
     public function add(string|int $columnKey, Cell $cell): self
     {
-        if (\array_key_exists($columnKey, $this->cells)) {
-            throw new \InvalidArgumentException("Column key already exists: {$columnKey}");
+        if ($this->offsetExists($columnKey)) {
+            throw new DuplicateColumnKey("Column key already exists: {$columnKey}");
         }
 
-        $this->cells[ $columnKey ] = $cell;
+        $this->container[ $columnKey ] = $cell;
         return $this;
     }
 
+    /**
+     * Returns cell for given column key. Throws exception if cell with given key does not exist.
+     *
+     * @param string|int $columnKey Key of the column we want this cell to belong to.
+     *
+     * @throws ColumnKeyNotFound
+     */
     public function get(string|int $columnKey): Cell
     {
         if (!$this->offsetExists($columnKey)) {
-            throw new \OutOfBoundsException("Unknown column key: {$columnKey}");
+            throw new ColumnKeyNotFound("Unknown column key: {$columnKey}");
         }
-        return $this->cells[ $columnKey ];
+        return $this->container[ $columnKey ];
     }
 
     /* ****************************************************************************************** */
 
-    public function count(): int
-    {
-        return \count($this->cells);
-    }
-
-    /* ****************************************************************************************** */
-
-    public function offsetExists(mixed $offset): bool
-    {
-        /** @var string|int $offset */
-        return \array_key_exists($offset, $this->cells);
-    }
-
-    /**
-     * @return Cell
-     */
-    public function offsetGet(mixed $offset): mixed
-    {
-        /** @var string|int $offset */
-        return $this->cells[ $offset ];
-    }
-
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        if (!($value instanceof Cell)) {
-            throw new \InvalidArgumentException('Invalid cell type: ' . \get_debug_type($value));
-        }
-
-        if ($offset === null) {
-            $this->cells[] = $value;
-        } else {
-            /** @var string|int $offset */
-            $this->cells[ $offset ] = $value;
-        }
-    }
-
-    public function offsetUnset(mixed $offset): void
-    {
-        /** @var string|int $offset */
-        unset($this->cells[ $offset ]);
-    }
-
-    /* ****************************************************************************************** */
-
-    public function getIterator(): Traversable
-    {
-        return new \ArrayIterator($this->cells);
-    }
-
-    /* ****************************************************************************************** */
-
-    public function toArray(): array
-    {
-        return $this->cells;
-    }
 }

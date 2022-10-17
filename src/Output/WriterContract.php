@@ -12,10 +12,13 @@ declare(strict_types=1);
  * @link      https://github.com/MarcinOrlowski/php-ascii-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\AsciiTable\Output;
 
-enum Span: int
+interface WriterContract
 {
-    case NONE = 0;
-    case AUTO = -1;
+    /**
+     * @param string|string[] $text
+     */
+    public function write(string|array $text = ''): void;
+
 }

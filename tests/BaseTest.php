@@ -1,23 +1,22 @@
 <?php
+/** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTableTests;
 
 use MarcinOrlowski\AsciiTable\Align;
 use MarcinOrlowski\AsciiTable\AsciiTable;
+use MarcinOrlowski\AsciiTable\Cell;
 use MarcinOrlowski\AsciiTable\Column;
 use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
+/** @noinspection PhpUnhandledExceptionInspection */
+
 class BaseTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     protected function render(AsciiTable $table): array
     {
         $bufferWriter = new BufferWriter();
@@ -33,6 +32,8 @@ class BaseTest extends TestCase
             return $line;
         }, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testSimpleTable(): void
     {
@@ -60,6 +61,8 @@ class BaseTest extends TestCase
 
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testMultiRowTable(): void
     {
@@ -90,9 +93,10 @@ class BaseTest extends TestCase
 
         $renderedTable = $this->render($table);
 
-        Assert::assertEquals($rowCnt, $table->getRowCount());
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testCustomColumnKeys(): void
     {
@@ -124,7 +128,9 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
-    public function testCustomIndex()
+    /* ****************************************************************************************** */
+
+    public function testCustomIndex(): void
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
@@ -144,7 +150,9 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
-    public function testRowCellsAutoAssign()
+    /* ****************************************************************************************** */
+
+    public function testRowCellsAutoAssign(): void
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
@@ -162,7 +170,9 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
-    public function testTableColumnAutoKey()
+    /* ****************************************************************************************** */
+
+    public function testTableColumnAutoKey(): void
     {
         $table = new AsciiTable(['ID', new Column('SCORE')]);
         $table->addRows([
@@ -179,6 +189,8 @@ class BaseTest extends TestCase
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testColumnAlign(): void
     {
@@ -203,6 +215,33 @@ class BaseTest extends TestCase
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    public function testCellColumnAlign(): void
+    {
+        $table = new AsciiTable(['ID',
+                                 new Column('NAME', maxWidth: 20),
+                                 'SCORE',
+        ]);
+        $table->addRows([
+            [1,
+             new Cell('John', Align::CENTER),
+             12,
+            ],
+        ]);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+----+----------------------+-------+',
+            '| ID | NAME                 | SCORE |',
+            '+----+----------------------+-------+',
+            '| 1  |         John         | 12    |',
+            '+----+----------------------+-------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    /* ****************************************************************************************** */
 
     public function testCustomWidth(): void
     {
@@ -290,6 +329,8 @@ class BaseTest extends TestCase
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testNoData(): void
     {

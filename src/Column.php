@@ -16,15 +16,30 @@ namespace MarcinOrlowski\AsciiTable;
 
 class Column
 {
-    public function __construct(string $title, Align $align = Align::AUTO, int $maxWidth = 0)
+    public function __construct(string $title,
+                                Align  $align = Align::AUTO,
+                                int    $maxWidth = 0,
+                                Align  $titleAlign = Align::AUTO)
     {
         $this->setTitle($title);
         $this->setMaxWidth($maxWidth);
-        $this->setAlign($align);
+        $this->setDefaultColumnAlign($align);
+        $this->setTitleAlign($titleAlign);
     }
 
     /* ****************************************************************************************** */
 
+    /**
+     * Returns current column's content width.
+     */
+    public function getWidth(): int
+    {
+        return $this->getMaxWidth();
+    }
+
+    /* ****************************************************************************************** */
+
+    /** Column title string */
     protected string $title;
 
     public function getTitle(): string
@@ -39,6 +54,8 @@ class Column
 
         return $this;
     }
+
+    /* ****************************************************************************************** */
 
     protected Align $titleAlign = Align::LEFT;
 
@@ -56,37 +73,26 @@ class Column
 
     /* ****************************************************************************************** */
 
-    protected int $width = 0;
+    /**
+     * Default column content alignment. Will be used for each cell in that column unless custom
+     * content alignment is set up.
+     */
+    protected Align $defaultColumnAlign = Align::AUTO;
 
-    public function getWidth(): int
+    public function getDefaultColumnAlign(): Align
     {
-        // FIXME Width support
-        return $this->getMaxWidth();
+        return $this->defaultColumnAlign;
     }
 
-    protected function setWidth(int $width): self
+    public function setDefaultColumnAlign(Align $defaultColumnAlign): self
     {
-        $this->width = $width;
+        $this->defaultColumnAlign = $defaultColumnAlign;
         return $this;
     }
 
     /* ****************************************************************************************** */
 
-    protected Align $align = Align::AUTO;
-
-    public function getAlign(): Align
-    {
-        return $this->align;
-    }
-
-    public function setAlign(Align $align): self
-    {
-        $this->align = $align;
-        return $this;
-    }
-
-    /* ****************************************************************************************** */
-
+    /** Max allowed width of the column. Content longer than `$maxWidth` will be automatically truncated */
     protected int $maxWidth = 0;
 
     protected function getMaxWidth(): int

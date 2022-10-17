@@ -12,15 +12,25 @@ declare(strict_types=1);
  * @link      https://github.com/MarcinOrlowski/php-ascii-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\AsciiTable\Renderers;
 
-use MarcinOrlowski\AsciiTable\Output\OutputContract;
+use MarcinOrlowski\AsciiTable\Align;
+use MarcinOrlowski\AsciiTable\AsciiTable;
+use MarcinOrlowski\AsciiTable\Cell;
+use MarcinOrlowski\AsciiTable\Column;
+use MarcinOrlowski\AsciiTable\ColumnsContainer;
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
+use MarcinOrlowski\AsciiTable\Output\WriterContract;
+use MarcinOrlowski\AsciiTable\Row;
 
-class Renderer
+class DefaultRenderer implements RendererContract
 {
-    /* ****************************************************************************************** */
-
-    public function render(AsciiTable $table, OutputContract $writer): void
+    /**
+     * @inheritDoc
+     *
+     * @throws ColumnKeyNotFound
+     */
+    public function render(AsciiTable $table, WriterContract $writer): void
     {
         $columns = $table->getColumns();
 
@@ -53,10 +63,18 @@ class Renderer
 
     /* ****************************************************************************************** */
 
+    /**
+     * @param ColumnsContainer $columns
+     * @param Row              $row Row to render
+     *
+     * @return string
+     *
+     * @throws ColumnKeyNotFound
+     */
     protected function renderRow(ColumnsContainer $columns, Row $row): string
     {
         $result = '';
-        $cells = $row->getCells();
+        $cells = $row->getContainer();
         $cnt = \count($cells);
         $columnOffset = 0;
         foreach (\array_keys($columns->toArray()) as $columnKey) {
@@ -70,7 +88,12 @@ class Renderer
                 $result .= self::HEADER_PAD_LEFT;
             }
 
-            $result .= $this->pad($columns, $columnKey, $cell->getValue());
+            // Using default column align
+            $align = $cell->getAlign() === Align::AUTO
+                ? $this->getColumnAlign($columns, $columnKey)
+                : $cell->getAlign();
+
+            $result .= $this->pad($columns, $columnKey, $cell->getValue(), $align);
 
             $result .= ($columnOffset === $cnt - 1)
                 ? self::HEADER_PAD_RIGHT
@@ -90,10 +113,16 @@ class Renderer
     protected const HEADER_PAD_CENTER = ' | ';
     protected const HEADER_PAD_RIGHT  = ' |';
 
+    /**
+     * @param ColumnsContainer $columns
+     *
+     * @return string
+     *
+     * @throws ColumnKeyNotFound
+     */
     protected function renderHeader(ColumnsContainer $columns): string
     {
         $result = '';
-
         $cnt = \count($columns);
         $columnOffset = 0;
         foreach ($columns as $columnKey => $column) {
@@ -105,8 +134,8 @@ class Renderer
                 $result .= self::HEADER_PAD_LEFT;
             }
 
-            $align = $this->getColumnTitleAlign($columns, $columnKey);
-            $result .= $this->pad($columns, $columnKey, $column->getTitle(), $align);
+            $titleAlign = $this->getColumnTitleAlign($columns, $columnKey);
+            $result .= $this->pad($columns, $columnKey, $column->getTitle(), $titleAlign);
 
             $result .= ($columnOffset === $cnt - 1)
                 ? self::HEADER_PAD_RIGHT
@@ -131,7 +160,7 @@ class Renderer
         $result = '';
         $cnt = \count($columns);
         $columnOffset = 0;
-        foreach ($columns as $columnKey => $column) {
+        foreach ($columns as $column) {
             /**
              * @var string|int $columnKey
              * @var Column     $column
@@ -156,6 +185,17 @@ class Renderer
 
     /* ****************************************************************************************** */
 
+    /**
+     * Pads given $value to fit column allowed width. If `$value` would exceed max allowed
+     * width, it will be truncated to fit. Returns aligned string.
+     *
+     * @param ColumnsContainer $columns   Table column definition container.
+     * @param string|int       $columnKey Column key we are going to populate.
+     * @param string           $value     Value to pad.
+     * @param Align|null       $align     Requested text alignment. If null, column's alignment will be used.
+     *
+     * @throws ColumnKeyNotFound
+     */
     protected function pad(ColumnsContainer $columns,
                            string|int       $columnKey,
                            string           $value,
@@ -163,7 +203,7 @@ class Renderer
     {
         // If no custom align specified, inherit column's default align.
         $align ??= $this->getColumnAlign($columns, $columnKey);
-        $maxWidth = $this->getColumnWidth($columns, $columnKey, $value);
+        $maxWidth = $this->getColumnWidth($columns, $columnKey);
 
         $padType = match ($align) {
             Align::RIGHT => \STR_PAD_LEFT,
@@ -184,20 +224,43 @@ class Renderer
 
     /* ****************************************************************************************** */
 
-    protected function getColumnWidth(ColumnsContainer $columns, string|int $columnIdx, string $value): int
+    /**
+     * Helper method returning width of column referenced by `$columnKey`.
+     *
+     * @param ColumnsContainer $columns   Table column definition container.
+     * @param string|int       $columnKey Column key we are going to populate.
+     *
+     * @throws ColumnKeyNotFound
+     */
+    protected function getColumnWidth(ColumnsContainer $columns, string|int $columnKey): int
     {
-        $columnMeta = $columns->get($columnIdx);
-        return $columnMeta->getWidth();
+        return $columns->get($columnKey)->getWidth();
     }
 
-    protected function getColumnAlign(ColumnsContainer $columns, string|int $columnIdx): Align
+    /**
+     * Helper method returning alignment of column referenced by `$columnKey`.
+     *
+     * @param ColumnsContainer $columns   Table column definition container.
+     * @param string|int       $columnKey Column key we are going to populate.
+     *
+     * @throws ColumnKeyNotFound
+     */
+    protected function getColumnAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
-        return $columns->get($columnIdx)->getAlign();
+        return $columns->get($columnKey)->getDefaultColumnAlign();
     }
 
-    protected function getColumnTitleAlign(ColumnsContainer $columns, string|int $columnIdx): Align
+    /**
+     * Helper method returning alignment of title string for colum referenced by `$columnKey`.
+     *
+     * @param ColumnsContainer $columns   Table column definition container.
+     * @param string|int       $columnKey Column key we are going to populate.
+     *
+     * @throws ColumnKeyNotFound
+     */
+    protected function getColumnTitleAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
-        return $columns->get($columnIdx)->getTitleAlign();
+        return $columns->get($columnKey)->getTitleAlign();
     }
     /* ****************************************************************************************** */
 

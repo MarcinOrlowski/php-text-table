@@ -12,20 +12,18 @@ declare(strict_types=1);
  * @link      https://github.com/MarcinOrlowski/php-ascii-table
  */
 
-namespace MarcinOrlowski\AsciiTable\Output\Writers;
+namespace MarcinOrlowski\AsciiTable\Renderers;
 
+use MarcinOrlowski\AsciiTable\AsciiTable;
 use MarcinOrlowski\AsciiTable\Output\WriterContract;
 
-class EchoWriter implements WriterContract
+interface RendererContract
 {
     /**
-     * @inheritDoc
+     * Renders provided `Table` using provided output writer.
+     *
+     * @param AsciiTable     $table  Instance of `AsciiTable` to render.
+     * @param WriterContract $writer Output writer to use.
      */
-    public function write(string|array $text = ''): void
-    {
-        foreach ((array)$text as $line) {
-            echo $line;
-        }
-    }
-
+    public function render(AsciiTable $table, WriterContract $writer): void;
 }

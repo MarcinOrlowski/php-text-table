@@ -14,94 +14,55 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
-use Traversable;
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
+use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
 
-class ColumnsContainer implements \Countable, \ArrayAccess, \IteratorAggregate, ArrayableContract
+class ColumnsContainer implements ContainerContract
 {
-    /** @var Column[] $columns */
-    protected array $columns = [];
+    use ArrayAccessTrait;
 
-    public function get(string|int $columnIdx): Column
+    /** @var Column[] $container */
+    protected array $container = [];
+
+    /**
+     * Returns instance of `Column` for given key, or throws exception is no such column exists.
+     *
+     * @param string|int $columnKey Column key we are going to populate.
+     *
+     * @throws ColumnKeyNotFound
+     */
+    public function get(string|int $columnKey): Column
     {
-        if (!$this->columnExists($columnIdx)) {
-            throw new \OutOfBoundsException("Unknown column index: {$columnIdx}");
+        if (!$this->offsetExists($columnKey)) {
+            throw new ColumnKeyNotFound("Unknown column key: {$columnKey}");
         }
-        return $this->columns[ $columnIdx ];
+        return $this->container[ $columnKey ];
     }
 
-    public function columnExists(string|int $columnIdx): bool
+    /**
+     * Adds new column definition to the container.
+     *
+     * @param string|int $columnKey Column key we are going to populate.
+     * @param Column     $column
+     *
+     * @return self
+     *
+     * @throws \MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound
+     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey
+     */
+    public function add(string|int $columnKey, Column $column): self
     {
-        return \array_key_exists($columnIdx, $this->columns);
-    }
-
-    public function add(string|int $columnIdx, Column $column): self
-    {
-        if (\array_key_exists($columnIdx, $this->columns)) {
-            throw new \InvalidArgumentException("Column index already exists: {$columnIdx}");
+        if ($this->offsetExists($columnKey)) {
+            throw new DuplicateColumnKey("Column index already exists: {$columnKey}");
         }
 
-        $this->columns[ $columnIdx ] = $column;
+        $this->container[ $columnKey ] = $column;
 
-        $this->get($columnIdx)->updateMaxWidth(\strlen($column->getTitle()));
+        $this->get($columnKey)->updateMaxWidth(\strlen($column->getTitle()));
 
         return $this;
     }
 
     /* ****************************************************************************************** */
-
-    public function count(): int
-    {
-        return \count($this->columns);
-    }
-
-    /* ****************************************************************************************** */
-
-    public function offsetExists(mixed $offset): bool
-    {
-        /** @var string|int $offset */
-        return \array_key_exists($offset, $this->columns);
-    }
-
-    /**
-     * @return Column
-     */
-    public function offsetGet(mixed $offset): mixed
-    {
-        /** @var string|int $offset */
-        return $this->columns[ $offset ];
-    }
-
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        if (!($value instanceof Column)) {
-            throw new \InvalidArgumentException('Invalid column type: ' . \get_debug_type($value));
-        }
-
-        if ($offset === null) {
-            $this->columns[] = $value;
-        } else {
-            /** @var string|int $offset */
-            $this->columns[ $offset ] = $value;
-        }
-    }
-
-    public function offsetUnset(mixed $offset): void
-    {
-        /** @var string|int $offset */
-        unset($this->columns[ $offset ]);
-    }
-
-    /* ****************************************************************************************** */
-
-    public function getIterator(): Traversable
-    {
-        return new \ArrayIterator($this->columns);
-    }
-
-    /* ****************************************************************************************** */
-
-    public function toArray(): array
-    {
-        return $this->columns;
-    }
 }
