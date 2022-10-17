@@ -14,12 +14,8 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
-interface OutputContract
+interface ArrayableContract
 {
-    /**
-     * @param string|string[] $text
-     * @param string          $end
-     */
-    public function write(string|array $text = '', string $end = PHP_EOL): void;
+    public function toArray(): array;
 
 }

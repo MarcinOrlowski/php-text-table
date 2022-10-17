@@ -16,7 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 use Traversable;
 
-class Cells implements \ArrayAccess, \Countable, \IteratorAggregate
+class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, ArrayableContract
 {
     /** @var Cell[] $cells */
     protected array $cells = [];
@@ -29,6 +29,14 @@ class Cells implements \ArrayAccess, \Countable, \IteratorAggregate
 
         $this->cells[ $columnKey ] = $cell;
         return $this;
+    }
+
+    public function get(string|int $columnKey): Cell
+    {
+        if (!$this->offsetExists($columnKey)) {
+            throw new \OutOfBoundsException("Unknown column key: {$columnKey}");
+        }
+        return $this->cells[ $columnKey ];
     }
 
     /* ****************************************************************************************** */
@@ -80,5 +88,12 @@ class Cells implements \ArrayAccess, \Countable, \IteratorAggregate
     public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->cells);
+    }
+
+    /* ****************************************************************************************** */
+
+    public function toArray(): array
+    {
+        return $this->cells;
     }
 }
