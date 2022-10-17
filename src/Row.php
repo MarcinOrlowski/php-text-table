@@ -57,7 +57,7 @@ class Row implements ContainerContract
         if (!($cell instanceof Cell)) {
             $cell = new Cell($cell, $align);
         }
-        $this->cells->add($columnKey, $cell);
+        $this->getCells()->add($columnKey, $cell);
 
         return $this;
     }
@@ -67,7 +67,7 @@ class Row implements ContainerContract
     /** @inheritDoc */
     public function count(): int
     {
-        return $this->cells->count();
+        return $this->getCells()->count();
     }
 
     /* ****************************************************************************************** */
@@ -76,14 +76,14 @@ class Row implements ContainerContract
     public function offsetExists(mixed $offset): bool
     {
         /** @var string|int $offset */
-        return $this->cells->offsetExists($offset);
+        return $this->getCells()->offsetExists($offset);
     }
 
     /** @inheritDoc */
     public function offsetGet(mixed $offset): mixed
     {
         /** @var string|int $offset */
-        return $this->cells->offsetGet($offset);
+        return $this->getCells()->offsetGet($offset);
     }
 
     /**
@@ -99,14 +99,14 @@ class Row implements ContainerContract
         }
 
         /** @var string|int $offset */
-        $this->cells->offsetSet($offset, $value);
+        $this->getCells()->offsetSet($offset, $value);
     }
 
     /** @inheritDoc */
     public function offsetUnset(mixed $offset): void
     {
         /** @var string|int $offset */
-        $this->cells->offsetUnset($offset);
+        $this->getCells()->offsetUnset($offset);
     }
 
     /* ****************************************************************************************** */
@@ -114,7 +114,7 @@ class Row implements ContainerContract
     /** @inheritDoc */
     public function getIterator(): Traversable
     {
-        return $this->cells->getIterator();
+        return $this->getCells()->getIterator();
     }
 
 
@@ -123,6 +123,6 @@ class Row implements ContainerContract
     /** @inheritDoc */
     public function toArray(): array
     {
-        return $this->cells;
+        return $this->getCells();
     }
 }
