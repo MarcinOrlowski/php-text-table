@@ -16,6 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Output\OutputContract;
 use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
+use MarcinOrlowski\AsciiTable\Renderers\DefaultRenderer;
 
 class AsciiTable
 {
@@ -206,7 +207,7 @@ class AsciiTable
             $writer = new EchoWriter();
         }
 
-        $renderer = new Renderer();
+        $renderer = new DefaultRenderer();
         $renderer->render($this, $writer);
     }
 

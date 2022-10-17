@@ -12,14 +12,19 @@ declare(strict_types=1);
  * @link      https://github.com/MarcinOrlowski/php-ascii-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\AsciiTable\Renderers;
 
+use MarcinOrlowski\AsciiTable\Align;
+use MarcinOrlowski\AsciiTable\AsciiTable;
+use MarcinOrlowski\AsciiTable\Cell;
+use MarcinOrlowski\AsciiTable\Column;
+use MarcinOrlowski\AsciiTable\ColumnsContainer;
 use MarcinOrlowski\AsciiTable\Output\OutputContract;
+use MarcinOrlowski\AsciiTable\Row;
 
-class Renderer
+class DefaultRenderer implements RendererContract
 {
-    /* ****************************************************************************************** */
-
+    /** @inheritDoc */
     public function render(AsciiTable $table, OutputContract $writer): void
     {
         $columns = $table->getColumns();
