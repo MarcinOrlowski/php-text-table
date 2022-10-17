@@ -2,7 +2,7 @@
     "name": "marcin-orlowski/ascii-table",
     "description": "Fast and flexible PHP library rendering plain ASCII tables.",
     "homepage": "https://github.com/MarcinOrlowski/php-ascii-table",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "keywords": [
         "php",
         "php8",
