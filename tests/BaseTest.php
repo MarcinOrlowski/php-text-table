@@ -13,11 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 class BaseTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     protected function render(AsciiTable $table): array
     {
         $bufferWriter = new BufferWriter();
@@ -33,6 +28,8 @@ class BaseTest extends TestCase
             return $line;
         }, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testSimpleTable(): void
     {
@@ -60,6 +57,8 @@ class BaseTest extends TestCase
 
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testMultiRowTable(): void
     {
@@ -93,6 +92,8 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    /* ****************************************************************************************** */
+
     public function testCustomColumnKeys(): void
     {
         $key1 = Generator::getRandomString('key1');
@@ -123,6 +124,8 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    /* ****************************************************************************************** */
+
     public function testCustomIndex()
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
@@ -143,6 +146,8 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    /* ****************************************************************************************** */
+
     public function testRowCellsAutoAssign()
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
@@ -161,6 +166,8 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    /* ****************************************************************************************** */
+
     public function testTableColumnAutoKey()
     {
         $table = new AsciiTable(['ID', new Column('SCORE')]);
@@ -178,6 +185,8 @@ class BaseTest extends TestCase
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testColumnAlign(): void
     {
@@ -202,6 +211,8 @@ class BaseTest extends TestCase
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testCustomWidth(): void
     {
@@ -289,6 +300,8 @@ class BaseTest extends TestCase
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
+
+    /* ****************************************************************************************** */
 
     public function testNoData(): void
     {
