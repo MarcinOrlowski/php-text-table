@@ -43,14 +43,15 @@ class Renderer
 
     /* ****************************************************************************************** */
 
-    protected function renderRow(Columns $columns, Row $row): string
+    protected function renderRow(ColumnsContainer $columns, Row $row): string
     {
         $result = '';
-
         $cells = $row->getCells();
         $cnt = \count($cells);
         $columnOffset = 0;
-        foreach ($cells as $columnKey => $cell) {
+        foreach (\array_keys($columns->toArray()) as $columnKey) {
+            $cell = $cells->get($columnKey);
+
             /**
              * @var string|int $columnKey
              * @var Cell       $cell
@@ -77,7 +78,7 @@ class Renderer
     protected const HEADER_PAD_CENTER = ' | ';
     protected const HEADER_PAD_RIGHT  = ' |';
 
-    protected function renderHeader(Columns $columns): string
+    protected function renderHeader(ColumnsContainer $columns): string
     {
         $result = '';
 
@@ -86,7 +87,7 @@ class Renderer
         foreach ($columns as $columnKey => $column) {
             /**
              * @var string|int $columnKey
-             * @var Column       $column
+             * @var Column     $column
              */
             if ($columnOffset === 0) {
                 $result .= self::HEADER_PAD_LEFT;
@@ -110,7 +111,7 @@ class Renderer
     protected const HEADER_SEGMENT_CENTER = '-+-';
     protected const HEADER_SEGMENT_RIGHT  = '-+';
 
-    protected function renderSeparator(Columns $columns): string
+    protected function renderSeparator(ColumnsContainer $columns): string
     {
         $result = '';
         $cnt = \count($columns);
@@ -138,7 +139,7 @@ class Renderer
 
     /* ****************************************************************************************** */
 
-    protected function pad(Columns $columns, string|int $columnKey, string $value): string
+    protected function pad(ColumnsContainer $columns, string|int $columnKey, string $value): string
     {
         $width = $this->getColumnWidth($columns, $columnKey, $value);
         $align = $this->getColumnAlign($columns, $columnKey);
@@ -162,13 +163,13 @@ class Renderer
 
     /* ****************************************************************************************** */
 
-    protected function getColumnWidth(Columns $columns, string|int $columnIdx, string $value): int
+    protected function getColumnWidth(ColumnsContainer $columns, string|int $columnIdx, string $value): int
     {
         $columnMeta = $columns->get($columnIdx);
         return \max($columnMeta->getWidth(), \strlen($value));
     }
 
-    protected function getColumnAlign(Columns $columns, string|int $columnIdx): Align
+    protected function getColumnAlign(ColumnsContainer $columns, string|int $columnIdx): Align
     {
         return $columns->get($columnIdx)->getAlign();
     }

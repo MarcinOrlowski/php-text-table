@@ -31,6 +31,14 @@ class CellsContainer implements \ArrayAccess, \Countable, \IteratorAggregate, Ar
         return $this;
     }
 
+    public function get(string|int $columnKey): Cell
+    {
+        if (!$this->offsetExists($columnKey)) {
+            throw new \OutOfBoundsException("Unknown column key: {$columnKey}");
+        }
+        return $this->cells[ $columnKey ];
+    }
+
     /* ****************************************************************************************** */
 
     public function count(): int

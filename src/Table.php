@@ -20,14 +20,14 @@ class Table
 
     public function __construct(array $headerColumns = [])
     {
-        $this->init();
-        $this->addColumns($headerColumns);
+        $this->init($headerColumns);
     }
 
-    public function init(): self
+    public function init(array $headerColumns = []): self
     {
-        $this->columns = new Columns();
-        $this->rows = new Rows();
+        $this->columns = new ColumnsContainer();
+        $this->rows = new RowsContainer();
+        $this->addColumns($headerColumns);
 
         return $this;
     }
@@ -35,13 +35,13 @@ class Table
     /* ****************************************************************************************** */
 
     /** Table column definitions and meta data */
-    protected Columns $columns;
+    protected ColumnsContainer $columns;
 
     /* ****************************************************************************************** */
 
-    protected Rows $rows;
+    protected RowsContainer $rows;
 
-    public function getRows(): Rows
+    public function getRows(): RowsContainer
     {
         return $this->rows;
     }
@@ -127,12 +127,10 @@ class Table
         return $this;
     }
 
-    public function getColumns(): Columns
+    public function getColumns(): ColumnsContainer
     {
         return $this->columns;
     }
-
-    /* ****************************************************************************************** */
 
     public function render(OutputContract $writer): void
     {

@@ -57,20 +57,7 @@ class BaseTest extends TestCase
             'C',
         ]);
 
-
         $rowCnt = Generator::getRandomInt(2, 10);
-
-        for ($i = 0; $i < $rowCnt; $i++) {
-            $table->addRow([
-                'A' => "a",
-                'B' => "b",
-                'C' => "c",
-            ]);
-        }
-
-        $table->render($this->bufferWriter);
-
-        $result = $this->bufferWriter->getBuffer();
 
         $expected = [
             '+---+---+---+',
@@ -79,13 +66,50 @@ class BaseTest extends TestCase
         ];
 
         for ($i = 0; $i < $rowCnt; $i++) {
+            $table->addRow([
+                'A' => "a",
+                'B' => "b",
+                'C' => "c",
+            ]);
             $expected[] = '| a | b | c |';
         }
-
         $expected[] = '+---+---+---+';
+
+        $table->render($this->bufferWriter);
+        $result = $this->bufferWriter->getBuffer();
 
         Assert::assertEquals($rowCnt, $table->getRowCount());
         Assert::assertEquals($expected, $result);
     }
 
+    public function testCustomColumnKeys(): void
+    {
+        $key1 = Generator::getRandomString('key1');
+        $key2 = Generator::getRandomString('key2');
+        $key3 = Generator::getRandomString('key3');
+        $table = new Table();
+        $table->addColumns([
+            $key1 => 'A',
+            $key2 => 'B',
+            $key3 => 'C',
+        ]);
+        $table->addRow([
+            $key3 => 'c',
+            $key2 => 'b',
+            $key1 => 'a',
+        ]);
+
+        $table->render($this->bufferWriter);
+        $result = $this->bufferWriter->getBuffer();
+
+        $expected = [
+            '+---+---+---+',
+            '| A | B | C |',
+            '+---+---+---+',
+            '| a | b | c |',
+            '+---+---+---+',
+        ];
+
+        Assert::assertEquals($expected, $result);
+    }
 }
