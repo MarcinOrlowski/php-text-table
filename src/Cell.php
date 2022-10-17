@@ -17,11 +17,9 @@ namespace MarcinOrlowski\AsciiTable;
 class Cell
 {
     public function __construct(\Stringable|string|int $value,
-                                Align                  $align = Align::AUTO,
-                                Span|int               $columnSpan = Span::NONE)
+                                Align                  $align = Align::AUTO)
     {
         $this->setValue($value);
-        $this->setColumnSpan($columnSpan);
         $this->setAlign($align);
     }
 
@@ -42,21 +40,6 @@ class Cell
             $value = (string)$value;
         }
         $this->value = $value;
-        return $this;
-    }
-
-    /* ****************************************************************************************** */
-
-    protected Span|int $columnSpan = Span::NONE;
-
-    public function getColumnSpan(): Span|int
-    {
-        return $this->columnSpan;
-    }
-
-    protected function setColumnSpan(Span|int $columnSpan): self
-    {
-        $this->columnSpan = $columnSpan;
         return $this;
     }
 

@@ -52,11 +52,10 @@ class Row implements \ArrayAccess, \IteratorAggregate
 
     public function addCell(string|int      $columnKey,
                             Cell|string|int $cell,
-                            Align           $align = Align::AUTO,
-                            Span|int        $columnSpan = Span::NONE): self
+                            Align           $align = Align::AUTO): self
     {
         if (!($cell instanceof Cell)) {
-            $cell = new Cell($cell, $align, $columnSpan);
+            $cell = new Cell($cell, $align);
         }
         $this->cells->add($columnKey, $cell);
 
