@@ -16,8 +16,8 @@ namespace MarcinOrlowski\AsciiTable;
 
 class Cell
 {
-    public function __construct(\Stringable|string|int $value,
-                                Align                  $align = Align::AUTO)
+    public function __construct(\Stringable|string|int|float|bool|null $value,
+                                Align                                  $align = Align::AUTO)
     {
         $this->setValue($value);
         $this->setAlign($align);
@@ -25,6 +25,7 @@ class Cell
 
     /* ****************************************************************************************** */
 
+    /** String representation of cell's value. */
     protected string $value;
 
     public function getValue(): string
@@ -32,13 +33,20 @@ class Cell
         return $this->value;
     }
 
-    protected function setValue(\Stringable|string|int $value): self
+    protected function setValue(\Stringable|string|int|float|bool|null $value): self
     {
-        if ($value instanceof \Stringable) {
+        if ($value === null) {
+            $value = 'NULL';
+        } elseif ($value instanceof \Stringable) {
             $value = $value->__toString();
         } elseif (\is_int($value)) {
             $value = (string)$value;
+        } elseif (\is_bool($value)) {
+            $value = $value ? 'TRUE' : 'FALSE';
+        } elseif (\is_float($value)) {
+            $value = (string)$value;
         }
+
         $this->value = $value;
         return $this;
     }
