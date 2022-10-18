@@ -50,7 +50,7 @@ class Column
     protected function setTitle(string $title): self
     {
         $this->title = $title;
-        $this->updateMaxWidth(\strlen($title));
+        $this->updateMaxWidth(\mb_strlen($title));
 
         return $this;
     }

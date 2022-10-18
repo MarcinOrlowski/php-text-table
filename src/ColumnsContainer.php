@@ -59,7 +59,7 @@ class ColumnsContainer implements ContainerContract
 
         $this->container[ $columnKey ] = $column;
 
-        $this->get($columnKey)->updateMaxWidth(\strlen($column->getTitle()));
+        $this->get($columnKey)->updateMaxWidth(\mb_strlen($column->getTitle()));
 
         return $this;
     }

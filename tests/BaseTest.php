@@ -26,8 +26,8 @@ class BaseTest extends TestCase
         // Strip trailing PHP_EOL to make comparing results
         // in tests easier.
         return \array_map(static function(string $line) {
-            if (\substr($line, -1) === PHP_EOL) {
-                $line = \substr($line, 0, -1);
+            if (\mb_substr($line, -1, null, 'utf-8') === PHP_EOL) {
+                $line = \mb_substr($line, 0, -1, 'utf-8');
             }
             return $line;
         }, $renderedTable);
@@ -268,6 +268,32 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    public function testCustomWidthAndUtf(): void
+    {
+        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table->addRows([
+            [1, 'Foo', 12],
+            [2, 'PBOX POH Poříčí (Restaura)', 15],
+        ]);
+
+        $table->setColumnWidth('ID', 10);
+        $table->setColumnWidth('NAME', 15);
+        $table->setColumnWidth('SCORE', 4);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+------------+-----------------+------+',
+            '| ID         | NAME            | SCO… |',
+            '+------------+-----------------+------+',
+            '| 1          | Foo             | 12   |',
+            '| 2          | PBOX POH Poříč… | 15   |',
+            '+------------+-----------------+------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+
     public function testCustomWidthAndAlign(): void
     {
         $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
@@ -305,7 +331,7 @@ class BaseTest extends TestCase
         $maxLength = Generator::getRandomInt(10, 20);
         $longName = Generator::getRandomString('name', $maxLength * 2);
 
-        $clipped = substr($longName, 0, $maxLength - 1) . '…';
+        $clipped = \mb_substr($longName, 0, $maxLength - 1, 'utf-8') . '…';
 
         $key = 'NAME';
 
@@ -322,7 +348,7 @@ class BaseTest extends TestCase
 
         $expected = [
             \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
-            \sprintf('| %s%s |', $key, \str_repeat(' ', $maxLength - \strlen($key))),
+            \sprintf('| %s%s |', $key, \str_repeat(' ', $maxLength - \mb_strlen($key))),
             \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
             "| {$clipped} |",
             \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
@@ -353,7 +379,7 @@ class BaseTest extends TestCase
 
         $expected = [
             \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
-            \sprintf('| %s%s |', $key, \str_repeat(' ', $maxLength - \strlen($key))),
+            \sprintf('| %s%s |', $key, \str_repeat(' ', $maxLength - \mb_strlen($key))),
             \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
             \sprintf('| %s |', $this->formatNoData($maxLength)),
             \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
@@ -365,7 +391,7 @@ class BaseTest extends TestCase
     {
         $maxLength = Generator::getRandomInt(10, 20);
         $key = Generator::getRandomString('name', $maxLength * 2);
-        $clipped = \substr($key, 0, $maxLength - 1) . '…';
+        $clipped = \mb_substr($key, 0, $maxLength - 1, 'utf-8') . '…';
 
         $table = new AsciiTable([$key]);
         $table->setColumnWidth($key, $maxLength);
@@ -385,8 +411,8 @@ class BaseTest extends TestCase
     protected function formatNoData(int $maxLength): string
     {
         $noDataLabel = 'NO DATA';
-        if (\strlen($noDataLabel) > $maxLength) {
-            $noDataLabel = substr($noDataLabel, 0, $maxLength - 1) . '…';
+        if (\mb_strlen($noDataLabel) > $maxLength) {
+            $noDataLabel = \mb_substr($noDataLabel, 0, $maxLength - 1, 'utf-8') . '…';
         } else {
             $noDataLabel = \str_pad($noDataLabel, $maxLength, ' ', \STR_PAD_BOTH);
         }

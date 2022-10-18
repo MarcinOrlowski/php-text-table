@@ -204,7 +204,7 @@ class AsciiTable
              */
             // Stretch the column width (if needed and possible) to fit the cell content.
             $columnMeta = $this->columns->get($columnKey);
-            $columnMeta->updateMaxWidth(\strlen($cell->getValue()));
+            $columnMeta->updateMaxWidth(\mb_strlen($cell->getValue()));
         }
 
         $this->rows[] = $row;
