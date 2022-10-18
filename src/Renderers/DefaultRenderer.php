@@ -55,7 +55,7 @@ class DefaultRenderer implements RendererContract
                 $label = \str_pad($label, $table->getTotalWidth(), ' ', \STR_PAD_BOTH);
 
             }
-            $noData = \sprintf('| %s |', $label);
+            $noData = \sprintf('| %s |' . PHP_EOL, $label);
             $writer->write($noData);
         }
         $writer->write($sep);
