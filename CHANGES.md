@@ -6,8 +6,8 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ## Changes
 
-* 1.3.1 (2022-10-18)
-  * Corrected handling of multibyte characters.
+* 1.4.0 (2022-10-18)
+  * Corrected handling of multibyte characters (UTF-8).
   * Fixed 'NO DATA' case being rendered in too narow cell.
 
 * 1.3.0 (2022-10-18)
@@ -16,7 +16,7 @@ Fast and flexible PHP library rendering plain ASCII tables.
   * Added own exceptions for most critical errors.
   * Added support for individual cell alignment.
   * Added more tests.
-  
+
 
 * v1.2.0 (2022-10-17)
   * Main class name changed to `AsciiTable`.
