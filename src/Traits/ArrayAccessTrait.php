@@ -31,16 +31,6 @@ trait ArrayAccessTrait
     /* ****************************************************************************************** */
 
     /** @inheritDoc */
-    public function getIterator(): Traversable
-    {
-        return $this->container instanceof Traversable
-            ? $this->container->getIterator()
-            : new \ArrayIterator($this->container);
-    }
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
     public function offsetExists(mixed $offset): bool
     {
         /** @var string|int $offset */

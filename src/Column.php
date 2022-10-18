@@ -19,12 +19,14 @@ class Column
     public function __construct(string $title,
                                 Align  $align = Align::AUTO,
                                 int    $maxWidth = 0,
-                                Align  $titleAlign = Align::AUTO)
+                                Align  $titleAlign = Align::AUTO,
+                                bool   $visible = true)
     {
         $this->setTitle($title);
         $this->setMaxWidth($maxWidth);
         $this->setDefaultColumnAlign($align);
         $this->setTitleAlign($titleAlign);
+        $this->setVisibility($visible);
     }
 
     /* ****************************************************************************************** */
@@ -111,6 +113,31 @@ class Column
         if ($width > $this->maxWidth) {
             $this->maxWidth = $width;
         }
+        return $this;
+    }
+
+    /* ****************************************************************************************** */
+
+    protected bool $visible = true;
+
+    public function isVisible(): bool
+    {
+        return $this->visible;
+    }
+
+    public function hide(): self
+    {
+        return $this->setVisibility(false);
+    }
+
+    public function show(): self
+    {
+        return $this->setVisibility(true);
+    }
+
+    protected function setVisibility(bool $visible): self
+    {
+        $this->visible = $visible;
         return $this;
     }
 

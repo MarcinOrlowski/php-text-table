@@ -16,10 +16,12 @@ namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
 use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
+use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
 
 class Row implements ContainerContract
 {
     use ArrayAccessTrait;
+    use IteratorAggregateTrait;
 
     /**
      * @param array|null $cells Optional list of cells to be added to the newly created row.

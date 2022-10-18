@@ -88,7 +88,7 @@ class AsciiTable
                 \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnKey));
         }
 
-        $this->columns->add($columnKey, $columnVal);
+        $this->columns->addColumn($columnKey, $columnVal);
 
         return $this;
     }
@@ -203,7 +203,7 @@ class AsciiTable
              * @var Cell       $cell
              */
             // Stretch the column width (if needed and possible) to fit the cell content.
-            $columnMeta = $this->columns->get($columnKey);
+            $columnMeta = $this->columns->getColumn($columnKey);
             $columnMeta->updateMaxWidth(\mb_strlen($cell->getValue()));
         }
 
@@ -248,6 +248,11 @@ class AsciiTable
         $renderer->render($this, $writer);
     }
 
+    public function getColumn(string $columnKey): Column
+    {
+        return $this->columns->getColumn($columnKey);
+    }
+
     /**
      * @param string|int $columnKey Unique column key to be assigned to this column
      * @param Align      $align
@@ -258,7 +263,7 @@ class AsciiTable
      */
     public function setDefaultColumnAlign(string|int $columnKey, Align $align): self
     {
-        $this->columns->get($columnKey)->setDefaultColumnAlign($align);
+        $this->columns->getColumn($columnKey)->setDefaultColumnAlign($align);
 
         return $this;
     }
@@ -268,12 +273,38 @@ class AsciiTable
      * @param int        $width
      *
      * @return self
+     */
+    public function setColumnMaxWidth(string|int $columnKey, int $width): self
+    {
+        $this->columns->getColumn($columnKey)->setMaxWidth($width);
+
+        return $this;
+    }
+
+    /**
+     * @param string|int $columnKey Key of the column to be hidden. Hidding hidden column has no effect.
+     *
+     * @return $this
      *
      * @throws ColumnKeyNotFound
      */
-    public function setColumnWidth(string|int $columnKey, int $width): self
+    public function hideColumn(string|int $columnKey): self
     {
-        $this->columns->get($columnKey)->setMaxWidth($width);
+        $this->columns->getColumn($columnKey)->hide();
+
+        return $this;
+    }
+
+    /**
+     * @param string|int $columnKey Key of the column to be shown. Showing visible column has no effect.
+     *
+     * @return $this
+     *
+     * @throws ColumnKeyNotFound
+     */
+    public function showColumn(string|int $columnKey): self
+    {
+        $this->columns->getColumn($columnKey)->hide();
 
         return $this;
     }

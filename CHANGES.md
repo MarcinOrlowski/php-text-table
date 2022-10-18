@@ -6,9 +6,14 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ## Changes
 
+* 1.5.0 (2022-10-18)
+  * Columns can now be hidden from the rendered output. 
+
+
 * 1.4.0 (2022-10-18)
   * Corrected handling of multibyte characters (UTF-8).
   * Fixed 'NO DATA' case being rendered in too narrow cell.
+
 
 * 1.3.0 (2022-10-18)
   * Improved code documentation.
