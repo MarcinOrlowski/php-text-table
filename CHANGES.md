@@ -8,7 +8,7 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 * 1.4.0 (2022-10-18)
   * Corrected handling of multibyte characters (UTF-8).
-  * Fixed 'NO DATA' case being rendered in too narow cell.
+  * Fixed 'NO DATA' case being rendered in too narrow cell.
 
 * 1.3.0 (2022-10-18)
   * Improved code documentation.

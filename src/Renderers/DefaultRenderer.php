@@ -22,6 +22,7 @@ use MarcinOrlowski\AsciiTable\ColumnsContainer;
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Output\WriterContract;
 use MarcinOrlowski\AsciiTable\Row;
+use MarcinOrlowski\AsciiTable\Utils\StringUtils;
 
 class DefaultRenderer implements RendererContract
 {
@@ -50,9 +51,9 @@ class DefaultRenderer implements RendererContract
         } else {
             $label = 'NO DATA';
             if (\mb_strlen($label) > $table->getTotalWidth()) {
-                $label = \mb_substr($label, 0, $table->getTotalWidth() - 1, 'utf-8') . '…';
+                $label = \mb_substr($label, 0, $table->getTotalWidth() - 1) . '…';
             } else {
-                $label = \str_pad($label, $table->getTotalWidth(), ' ', \STR_PAD_BOTH);
+                $label = StringUtils::pad($label, $table->getTotalWidth(), ' ', \STR_PAD_BOTH);
 
             }
             $noData = \sprintf('| %s |' . PHP_EOL, $label);
@@ -85,7 +86,7 @@ class DefaultRenderer implements RendererContract
              * @var Cell       $cell
              */
             if ($columnOffset === 0) {
-                $result .= self::HEADER_PAD_LEFT;
+                $result .= self::HEADER_BORDER_LEFT;
             }
 
             // Using default column align
@@ -96,8 +97,8 @@ class DefaultRenderer implements RendererContract
             $result .= $this->pad($columns, $columnKey, $cell->getValue(), $align);
 
             $result .= ($columnOffset === $cnt - 1)
-                ? self::HEADER_PAD_RIGHT
-                : self::HEADER_PAD_CENTER;
+                ? self::HEADER_BORDER_RIGHT
+                : self::HEADER_BORDER_CENTER;
 
             $columnOffset++;
         }
@@ -109,9 +110,9 @@ class DefaultRenderer implements RendererContract
 
     /* ****************************************************************************************** */
 
-    protected const HEADER_PAD_LEFT   = '| ';
-    protected const HEADER_PAD_CENTER = ' | ';
-    protected const HEADER_PAD_RIGHT  = ' |';
+    protected const HEADER_BORDER_LEFT   = '| ';
+    protected const HEADER_BORDER_CENTER = ' | ';
+    protected const HEADER_BORDER_RIGHT  = ' |';
 
     /**
      * @param ColumnsContainer $columns
@@ -131,15 +132,15 @@ class DefaultRenderer implements RendererContract
              * @var Column     $column
              */
             if ($columnOffset === 0) {
-                $result .= self::HEADER_PAD_LEFT;
+                $result .= self::HEADER_BORDER_LEFT;
             }
 
             $titleAlign = $this->getColumnTitleAlign($columns, $columnKey);
             $result .= $this->pad($columns, $columnKey, $column->getTitle(), $titleAlign);
 
             $result .= ($columnOffset === $cnt - 1)
-                ? self::HEADER_PAD_RIGHT
-                : self::HEADER_PAD_CENTER;
+                ? self::HEADER_BORDER_RIGHT
+                : self::HEADER_BORDER_CENTER;
 
             $columnOffset++;
         }
@@ -219,7 +220,7 @@ class DefaultRenderer implements RendererContract
             $value = \mb_substr($value, 0, $maxWidth - 1,  'utf-8') . '…';
         }
 
-        return \str_pad($value, $maxWidth, ' ', $padType);
+        return StringUtils::pad($value, $maxWidth, ' ', $padType);
     }
 
     /* ****************************************************************************************** */

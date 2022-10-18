@@ -9,6 +9,7 @@ use MarcinOrlowski\AsciiTable\AsciiTable;
 use MarcinOrlowski\AsciiTable\Cell;
 use MarcinOrlowski\AsciiTable\Column;
 use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
+use MarcinOrlowski\AsciiTable\Utils\StringUtils;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
@@ -26,8 +27,8 @@ class BaseTest extends TestCase
         // Strip trailing PHP_EOL to make comparing results
         // in tests easier.
         return \array_map(static function(string $line) {
-            if (\mb_substr($line, -1, null, 'utf-8') === PHP_EOL) {
-                $line = \mb_substr($line, 0, -1, 'utf-8');
+            if (\mb_substr($line, -1) === PHP_EOL) {
+                $line = \mb_substr($line, 0, -1);
             }
             return $line;
         }, $renderedTable);
@@ -293,6 +294,32 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    public function testCustomWidthAndUtfMulticolumn(): void
+    {
+        // Create display table
+        $table = new AsciiTable([
+            new Column('NAME', maxWidth: 25),
+        ]);
+
+        $table->addRows([
+            ['Řídící depo Praha 704'],
+            ['Oční optika M. Ečerová'],
+            ['AKY chovatelské potřeby a krmiva'],
+        ]);
+
+        $renderedTable = $this->render($table);
+        $expected = [
+            '+----------------------------------+',
+            '| NAME                             |',
+            '+----------------------------------+',
+            '| Řídící depo Praha 704            |',
+            '| Oční optika M. Ečerová           |',
+            '| AKY chovatelské potřeby a krmiva |',
+            '+----------------------------------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
 
     public function testCustomWidthAndAlign(): void
     {
@@ -331,7 +358,7 @@ class BaseTest extends TestCase
         $maxLength = Generator::getRandomInt(10, 20);
         $longName = Generator::getRandomString('name', $maxLength * 2);
 
-        $clipped = \mb_substr($longName, 0, $maxLength - 1, 'utf-8') . '…';
+        $clipped = \mb_substr($longName, 0, $maxLength - 1) . '…';
 
         $key = 'NAME';
 
@@ -347,11 +374,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->render($table);
 
         $expected = [
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
+            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
             \sprintf('| %s%s |', $key, \str_repeat(' ', $maxLength - \mb_strlen($key))),
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
+            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
             "| {$clipped} |",
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
+            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -379,7 +406,7 @@ class BaseTest extends TestCase
     {
         $maxLength = Generator::getRandomInt(10, 20);
         $key = Generator::getRandomString('name', $maxLength * 2);
-        $clipped = \mb_substr($key, 0, $maxLength - 1, 'utf-8') . '…';
+        $clipped = \mb_substr($key, 0, $maxLength - 1) . '…';
 
         $table = new AsciiTable([$key]);
         $table->setColumnWidth($key, $maxLength);
@@ -387,11 +414,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->render($table);
 
         $expected = [
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
+            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
             \sprintf('| %s |', $clipped),
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
+            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
             \sprintf('| %s |', $this->formatNoData($maxLength)),
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
+            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -400,9 +427,9 @@ class BaseTest extends TestCase
     {
         $noDataLabel = 'NO DATA';
         if (\mb_strlen($noDataLabel) > $maxLength) {
-            $noDataLabel = \mb_substr($noDataLabel, 0, $maxLength - 1, 'utf-8') . '…';
+            $noDataLabel = \mb_substr($noDataLabel, 0, $maxLength - 1) . '…';
         } else {
-            $noDataLabel = \str_pad($noDataLabel, $maxLength, ' ', \STR_PAD_BOTH);
+            $noDataLabel = StringUtils::pad($noDataLabel, $maxLength, ' ', \STR_PAD_BOTH);
         }
 
         return $noDataLabel;
