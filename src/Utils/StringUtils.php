@@ -26,7 +26,7 @@ class StringUtils
      *
      * @return string
      */
-    public static function pad(string $str, int $len, string $pad, int $align = \STR_PAD_RIGHT): string
+    public static function pad(string $str, int $len, string $pad = ' ', int $align = \STR_PAD_RIGHT): string
     {
         $strLen = \mb_strlen($str);
         if ($strLen >= $len) {
