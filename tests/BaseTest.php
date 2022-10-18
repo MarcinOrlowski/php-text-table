@@ -360,29 +360,17 @@ class BaseTest extends TestCase
 
     public function testNoData(): void
     {
-        $maxLength = Generator::getRandomInt(10, 20);
-
-        $key = 'NAME';
-
-        $table = new AsciiTable([$key]);
-        $table->setColumnWidth($key, $maxLength);
-
         $table = new AsciiTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
         $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
-        $table->addRows([
-            [1, 'John', 12],
-            [2, new Cell('Tommy', Align::CENTER), 15],
-        ]);
-        $table->render();
 
         $renderedTable = $this->render($table);
 
         $expected = [
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
-            \sprintf('| %s%s |', $key, \str_repeat(' ', $maxLength - \mb_strlen($key))),
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
-            \sprintf('| %s |', $this->formatNoData($maxLength)),
-            \sprintf('+-%s-+', \str_pad('', $maxLength, '-')),
+            '+----+----------------------+-------+',
+            '| ID | NAME                 | SCORE |',
+            '+----+----------------------+-------+',
+            '|              NO DATA              |',
+            '+----+----------------------+-------+',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
