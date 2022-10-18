@@ -49,13 +49,13 @@ class DefaultRenderer implements RendererContract
             }
         } else {
             $label = 'NO DATA';
-            if (\strlen($label) > $table->getTotalWidth()) {
-                $label = \substr($label, 0, $table->getTotalWidth() - 1) . '…';
+            if (\mb_strlen($label) > $table->getTotalWidth()) {
+                $label = \mb_substr($label, 0, $table->getTotalWidth() - 1, 'utf-8') . '…';
             } else {
                 $label = \str_pad($label, $table->getTotalWidth(), ' ', \STR_PAD_BOTH);
 
             }
-            $noData = \sprintf('| %s |', $label);
+            $noData = \sprintf('| %s |' . PHP_EOL, $label);
             $writer->write($noData);
         }
         $writer->write($sep);
@@ -212,11 +212,11 @@ class DefaultRenderer implements RendererContract
             Align::AUTO => \STR_PAD_RIGHT,
         };
 
-        $strLen = \strlen($value);
+        $strLen = \mb_strlen($value);
 
         // Clip the string if it is longer that max allowed column width
         if ($strLen > $maxWidth) {
-            $value = \substr($value, 0, $maxWidth - 1) . '…';
+            $value = \mb_substr($value, 0, $maxWidth - 1,  'utf-8') . '…';
         }
 
         return \str_pad($value, $maxWidth, ' ', $padType);

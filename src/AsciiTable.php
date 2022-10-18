@@ -204,7 +204,7 @@ class AsciiTable
              */
             // Stretch the column width (if needed and possible) to fit the cell content.
             $columnMeta = $this->columns->get($columnKey);
-            $columnMeta->updateMaxWidth(\strlen($cell->getValue()));
+            $columnMeta->updateMaxWidth(\mb_strlen($cell->getValue()));
         }
 
         $this->rows[] = $row;
@@ -278,12 +278,22 @@ class AsciiTable
         return $this;
     }
 
+    /**
+     * Get total width of the table WITHOUT edges (so the full table width
+     * in output is then 2 (for left edge) + getTotalWidth() + 2 (for right edge).
+     */
     public function getTotalWidth(): int
     {
         $totalWidth = 0;
+
         foreach ($this->getColumns() as $column) {
             $totalWidth += $column->getWidth();
         }
+
+        // Next, we need to account column separators as well.
+        $columnSeparator = ' | ';
+        $columnCnt = \count($this->getColumns());
+        $totalWidth += ($columnCnt - 1) * \mb_strlen($columnSeparator);
 
         return $totalWidth;
     }

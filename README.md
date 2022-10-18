@@ -4,17 +4,12 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ---
 
-## Requirements
+Table of contents
 
-* PHP v8.1+
-
----
-
-## Installation
-
-```bash
-$ composer require marcin-orlowski/ascii-table
-```
+1. [Features](#features)
+1. [Installation & requirements](docs/setup.md)
+1. [Examples](docs/examples.md)
+1. [License](#license) 
 
 ---
 
@@ -50,31 +45,7 @@ would produce nice ASCII table:
 +----+-------+-------+
 ```
 
----
-
-More advanced cell content formatting applied:
-
-```php
-
-$table = new AsciiTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
-$table->setDefaultColumnAlign('SCORE', Align::RIGHT);
-$table->addRows([
-    [1, 'John', 12],
-    [2, new Cell('Tommy', Align::CENTER), 15],
-]);
-$table->render();
-```
-
-would produce this nicely formatted ASCII table:
-
-```php
-+----+----------------------+-------+
-| ID | NAME                 | SCORE |
-+----+----------------------+-------+
-| 1  | John                 |    12 |
-| 2  |        Tommy         |    15 |
-+----+----------------------+-------+
-```
+See more [usage examples](docs/examples.md).
 
 ---
 
