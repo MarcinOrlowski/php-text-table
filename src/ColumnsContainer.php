@@ -17,10 +17,12 @@ namespace MarcinOrlowski\AsciiTable;
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
 use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
+use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
 
 class ColumnsContainer implements ContainerContract
 {
     use ArrayAccessTrait;
+    use IteratorAggregateTrait;
 
     /** @var Column[] $container */
     protected array $container = [];
@@ -32,7 +34,7 @@ class ColumnsContainer implements ContainerContract
      *
      * @throws ColumnKeyNotFound
      */
-    public function get(string|int $columnKey): Column
+    public function getColumn(string|int $columnKey): Column
     {
         if (!$this->offsetExists($columnKey)) {
             throw new ColumnKeyNotFound("Unknown column key: {$columnKey}");
@@ -51,7 +53,7 @@ class ColumnsContainer implements ContainerContract
      * @throws \MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound
      * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey
      */
-    public function add(string|int $columnKey, Column $column): self
+    public function addColumn(string|int $columnKey, Column $column): self
     {
         if ($this->offsetExists($columnKey)) {
             throw new DuplicateColumnKey("Column index already exists: {$columnKey}");
@@ -59,10 +61,11 @@ class ColumnsContainer implements ContainerContract
 
         $this->container[ $columnKey ] = $column;
 
-        $this->get($columnKey)->updateMaxWidth(\mb_strlen($column->getTitle()));
+        $this->getColumn($columnKey)->updateMaxWidth(\mb_strlen($column->getTitle()));
 
         return $this;
     }
 
     /* ****************************************************************************************** */
+
 }

@@ -77,8 +77,15 @@ class DefaultRenderer implements RendererContract
         $result = '';
         $cells = $row->getContainer();
         $cnt = \count($cells);
-        $columnOffset = 0;
-        foreach (\array_keys($columns->toArray()) as $columnKey) {
+        $columnOffset = -1;
+//        foreach (\array_keys($columns->toArray()) as $columnKey => $column) {
+        foreach ($columns as $columnKey => $column) {
+            $columnOffset++;
+
+            if (!$column->isVisible()) {
+                continue;
+            }
+
             $cell = $cells->get($columnKey);
 
             /**
@@ -99,8 +106,6 @@ class DefaultRenderer implements RendererContract
             $result .= ($columnOffset === $cnt - 1)
                 ? self::HEADER_BORDER_RIGHT
                 : self::HEADER_BORDER_CENTER;
-
-            $columnOffset++;
         }
 
         $result .= PHP_EOL;
@@ -125,24 +130,28 @@ class DefaultRenderer implements RendererContract
     {
         $result = '';
         $cnt = \count($columns);
-        $columnOffset = 0;
+        $columnOffset = -1;
         foreach ($columns as $columnKey => $column) {
+            $columnOffset++;
+
             /**
              * @var string|int $columnKey
              * @var Column     $column
              */
+            if (!$column->isVisible()) {
+                continue;
+            }
+
             if ($columnOffset === 0) {
                 $result .= self::HEADER_BORDER_LEFT;
             }
 
-            $titleAlign = $this->getColumnTitleAlign($columns, $columnKey);
+            $titleAlign = $column->getTitleAlign();
             $result .= $this->pad($columns, $columnKey, $column->getTitle(), $titleAlign);
 
             $result .= ($columnOffset === $cnt - 1)
                 ? self::HEADER_BORDER_RIGHT
                 : self::HEADER_BORDER_CENTER;
-
-            $columnOffset++;
         }
 
         $result .= PHP_EOL;
@@ -160,12 +169,18 @@ class DefaultRenderer implements RendererContract
     {
         $result = '';
         $cnt = \count($columns);
-        $columnOffset = 0;
+        $columnOffset = -1;
         foreach ($columns as $column) {
+            $columnOffset++;
+
             /**
              * @var string|int $columnKey
              * @var Column     $column
              */
+            if (!$column->isVisible()) {
+                continue;
+            }
+
             if ($columnOffset === 0) {
                 $result .= self::HEADER_SEGMENT_LEFT;
             }
@@ -175,8 +190,6 @@ class DefaultRenderer implements RendererContract
             $result .= ($columnOffset === $cnt - 1)
                 ? self::HEADER_SEGMENT_RIGHT
                 : self::HEADER_SEGMENT_CENTER;
-
-            $columnOffset++;
         }
 
         $result .= PHP_EOL;
@@ -217,7 +230,7 @@ class DefaultRenderer implements RendererContract
 
         // Clip the string if it is longer that max allowed column width
         if ($strLen > $maxWidth) {
-            $value = \mb_substr($value, 0, $maxWidth - 1,  'utf-8') . '…';
+            $value = \mb_substr($value, 0, $maxWidth - 1, 'utf-8') . '…';
         }
 
         return StringUtils::pad($value, $maxWidth, ' ', $padType);
@@ -235,7 +248,7 @@ class DefaultRenderer implements RendererContract
      */
     protected function getColumnWidth(ColumnsContainer $columns, string|int $columnKey): int
     {
-        return $columns->get($columnKey)->getWidth();
+        return $columns->getColumn($columnKey)->getWidth();
     }
 
     /**
@@ -248,7 +261,7 @@ class DefaultRenderer implements RendererContract
      */
     protected function getColumnAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
-        return $columns->get($columnKey)->getDefaultColumnAlign();
+        return $columns->getColumn($columnKey)->getDefaultColumnAlign();
     }
 
     /**
@@ -261,7 +274,7 @@ class DefaultRenderer implements RendererContract
      */
     protected function getColumnTitleAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
-        return $columns->get($columnKey)->getTitleAlign();
+        return $columns->getColumn($columnKey)->getTitleAlign();
     }
     /* ****************************************************************************************** */
 

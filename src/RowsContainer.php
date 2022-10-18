@@ -15,10 +15,12 @@ declare(strict_types=1);
 namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
+use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
 
 class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, ArrayableContract
 {
     use ArrayAccessTrait;
+    use IteratorAggregateTrait;
 
     /** @var Row[] $container */
     protected array $container = [];

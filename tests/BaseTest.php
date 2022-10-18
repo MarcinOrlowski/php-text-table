@@ -252,9 +252,9 @@ class BaseTest extends TestCase
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
         ]);
 
-        $table->setColumnWidth('ID', 20);
-        $table->setColumnWidth('NAME', 5);
-        $table->setColumnWidth('SCORE', 25);
+        $table->setColumnMaxWidth('ID', 20);
+        $table->setColumnMaxWidth('NAME', 5);
+        $table->setColumnMaxWidth('SCORE', 25);
 
         $renderedTable = $this->render($table);
 
@@ -277,9 +277,9 @@ class BaseTest extends TestCase
             [2, 'PBOX POH Poříčí (Restaura)', 15],
         ]);
 
-        $table->setColumnWidth('ID', 10);
-        $table->setColumnWidth('NAME', 15);
-        $table->setColumnWidth('SCORE', 4);
+        $table->setColumnMaxWidth('ID', 10);
+        $table->setColumnMaxWidth('NAME', 15);
+        $table->setColumnMaxWidth('SCORE', 4);
 
         $renderedTable = $this->render($table);
 
@@ -329,9 +329,9 @@ class BaseTest extends TestCase
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
         ]);
 
-        $table->setColumnWidth('ID', 20);
-        $table->setColumnWidth('NAME', 5);
-        $table->setColumnWidth('SCORE', 25);
+        $table->setColumnMaxWidth('ID', 20);
+        $table->setColumnMaxWidth('NAME', 5);
+        $table->setColumnMaxWidth('SCORE', 25);
 
         $table->setDefaultColumnAlign('ID', Align::RIGHT);
         $table->setDefaultColumnAlign('NAME', Align::CENTER);
@@ -369,7 +369,7 @@ class BaseTest extends TestCase
             ],
         ]);
 
-        $table->setColumnWidth('NAME', $maxLength);
+        $table->setColumnMaxWidth('NAME', $maxLength);
 
         $renderedTable = $this->render($table);
 
@@ -406,19 +406,20 @@ class BaseTest extends TestCase
     {
         $maxLength = Generator::getRandomInt(10, 20);
         $key = Generator::getRandomString('name', $maxLength * 2);
-        $clipped = \mb_substr($key, 0, $maxLength - 1) . '…';
 
         $table = new AsciiTable([$key]);
-        $table->setColumnWidth($key, $maxLength);
+        $table->setColumnMaxWidth($key, $maxLength);
 
         $renderedTable = $this->render($table);
 
+        $clippedTitle = \mb_substr($key, 0, $maxLength - 1) . '…';
+        $tableSeparatorLine = \sprintf('+-%s-+', \str_repeat('-', $maxLength));
         $expected = [
-            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
-            \sprintf('| %s |', $clipped),
-            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
+            $tableSeparatorLine,
+            \sprintf('| %s |', $clippedTitle),
+            $tableSeparatorLine,
             \sprintf('| %s |', $this->formatNoData($maxLength)),
-            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
+            $tableSeparatorLine,
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -433,6 +434,39 @@ class BaseTest extends TestCase
         }
 
         return $noDataLabel;
+    }
+
+    public function testHidden(): void
+    {
+        $key1 = Generator::getRandomString('key1');
+        $key2 = Generator::getRandomString('key2');
+        $key3 = Generator::getRandomString('key3');
+        $table = new AsciiTable();
+        $table->addColumns([
+            $key1 => 'A',
+            $key2 => 'B',
+            $key3 => 'C',
+        ]);
+        $table->addRow([
+            $key3 => 'c',
+            $key2 => 'b',
+            $key1 => 'a',
+        ]);
+
+
+        $table->hideColumn($key2);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+---+---+',
+            '| A | C |',
+            '+---+---+',
+            '| a | c |',
+            '+---+---+',
+        ];
+
+        Assert::assertEquals($expected, $renderedTable);
     }
 }
 

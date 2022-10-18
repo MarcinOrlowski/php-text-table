@@ -17,10 +17,12 @@ namespace MarcinOrlowski\AsciiTable;
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
 use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
+use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
 
 class CellsContainer implements ContainerContract
 {
     use ArrayAccessTrait;
+    use IteratorAggregateTrait;
 
     /** @var Cell[] $container */
     protected array $container = [];
