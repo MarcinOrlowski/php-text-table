@@ -60,6 +60,11 @@ class CellsContainer implements ContainerContract
         return $this->container[ $columnKey ];
     }
 
+    public function has(string|int $columnKey): bool
+    {
+        return $this->offsetExists($columnKey);
+    }
+
     /* ****************************************************************************************** */
 
 }
