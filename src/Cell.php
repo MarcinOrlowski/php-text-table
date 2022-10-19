@@ -16,7 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 class Cell
 {
-    public function __construct(\Stringable|string|int|float|bool|null $value,
+    public function __construct(\Stringable|string|int|float|bool|null $value = '',
                                 Align                                  $align = Align::AUTO)
     {
         $this->setValue($value);

@@ -436,6 +436,8 @@ class BaseTest extends TestCase
         return $noDataLabel;
     }
 
+    /* ****************************************************************************************** */
+
     public function testHidden(): void
     {
         $key1 = Generator::getRandomString('key1');
@@ -466,6 +468,60 @@ class BaseTest extends TestCase
             '+---+---+',
         ];
 
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    /* ****************************************************************************************** */
+
+    /**
+     * Tests if missing column values in rows are correctly handled.
+     */
+    public function testMissingRowCellsMulticolumn(): void
+    {
+        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table->addRows([
+            ['SCORE' => 15,],
+            [1, 'John', 12],
+            ['ID' => 2, 'NAME' => 'Alan'],
+            ['SCORE' => 32, 'NAME' => 'Robert'],
+        ]);
+
+        $table->setDefaultColumnAlign('ID', Align::RIGHT);
+        $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+----+--------+-------+',
+            '| ID | NAME   | SCORE |',
+            '+----+--------+-------+',
+            '|    |        |    15 |',
+            '|  1 | John   |    12 |',
+            '|  2 | Alan   |       |',
+            '|    | Robert |    32 |',
+            '+----+--------+-------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    public function testMissingRowCells(): void
+    {
+        $table = new AsciiTable(['ID', 'NAME']);
+        $table->addRows([
+            [1],
+            ['NAME' => 'John'],
+        ]);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+----+------+',
+            '| ID | NAME |',
+            '+----+------+',
+            '| 1  |      |',
+            '|    | John |',
+            '+----+------+',
+        ];
         Assert::assertEquals($expected, $renderedTable);
     }
 }

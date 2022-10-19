@@ -76,7 +76,7 @@ class DefaultRenderer implements RendererContract
     {
         $result = '';
         $cells = $row->getContainer();
-        $cnt = \count($cells);
+        $cnt = $columns->count();
         $columnOffset = -1;
 //        foreach (\array_keys($columns->toArray()) as $columnKey => $column) {
         foreach ($columns as $columnKey => $column) {
@@ -86,7 +86,11 @@ class DefaultRenderer implements RendererContract
                 continue;
             }
 
-            $cell = $cells->get($columnKey);
+            if ($cells->has($columnKey)) {
+                $cell = $cells->get($columnKey);
+            } else {
+                $cell = new Cell();
+            }
 
             /**
              * @var string|int $columnKey
