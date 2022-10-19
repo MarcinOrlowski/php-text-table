@@ -2,15 +2,15 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
-namespace MarcinOrlowski\AsciiTableTests;
+namespace MarcinOrlowski\TextTableTests;
 
-use MarcinOrlowski\AsciiTable\Align;
-use MarcinOrlowski\AsciiTable\AsciiTable;
-use MarcinOrlowski\AsciiTable\Cell;
-use MarcinOrlowski\AsciiTable\Column;
-use MarcinOrlowski\AsciiTable\Exceptions\NoVisibleColumnsException;
-use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
-use MarcinOrlowski\AsciiTable\Utils\StringUtils;
+use MarcinOrlowski\TextTable\Align;
+use MarcinOrlowski\TextTable\TextTable;
+use MarcinOrlowski\TextTable\Cell;
+use MarcinOrlowski\TextTable\Column;
+use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
+use MarcinOrlowski\TextTable\Output\Writers\BufferWriter;
+use MarcinOrlowski\TextTable\Utils\StringUtils;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 class BaseTest extends TestCase
 {
-    protected function render(AsciiTable $table): array
+    protected function render(TextTable $table): array
     {
         $bufferWriter = new BufferWriter();
         $table->render($bufferWriter);
@@ -39,7 +39,7 @@ class BaseTest extends TestCase
 
     public function testSimpleTable(): void
     {
-        $table = new AsciiTable();
+        $table = new TextTable();
         $table->addColumns([
             'A',
             'B',
@@ -68,7 +68,7 @@ class BaseTest extends TestCase
 
     public function testMultiRowTable(): void
     {
-        $table = new AsciiTable();
+        $table = new TextTable();
         $table->addColumns([
             'A',
             'B',
@@ -105,7 +105,7 @@ class BaseTest extends TestCase
         $key1 = Generator::getRandomString('key1');
         $key2 = Generator::getRandomString('key2');
         $key3 = Generator::getRandomString('key3');
-        $table = new AsciiTable();
+        $table = new TextTable();
         $table->addColumns([
             $key1 => 'A',
             $key2 => 'B',
@@ -134,7 +134,7 @@ class BaseTest extends TestCase
 
     public function testCustomIndex(): void
     {
-        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
             ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
@@ -156,7 +156,7 @@ class BaseTest extends TestCase
 
     public function testRowCellsAutoAssign(): void
     {
-        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
             [1, 'John', 12],
         ]);
@@ -176,7 +176,7 @@ class BaseTest extends TestCase
 
     public function testTableColumnAutoKey(): void
     {
-        $table = new AsciiTable(['ID', new Column('SCORE')]);
+        $table = new TextTable(['ID', new Column('SCORE')]);
         $table->addRows([
             ['ID' => 1, 'SCORE' => 12],
         ]);
@@ -196,7 +196,7 @@ class BaseTest extends TestCase
 
     public function testColumnAlign(): void
     {
-        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
             ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
@@ -220,9 +220,9 @@ class BaseTest extends TestCase
 
     public function testCellColumnAlign(): void
     {
-        $table = new AsciiTable(['ID',
-                                 new Column('NAME', maxWidth: 20),
-                                 'SCORE',
+        $table = new TextTable(['ID',
+                                new Column('NAME', maxWidth: 20),
+                                'SCORE',
         ]);
         $table->addRows([
             [1,
@@ -247,7 +247,7 @@ class BaseTest extends TestCase
 
     public function testCustomWidth(): void
     {
-        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
             ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
@@ -272,7 +272,7 @@ class BaseTest extends TestCase
 
     public function testCustomWidthAndUtf(): void
     {
-        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
             [1, 'Foo', 12],
             [2, 'PBOX POH Poříčí (Restaura)', 15],
@@ -298,7 +298,7 @@ class BaseTest extends TestCase
     public function testCustomWidthAndUtfMulticolumn(): void
     {
         // Create display table
-        $table = new AsciiTable([
+        $table = new TextTable([
             new Column('NAME', maxWidth: 25),
         ]);
 
@@ -324,7 +324,7 @@ class BaseTest extends TestCase
 
     public function testCustomWidthAndAlign(): void
     {
-        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
             ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
@@ -363,7 +363,7 @@ class BaseTest extends TestCase
 
         $key = 'NAME';
 
-        $table = new AsciiTable([$key]);
+        $table = new TextTable([$key]);
         $table->addRows([
             [
                 $key => $longName,
@@ -388,7 +388,7 @@ class BaseTest extends TestCase
 
     public function testNoData(): void
     {
-        $table = new AsciiTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
+        $table = new TextTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
         $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
 
         $renderedTable = $this->render($table);
@@ -408,7 +408,7 @@ class BaseTest extends TestCase
         $maxLength = Generator::getRandomInt(10, 20);
         $key = Generator::getRandomString('name', $maxLength * 2);
 
-        $table = new AsciiTable([$key]);
+        $table = new TextTable([$key]);
         $table->setColumnMaxWidth($key, $maxLength);
 
         $renderedTable = $this->render($table);
@@ -444,7 +444,7 @@ class BaseTest extends TestCase
         $key1 = Generator::getRandomString('key1');
         $key2 = Generator::getRandomString('key2');
         $key3 = Generator::getRandomString('key3');
-        $table = new AsciiTable();
+        $table = new TextTable();
         $table->addColumns([
             $key1 => 'A',
             $key2 => 'B',
@@ -476,7 +476,7 @@ class BaseTest extends TestCase
     public function testNoVisibleColumn(): void
     {
         $columns = ['ID', 'NAME', 'SCORE'];
-        $table = new AsciiTable($columns);
+        $table = new TextTable($columns);
 
         foreach($columns as $column) {
             $table->hideColumn($column);
@@ -491,7 +491,7 @@ class BaseTest extends TestCase
         $key1 = Generator::getRandomString('key1');
         $key2 = Generator::getRandomString('key2');
         $key3 = Generator::getRandomString('key3');
-        $table = new AsciiTable();
+        $table = new TextTable();
         $table->addColumns([
             $key1 => 'A',
             $key2 => 'B',
@@ -522,7 +522,7 @@ class BaseTest extends TestCase
         $key1 = Generator::getRandomString('key1');
         $key2 = Generator::getRandomString('key2');
         $key3 = Generator::getRandomString('key3');
-        $table = new AsciiTable();
+        $table = new TextTable();
         $table->addColumns([
             $key1 => 'A',
             $key2 => 'B',
@@ -556,7 +556,7 @@ class BaseTest extends TestCase
      */
     public function testMissingRowCellsMulticolumn(): void
     {
-        $table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
             ['SCORE' => 15,],
             [1, 'John', 12],
@@ -584,7 +584,7 @@ class BaseTest extends TestCase
 
     public function testMissingRowCells(): void
     {
-        $table = new AsciiTable(['ID', 'NAME']);
+        $table = new TextTable(['ID', 'NAME']);
         $table->addRows([
             [1],
             ['NAME' => 'John'],

@@ -26,7 +26,7 @@ Table of contents
 Simples possible usage:
 
 ```php
-$table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+$table = new TextTable(['ID', 'NAME', 'SCORE']);
 $table->addRows([
     [1, 'John', 12],
     [2, 'Tommy', 15],

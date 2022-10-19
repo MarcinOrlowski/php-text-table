@@ -4,25 +4,25 @@ declare(strict_types=1);
 /**
  * ASCII Table
  *
- * @package   MarcinOrlowski\AsciiTable
+ * @package   MarcinOrlowski\TextTable
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
  * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/php-ascii-table
+ * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\TextTable;
 
-use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException;
-use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException;
-use MarcinOrlowski\AsciiTable\Exceptions\NoVisibleColumnsException;
-use MarcinOrlowski\AsciiTable\Exceptions\UnsupportedColumnTypeException;
-use MarcinOrlowski\AsciiTable\Output\WriterContract;
-use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
-use MarcinOrlowski\AsciiTable\Renderers\DefaultRenderer;
+use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
+use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
+use MarcinOrlowski\TextTable\Exceptions\UnsupportedColumnTypeException;
+use MarcinOrlowski\TextTable\Output\WriterContract;
+use MarcinOrlowski\TextTable\Output\Writers\EchoWriter;
+use MarcinOrlowski\TextTable\Renderers\DefaultRenderer;
 
-class AsciiTable
+class TextTable
 {
     /**
      * @param array $headerColumns Optional array of column headers to be created.
@@ -337,29 +337,12 @@ class AsciiTable
         return $this;
     }
 
+    /**
+     * Returns number of columns with visibility set to `true`.
+     */
     public function getVisibleColumnCount(): int
     {
         return \count(\array_filter($this->columns->toArray(), fn(Column $column) => $column->isVisible()));
-    }
-
-    /**
-     * Get total width of the table WITHOUT edges (so the full table width
-     * in output is then 2 (for left edge) + getTotalWidth() + 2 (for right edge).
-     */
-    public function getTotalWidth(): int
-    {
-        $totalWidth = 0;
-
-        foreach ($this->getColumns() as $column) {
-            $totalWidth += $column->getWidth();
-        }
-
-        // Next, we need to account column separators as well.
-        $columnSeparator = ' | ';
-        $columnCnt = \count($this->getColumns());
-        $totalWidth += ($columnCnt - 1) * \mb_strlen($columnSeparator);
-
-        return $totalWidth;
     }
 
 }

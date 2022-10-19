@@ -4,26 +4,26 @@ declare(strict_types=1);
 /**
  * ASCII Table
  *
- * @package   MarcinOrlowski\AsciiTable
+ * @package   MarcinOrlowski\TextTable
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
  * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/php-ascii-table
+ * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\AsciiTable\Renderers;
+namespace MarcinOrlowski\TextTable\Renderers;
 
-use MarcinOrlowski\AsciiTable\AsciiTable;
-use MarcinOrlowski\AsciiTable\Output\WriterContract;
+use MarcinOrlowski\TextTable\TextTable;
+use MarcinOrlowski\TextTable\Output\WriterContract;
 
 interface RendererContract
 {
     /**
      * Renders provided `Table` using provided output writer.
      *
-     * @param AsciiTable     $table  Instance of `AsciiTable` to render.
+     * @param TextTable      $table  Instance of `AsciiTable` to render.
      * @param WriterContract $writer Output writer to use.
      */
-    public function render(AsciiTable $table, WriterContract $writer): void;
+    public function render(TextTable $table, WriterContract $writer): void;
 }

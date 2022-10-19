@@ -1,7 +1,7 @@
 {
-    "name": "marcin-orlowski/ascii-table",
+    "name": "marcin-orlowski/text-table",
     "description": "Fast and flexible PHP library rendering plain ASCII tables.",
-    "homepage": "https://github.com/MarcinOrlowski/php-ascii-table",
+    "homepage": "https://github.com/MarcinOrlowski/php-text-table",
     "version": "1.7.0",
     "keywords": [
         "php",
@@ -19,18 +19,18 @@
         }
     ],
     "support": {
-        "source": "https://github.com/MarcinOrlowski/php-ascii-table/",
-        "issues": "https://github.com/MarcinOrlowski/php-ascii-table/issues"
+        "source": "https://github.com/MarcinOrlowski/php-text-table/",
+        "issues": "https://github.com/MarcinOrlowski/php-text-table/issues"
     },
     "type": "library",
     "autoload": {
         "psr-4": {
-            "MarcinOrlowski\\AsciiTable\\": "src/"
+            "MarcinOrlowski\\TextTable\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MarcinOrlowski\\AsciiTableTests\\": "tests/"
+            "MarcinOrlowski\\TextTableTests\\": "tests/"
         }
     },
     "require": {
