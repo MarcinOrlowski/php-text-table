@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
-use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
 use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
 
@@ -26,7 +26,7 @@ class Row implements ContainerContract
     /**
      * @param array|null $cells Optional list of cells to be added to the newly created row.
      *
-     * @throws DuplicateColumnKey
+     * @throws DuplicateColumnKeyException
      */
     public function __construct(array|null $cells = null)
     {
@@ -51,7 +51,7 @@ class Row implements ContainerContract
     /**
      * @param array<string|int, Cell|string|int|float|bool|null> $cells
      *
-     * @throws DuplicateColumnKey
+     * @throws DuplicateColumnKeyException
      */
     public function addCells(array $cells): self
     {
@@ -68,7 +68,7 @@ class Row implements ContainerContract
      * @param Align           $align
      *
      * @return $this
-     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey
+     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException
      */
     public function addCell(string|int      $columnKey,
                             Cell|string|int $cell,

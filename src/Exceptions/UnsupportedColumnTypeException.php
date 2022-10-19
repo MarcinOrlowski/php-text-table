@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable\Exceptions;
 
-class DuplicateColumnKey extends \Exception
+class UnsupportedColumnTypeException extends \Exception
 {
 
 }
