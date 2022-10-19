@@ -8,6 +8,7 @@ use MarcinOrlowski\AsciiTable\Align;
 use MarcinOrlowski\AsciiTable\AsciiTable;
 use MarcinOrlowski\AsciiTable\Cell;
 use MarcinOrlowski\AsciiTable\Column;
+use MarcinOrlowski\AsciiTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\AsciiTable\Output\Writers\BufferWriter;
 use MarcinOrlowski\AsciiTable\Utils\StringUtils;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
@@ -471,6 +472,83 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+
+    public function testNoVisibleColumn(): void
+    {
+        $columns = ['ID', 'NAME', 'SCORE'];
+        $table = new AsciiTable($columns);
+
+        foreach($columns as $column) {
+            $table->hideColumn($column);
+        }
+
+        $this->expectException(NoVisibleColumnsException::class);
+        $renderedTable = $this->render($table);
+    }
+
+    public function testHiddingFirstColumn(): void
+    {
+        $key1 = Generator::getRandomString('key1');
+        $key2 = Generator::getRandomString('key2');
+        $key3 = Generator::getRandomString('key3');
+        $table = new AsciiTable();
+        $table->addColumns([
+            $key1 => 'A',
+            $key2 => 'B',
+            $key3 => 'C',
+        ]);
+        $table->addRow([
+            $key3 => 'c',
+            $key2 => 'b',
+            $key1 => 'a',
+        ]);
+
+        $table->hideColumn($key1);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+---+---+',
+            '| B | C |',
+            '+---+---+',
+            '| b | c |',
+            '+---+---+',
+        ];
+
+        Assert::assertEquals($expected, $renderedTable);
+    }
+    public function testHiddingLastColumn(): void
+    {
+        $key1 = Generator::getRandomString('key1');
+        $key2 = Generator::getRandomString('key2');
+        $key3 = Generator::getRandomString('key3');
+        $table = new AsciiTable();
+        $table->addColumns([
+            $key1 => 'A',
+            $key2 => 'B',
+            $key3 => 'C',
+        ]);
+        $table->addRow([
+            $key3 => 'c',
+            $key2 => 'b',
+            $key1 => 'a',
+        ]);
+
+        $table->hideColumn($key3);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+---+---+',
+            '| A | B |',
+            '+---+---+',
+            '| a | b |',
+            '+---+---+',
+        ];
+
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
     /* ****************************************************************************************** */
 
     /**
@@ -524,5 +602,7 @@ class BaseTest extends TestCase
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
+
+
 }
 

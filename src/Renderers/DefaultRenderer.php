@@ -19,7 +19,7 @@ use MarcinOrlowski\AsciiTable\AsciiTable;
 use MarcinOrlowski\AsciiTable\Cell;
 use MarcinOrlowski\AsciiTable\Column;
 use MarcinOrlowski\AsciiTable\ColumnsContainer;
-use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\AsciiTable\Output\WriterContract;
 use MarcinOrlowski\AsciiTable\Row;
 use MarcinOrlowski\AsciiTable\Utils\StringUtils;
@@ -29,7 +29,7 @@ class DefaultRenderer implements RendererContract
     /**
      * @inheritDoc
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     public function render(AsciiTable $table, WriterContract $writer): void
     {
@@ -65,38 +65,29 @@ class DefaultRenderer implements RendererContract
     /* ****************************************************************************************** */
 
     /**
-     * @param ColumnsContainer $columns
-     * @param Row              $row Row to render
+     * Render single data row.
+     *
+     * @param ColumnsContainer $columns Table column definition container.
+     * @param Row              $row     Row to render
      *
      * @return string
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     protected function renderRow(ColumnsContainer $columns, Row $row): string
     {
         $result = '';
         $cells = $row->getContainer();
-        $cnt = $columns->count();
-        $columnOffset = -1;
-//        foreach (\array_keys($columns->toArray()) as $columnKey => $column) {
         foreach ($columns as $columnKey => $column) {
-            $columnOffset++;
-
             if (!$column->isVisible()) {
                 continue;
             }
 
-            if ($cells->has($columnKey)) {
-                $cell = $cells->get($columnKey);
-            } else {
-                $cell = new Cell();
-            }
+            $cell = ($cells->has($columnKey))
+                ? $cells->get($columnKey)
+                : new Cell();
 
-            /**
-             * @var string|int $columnKey
-             * @var Cell       $cell
-             */
-            if ($columnOffset === 0) {
+            if ($this->isFirstVisibleColumn($columns, $columnKey)) {
                 $result .= self::HEADER_BORDER_LEFT;
             }
 
@@ -107,7 +98,7 @@ class DefaultRenderer implements RendererContract
 
             $result .= $this->pad($columns, $columnKey, $cell->getValue(), $align);
 
-            $result .= ($columnOffset === $cnt - 1)
+            $result .= $this->isLastVisibleColumn($columns, $columnKey)
                 ? self::HEADER_BORDER_RIGHT
                 : self::HEADER_BORDER_CENTER;
         }
@@ -124,20 +115,16 @@ class DefaultRenderer implements RendererContract
     protected const HEADER_BORDER_RIGHT  = ' |';
 
     /**
-     * @param ColumnsContainer $columns
+     * @param ColumnsContainer $columns Table column definition container.
      *
      * @return string
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     protected function renderHeader(ColumnsContainer $columns): string
     {
         $result = '';
-        $cnt = \count($columns);
-        $columnOffset = -1;
         foreach ($columns as $columnKey => $column) {
-            $columnOffset++;
-
             /**
              * @var string|int $columnKey
              * @var Column     $column
@@ -146,14 +133,14 @@ class DefaultRenderer implements RendererContract
                 continue;
             }
 
-            if ($columnOffset === 0) {
+            if ($this->isFirstVisibleColumn($columns, $columnKey)) {
                 $result .= self::HEADER_BORDER_LEFT;
             }
 
             $titleAlign = $column->getTitleAlign();
             $result .= $this->pad($columns, $columnKey, $column->getTitle(), $titleAlign);
 
-            $result .= ($columnOffset === $cnt - 1)
+            $result .= $this->isLastVisibleColumn($columns, $columnKey)
                 ? self::HEADER_BORDER_RIGHT
                 : self::HEADER_BORDER_CENTER;
         }
@@ -165,18 +152,46 @@ class DefaultRenderer implements RendererContract
 
     /* ****************************************************************************************** */
 
+    protected function isFirstVisibleColumn(ColumnsContainer $columns, $columnKey): bool
+    {
+        foreach ($columns as $key => $column) {
+            if ($column->isVisible()) {
+                return $key === $columnKey;
+            }
+        }
+        return false;
+    }
+
+    protected function isLastVisibleColumn(ColumnsContainer $columns, $columnKey): bool
+    {
+        $lastVisibleColumnKey = null;
+        foreach ($columns as $key => $column) {
+            if (!$column->isVisible()) {
+                continue;
+            }
+            $lastVisibleColumnKey = $key;
+        }
+        return $lastVisibleColumnKey === $columnKey;
+    }
+
+    /* ****************************************************************************************** */
+
     protected const HEADER_SEGMENT_LEFT   = '+-';
     protected const HEADER_SEGMENT_CENTER = '-+-';
     protected const HEADER_SEGMENT_RIGHT  = '-+';
 
+    /**
+     * Renders separator row (usually to separate header/footer from
+     * the table content).
+     *
+     * @param ColumnsContainer $columns Table column definition container.
+     *
+     * @return string
+     */
     protected function renderSeparator(ColumnsContainer $columns): string
     {
         $result = '';
-        $cnt = \count($columns);
-        $columnOffset = -1;
-        foreach ($columns as $column) {
-            $columnOffset++;
-
+        foreach ($columns as $columnKey => $column) {
             /**
              * @var string|int $columnKey
              * @var Column     $column
@@ -185,13 +200,12 @@ class DefaultRenderer implements RendererContract
                 continue;
             }
 
-            if ($columnOffset === 0) {
+            if ($this->isFirstVisibleColumn($columns, $columnKey)) {
                 $result .= self::HEADER_SEGMENT_LEFT;
             }
 
             $result .= str_repeat('-', $column->getWidth());
-
-            $result .= ($columnOffset === $cnt - 1)
+            $result .= $this->isLastVisibleColumn($columns, $columnKey)
                 ? self::HEADER_SEGMENT_RIGHT
                 : self::HEADER_SEGMENT_CENTER;
         }
@@ -212,7 +226,7 @@ class DefaultRenderer implements RendererContract
      * @param string           $value     Value to pad.
      * @param Align|null       $align     Requested text alignment. If null, column's alignment will be used.
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     protected function pad(ColumnsContainer $columns,
                            string|int       $columnKey,
@@ -248,7 +262,7 @@ class DefaultRenderer implements RendererContract
      * @param ColumnsContainer $columns   Table column definition container.
      * @param string|int       $columnKey Column key we are going to populate.
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     protected function getColumnWidth(ColumnsContainer $columns, string|int $columnKey): int
     {
@@ -261,7 +275,7 @@ class DefaultRenderer implements RendererContract
      * @param ColumnsContainer $columns   Table column definition container.
      * @param string|int       $columnKey Column key we are going to populate.
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     protected function getColumnAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
@@ -274,7 +288,7 @@ class DefaultRenderer implements RendererContract
      * @param ColumnsContainer $columns   Table column definition container.
      * @param string|int       $columnKey Column key we are going to populate.
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     protected function getColumnTitleAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {

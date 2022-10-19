@@ -14,8 +14,8 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
-use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
-use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
 use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
 
@@ -32,12 +32,12 @@ class ColumnsContainer implements ContainerContract
      *
      * @param string|int $columnKey Column key we are going to populate.
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     public function getColumn(string|int $columnKey): Column
     {
         if (!$this->offsetExists($columnKey)) {
-            throw new ColumnKeyNotFound("Unknown column key: {$columnKey}");
+            throw new ColumnKeyNotFoundException("Unknown column key: {$columnKey}");
         }
         return $this->container[ $columnKey ];
     }
@@ -50,13 +50,13 @@ class ColumnsContainer implements ContainerContract
      *
      * @return self
      *
-     * @throws \MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound
-     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey
+     * @throws \MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException
+     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException
      */
     public function addColumn(string|int $columnKey, Column $column): self
     {
         if ($this->offsetExists($columnKey)) {
-            throw new DuplicateColumnKey("Column index already exists: {$columnKey}");
+            throw new DuplicateColumnKeyException("Column index already exists: {$columnKey}");
         }
 
         $this->container[ $columnKey ] = $column;

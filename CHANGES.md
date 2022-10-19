@@ -6,12 +6,18 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ## Changes
 
+* 1.7.0 (2022-10-19)
+  * Corrected rendering tables with first/last column hidden.
+  * Attempt to render table with all colums hidden throws `NoVisibleColumnsException`.
+  * All custom exception class names now ends with `Exception`.
+
+
 * 1.6.0 (2022-10-19)
   * Rows can now contain incomplete set of column cells.
 
 
 * 1.5.0 (2022-10-18)
-  * Columns can now be hidden from the rendered output. 
+  * Columns can now be hidden from the rendered output.
 
 
 * 1.4.0 (2022-10-18)

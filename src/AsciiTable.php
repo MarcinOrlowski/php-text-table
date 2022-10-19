@@ -14,9 +14,10 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\AsciiTable;
 
-use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
-use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
-use MarcinOrlowski\AsciiTable\Exceptions\UnsupportedColumnType;
+use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException;
+use MarcinOrlowski\AsciiTable\Exceptions\NoVisibleColumnsException;
+use MarcinOrlowski\AsciiTable\Exceptions\UnsupportedColumnTypeException;
 use MarcinOrlowski\AsciiTable\Output\WriterContract;
 use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
 use MarcinOrlowski\AsciiTable\Renderers\DefaultRenderer;
@@ -26,9 +27,9 @@ class AsciiTable
     /**
      * @param array $headerColumns Optional array of column headers to be created.
      *
-     * @throws ColumnKeyNotFound
-     * @throws DuplicateColumnKey
-     * @throws UnsupportedColumnType
+     * @throws ColumnKeyNotFoundException
+     * @throws DuplicateColumnKeyException
+     * @throws UnsupportedColumnTypeException
      */
     public function __construct(array $headerColumns = [])
     {
@@ -40,9 +41,9 @@ class AsciiTable
      *
      * @return self
      *
-     * @throws ColumnKeyNotFound
-     * @throws DuplicateColumnKey
-     * @throws UnsupportedColumnType
+     * @throws ColumnKeyNotFoundException
+     * @throws DuplicateColumnKeyException
+     * @throws UnsupportedColumnTypeException
      */
     public function init(array $headerColumns = []): self
     {
@@ -69,22 +70,22 @@ class AsciiTable
     /**
      * Adds new column with specific index. Note columns are registered in the order they are added.
      *
-     * @param string|int    $columnKey Unique column key to be assigned to this column
+     * @param string|int    $columnKey Unique column key to be assigned to this column.
      * @param Column|string $columnVal Either instance of `Column` or string to be used as column title
      *                                 (for which instance of `Column` will be automatically created).
      *
      * @return self
      *
-     * @throws ColumnKeyNotFound
-     * @throws DuplicateColumnKey
-     * @throws UnsupportedColumnType
+     * @throws ColumnKeyNotFoundException
+     * @throws DuplicateColumnKeyException
+     * @throws UnsupportedColumnTypeException
      */
     public function addColumn(string|int $columnKey, Column|string $columnVal): self
     {
         if (\is_string($columnVal)) {
             $columnVal = new Column($columnVal);
         } else if (!($columnVal instanceof Column)) {
-            throw new UnsupportedColumnType(
+            throw new UnsupportedColumnTypeException(
                 \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnKey));
         }
 
@@ -107,9 +108,9 @@ class AsciiTable
      *
      * @return self
      *
-     * @throws ColumnKeyNotFound
-     * @throws DuplicateColumnKey
-     * @throws UnsupportedColumnType
+     * @throws ColumnKeyNotFoundException
+     * @throws DuplicateColumnKeyException
+     * @throws UnsupportedColumnTypeException
      */
     public function addColumns(array $columns): self
     {
@@ -162,8 +163,8 @@ class AsciiTable
      *
      * @return self
      *
-     * @throws ColumnKeyNotFound
-     * @throws DuplicateColumnKey
+     * @throws ColumnKeyNotFoundException
+     * @throws DuplicateColumnKeyException
      */
     public function addRow(Row|array|null $srcRow): self
     {
@@ -217,8 +218,8 @@ class AsciiTable
      *
      * @param Row[]|array[] $rows
      *
-     * @throws ColumnKeyNotFound
-     * @throws DuplicateColumnKey
+     * @throws ColumnKeyNotFoundException
+     * @throws DuplicateColumnKeyException
      */
     public function addRows(array $rows): self
     {
@@ -236,10 +237,14 @@ class AsciiTable
      *
      * @param WriterContract|null $writer
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     public function render(?WriterContract $writer = null): void
     {
+        if ($this->getVisibleColumnCount() === 0) {
+            throw new NoVisibleColumnsException();
+        }
+
         if ($writer === null) {
             $writer = new EchoWriter();
         }
@@ -248,7 +253,14 @@ class AsciiTable
         $renderer->render($this, $writer);
     }
 
-    public function getColumn(string $columnKey): Column
+    /**
+     * @param string|int $columnKey
+     *
+     * @return Column
+     *
+     * @throws ColumnKeyNotFoundException
+     */
+    public function getColumn(string|int $columnKey): Column
     {
         return $this->columns->getColumn($columnKey);
     }
@@ -259,7 +271,7 @@ class AsciiTable
      *
      * @return self
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     public function setDefaultColumnAlign(string|int $columnKey, Align $align): self
     {
@@ -273,6 +285,8 @@ class AsciiTable
      * @param int        $width
      *
      * @return self
+     *
+     * @throws ColumnKeyNotFoundException
      */
     public function setColumnMaxWidth(string|int $columnKey, int $width): self
     {
@@ -282,15 +296,29 @@ class AsciiTable
     }
 
     /**
-     * @param string|int $columnKey Key of the column to be hidden. Hidding hidden column has no effect.
+     * @param string|int $columnKey
+     * @param bool       $visible
+     *
+     * @return $this
+     * @throws ColumnKeyNotFoundException
+     */
+    public function setColumnVisibility(string|int $columnKey, bool $visible): self
+    {
+        $this->columns->getColumn($columnKey)->setVisibility($visible);
+
+        return $this;
+    }
+
+    /**
+     * @param string|int $columnKey Key of the column to be hidden. Hiding hidden column has no effect.
      *
      * @return $this
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     public function hideColumn(string|int $columnKey): self
     {
-        $this->columns->getColumn($columnKey)->hide();
+        $this->setColumnVisibility($columnKey, false);
 
         return $this;
     }
@@ -300,13 +328,18 @@ class AsciiTable
      *
      * @return $this
      *
-     * @throws ColumnKeyNotFound
+     * @throws ColumnKeyNotFoundException
      */
     public function showColumn(string|int $columnKey): self
     {
-        $this->columns->getColumn($columnKey)->hide();
+        $this->columns->getColumn($columnKey)->setVisibility(true);
 
         return $this;
+    }
+
+    public function getVisibleColumnCount(): int
+    {
+        return \count(\array_filter($this->columns->toArray(), fn(Column $column) => $column->isVisible()));
     }
 
     /**
