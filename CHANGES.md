@@ -6,7 +6,7 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ## Changes
 
-* 1.6.0 (2022-10-18)
+* 1.6.0 (2022-10-19)
   * Rows can now contain incomplete set of column cells.
 
 
