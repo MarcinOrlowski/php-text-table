@@ -60,6 +60,13 @@ class CellsContainer implements ContainerContract
         return $this->container[ $columnKey ];
     }
 
+    /**
+     * Returns cell for given column key. Returns null if cell with given key does not exist.
+     *
+     * @param string|int $columnKey Key of the column we want this cell to belong to.
+     *
+     * @return bool
+     */
     public function has(string|int $columnKey): bool
     {
         return $this->offsetExists($columnKey);
