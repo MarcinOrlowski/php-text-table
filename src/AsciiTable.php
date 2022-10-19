@@ -69,7 +69,7 @@ class AsciiTable
     /**
      * Adds new column with specific index. Note columns are registered in the order they are added.
      *
-     * @param string|int    $columnKey Unique column key to be assigned to this column
+     * @param string|int    $columnKey Unique column key to be assigned to this column.
      * @param Column|string $columnVal Either instance of `Column` or string to be used as column title
      *                                 (for which instance of `Column` will be automatically created).
      *
@@ -248,7 +248,14 @@ class AsciiTable
         $renderer->render($this, $writer);
     }
 
-    public function getColumn(string $columnKey): Column
+    /**
+     * @param string|int $columnKey
+     *
+     * @return Column
+     *
+     * @throws ColumnKeyNotFound
+     */
+    public function getColumn(string|int $columnKey): Column
     {
         return $this->columns->getColumn($columnKey);
     }
@@ -273,6 +280,8 @@ class AsciiTable
      * @param int        $width
      *
      * @return self
+     *
+     * @throws ColumnKeyNotFound
      */
     public function setColumnMaxWidth(string|int $columnKey, int $width): self
     {
@@ -282,7 +291,21 @@ class AsciiTable
     }
 
     /**
-     * @param string|int $columnKey Key of the column to be hidden. Hidding hidden column has no effect.
+     * @param string|int $columnKey
+     * @param bool       $visible
+     *
+     * @return $this
+     * @throws ColumnKeyNotFound
+     */
+    public function setColumnVisibility(string|int $columnKey, bool $visible): self
+    {
+        $this->columns->getColumn($columnKey)->setVisibility($visible);
+
+        return $this;
+    }
+
+    /**
+     * @param string|int $columnKey Key of the column to be hidden. Hiding hidden column has no effect.
      *
      * @return $this
      *
@@ -290,7 +313,7 @@ class AsciiTable
      */
     public function hideColumn(string|int $columnKey): self
     {
-        $this->columns->getColumn($columnKey)->hide();
+        $this->setColumnVisibility($columnKey, false);
 
         return $this;
     }
@@ -304,9 +327,14 @@ class AsciiTable
      */
     public function showColumn(string|int $columnKey): self
     {
-        $this->columns->getColumn($columnKey)->hide();
+        $this->columns->getColumn($columnKey)->setVisibility(true);
 
         return $this;
+    }
+
+    public function getVisibleColumnCount(): int
+    {
+        return \count(\array_filter($this->columns->toArray(), fn(Column $column) => $column->isVisible()));
     }
 
     /**

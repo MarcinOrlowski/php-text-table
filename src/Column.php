@@ -125,17 +125,19 @@ class Column
         return $this->visible;
     }
 
+    /** @deprecated */
     public function hide(): self
     {
         return $this->setVisibility(false);
     }
 
+    /** @deprecated */
     public function show(): self
     {
         return $this->setVisibility(true);
     }
 
-    protected function setVisibility(bool $visible): self
+    public function setVisibility(bool $visible): self
     {
         $this->visible = $visible;
         return $this;
