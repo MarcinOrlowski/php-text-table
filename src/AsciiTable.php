@@ -16,6 +16,7 @@ namespace MarcinOrlowski\AsciiTable;
 
 use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFound;
 use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKey;
+use MarcinOrlowski\AsciiTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\AsciiTable\Exceptions\UnsupportedColumnType;
 use MarcinOrlowski\AsciiTable\Output\WriterContract;
 use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
@@ -240,6 +241,10 @@ class AsciiTable
      */
     public function render(?WriterContract $writer = null): void
     {
+        if ($this->getVisibleColumnCount() === 0) {
+            throw new NoVisibleColumnsException();
+        }
+
         if ($writer === null) {
             $writer = new EchoWriter();
         }
