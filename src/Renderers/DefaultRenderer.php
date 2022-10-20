@@ -19,7 +19,6 @@ use MarcinOrlowski\TextTable\Cell;
 use MarcinOrlowski\TextTable\Column;
 use MarcinOrlowski\TextTable\ColumnsContainer;
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
-use MarcinOrlowski\TextTable\Output\WriterContract;
 use MarcinOrlowski\TextTable\Row;
 use MarcinOrlowski\TextTable\TextTable;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
@@ -31,22 +30,24 @@ class DefaultRenderer implements RendererContract
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function render(TextTable $table, WriterContract $writer): void
+    public function render(TextTable $table): array
     {
+        $result = [];
+
         $columns = $table->getColumns();
 
         $sep = $this->renderSeparator($columns);
 
         if (\count($columns) > 0) {
-            $writer->write($sep);
-            $writer->write($this->renderHeader($columns));
+            $result[] = $sep;
+            $result[] = $this->renderHeader($columns);
         }
-        $writer->write($sep);
+        $result[] = $sep;
         $rows = $table->getRows();
         if (\count($rows) > 0) {
             foreach ($rows as $row) {
                 /** @var Row $row */
-                $writer->write($this->renderRow($columns, $row));
+                $result[] = $this->renderRow($columns, $row);
             }
         } else {
             $label = 'NO DATA';
@@ -54,11 +55,47 @@ class DefaultRenderer implements RendererContract
             $label = (\mb_strlen($label) > $tableTotalWidth)
                 ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
                 : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
-            $noData = \sprintf('| %s |' . PHP_EOL, $label);
-            $writer->write($noData);
+            $result[] = \sprintf('| %s |' . PHP_EOL, $label);
         }
-        $writer->write($sep);
+        $result[] = $sep;
+
+        return $result;
     }
+
+
+//    /**
+//     * @inheritDoc
+//     *
+//     * @throws ColumnKeyNotFoundException
+//     */
+//    public function render(TextTable $table, WriterContract $writer): void
+//    {
+//        $columns = $table->getColumns();
+//
+//        $sep = $this->renderSeparator($columns);
+//
+//        if (\count($columns) > 0) {
+//            $writer->write($sep);
+//            $writer->write($this->renderHeader($columns));
+//        }
+//        $writer->write($sep);
+//        $rows = $table->getRows();
+//        if (\count($rows) > 0) {
+//            foreach ($rows as $row) {
+//                /** @var Row $row */
+//                $writer->write($this->renderRow($columns, $row));
+//            }
+//        } else {
+//            $label = 'NO DATA';
+//            $tableTotalWidth = $this->getTableTotalWidth($table);
+//            $label = (\mb_strlen($label) > $tableTotalWidth)
+//                ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
+//                : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
+//            $noData = \sprintf('| %s |' . PHP_EOL, $label);
+//            $writer->write($noData);
+//        }
+//        $writer->write($sep);
+//    }
 
     /* ****************************************************************************************** */
 

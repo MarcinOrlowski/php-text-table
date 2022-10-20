@@ -18,8 +18,6 @@ use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Exceptions\UnsupportedColumnTypeException;
-use MarcinOrlowski\TextTable\Output\WriterContract;
-use MarcinOrlowski\TextTable\Output\Writers\EchoWriter;
 use MarcinOrlowski\TextTable\Renderers\DefaultRenderer;
 
 class TextTable
@@ -235,22 +233,17 @@ class TextTable
     /**
      * Renders given table and outputs it via provided writer.
      *
-     * @param WriterContract|null $writer
-     *
+     * @throws NoVisibleColumnsException
      * @throws ColumnKeyNotFoundException
      */
-    public function render(?WriterContract $writer = null): void
+    public function render(): array
     {
         if ($this->getVisibleColumnCount() === 0) {
             throw new NoVisibleColumnsException();
         }
 
-        if ($writer === null) {
-            $writer = new EchoWriter();
-        }
-
         $renderer = new DefaultRenderer();
-        $renderer->render($this, $writer);
+        return $renderer->render($this);
     }
 
     /**

@@ -21,9 +21,9 @@ class BaseTest extends TestCase
 {
     protected function render(TextTable $table): array
     {
-        $bufferWriter = new BufferWriter();
-        $table->render($bufferWriter);
-        $renderedTable = $bufferWriter->getBuffer();
+//        $bufferWriter = new BufferWriter();
+        $renderedTable = $table->render();
+//        $renderedTable = $bufferWriter->getBuffer();
 
         // Strip trailing PHP_EOL to make comparing results
         // in tests easier.
