@@ -2,9 +2,9 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 declare(strict_types=1);
 
-namespace MarcinOrlowski\AsciiTableTests;
+namespace MarcinOrlowski\TextTableTests;
 
-use MarcinOrlowski\AsciiTable\Utils\StringUtils;
+use MarcinOrlowski\TextTable\Utils\StringUtils;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;

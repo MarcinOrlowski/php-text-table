@@ -1,14 +1,20 @@
-# ASCII Table
+# Text Table
 
-Fast and flexible PHP library rendering plain ASCII tables.
+Fast and flexible PHP library for text tables.
 
 ---
 
 ## Changes
 
+* 2.0.0 (2022-10-20)
+  * Main class name changed to `TextTable`.
+  * `RendererContract`'s `render()` no longer expects returns `string[]`.
+  * Writers and `WriterContract` are completely gone as they are no longer needed.
+
+
 * 1.7.0 (2022-10-19)
   * Corrected rendering tables with first/last column hidden.
-  * Attempt to render table with all colums hidden throws `NoVisibleColumnsException`.
+  * Attempt to render table with all columns hidden throws `NoVisibleColumnsException`.
   * All custom exception class names now ends with `Exception`.
 
 

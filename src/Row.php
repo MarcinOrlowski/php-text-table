@@ -2,21 +2,21 @@
 declare(strict_types=1);
 
 /**
- * ASCII Table
+ * Text Table
  *
- * @package   MarcinOrlowski\AsciiTable
+ * @package   MarcinOrlowski\TextTable
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
  * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/php-ascii-table
+ * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\TextTable;
 
-use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException;
-use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
-use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
+use MarcinOrlowski\TextTable\Traits\ArrayAccessTrait;
+use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
 
 class Row implements ContainerContract
 {
@@ -68,7 +68,7 @@ class Row implements ContainerContract
      * @param Align           $align
      *
      * @return $this
-     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException
+     * @throws DuplicateColumnKeyException
      */
     public function addCell(string|int      $columnKey,
                             Cell|string|int $cell,
@@ -77,7 +77,7 @@ class Row implements ContainerContract
         if (!($cell instanceof Cell)) {
             $cell = new Cell($cell, $align);
         }
-        $this->getContainer()->add($columnKey, $cell);
+        $this->getContainer()->addCell($columnKey, $cell);
 
         return $this;
     }

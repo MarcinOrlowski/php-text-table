@@ -2,17 +2,17 @@
 declare(strict_types=1);
 
 /**
- * ASCII Table
+ * Text Table
  *
- * @package   MarcinOrlowski\AsciiTable
+ * @package   MarcinOrlowski\TextTable
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
  * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/php-ascii-table
+ * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\TextTable;
 
 class Column
 {
@@ -24,7 +24,7 @@ class Column
     {
         $this->setTitle($title);
         $this->setMaxWidth($maxWidth);
-        $this->setDefaultColumnAlign($align);
+        $this->setCellAlign($align);
         $this->setTitleAlign($titleAlign);
         $this->setVisibility($visible);
     }
@@ -77,18 +77,18 @@ class Column
 
     /**
      * Default column content alignment. Will be used for each cell in that column unless custom
-     * content alignment is set up.
+     * cell has own (non Align::AUTO) alignment specified.
      */
-    protected Align $defaultColumnAlign = Align::AUTO;
+    protected Align $columnAlign = Align::AUTO;
 
-    public function getDefaultColumnAlign(): Align
+    public function getColumnAlign(): Align
     {
-        return $this->defaultColumnAlign;
+        return $this->columnAlign;
     }
 
-    public function setDefaultColumnAlign(Align $defaultColumnAlign): self
+    public function setCellAlign(Align $columnAlign): self
     {
-        $this->defaultColumnAlign = $defaultColumnAlign;
+        $this->columnAlign = $columnAlign;
         return $this;
     }
 

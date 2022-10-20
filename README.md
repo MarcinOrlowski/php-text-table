@@ -1,6 +1,6 @@
-# ASCII Table
+# Text Table
 
-Fast and flexible PHP library rendering plain ASCII tables.
+Fast and flexible PHP library for text tables.
 
 ---
 
@@ -26,7 +26,7 @@ Table of contents
 Simples possible usage:
 
 ```php
-$table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+$table = new TextTable(['ID', 'NAME', 'SCORE']);
 $table->addRows([
     [1, 'John', 12],
     [2, 'Tommy', 15],
@@ -34,7 +34,7 @@ $table->addRows([
 $table->render();
 ```
 
-would produce nice ASCII table:
+would produce nice text table:
 
 ```php
 +----+-------+-------+
@@ -52,5 +52,5 @@ See more [usage examples](docs/examples.md).
 ## License
 
 * Written and copyrighted &copy;2022 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* ASCII Table is open-sourced software licensed under
+* Text Table is open-sourced software licensed under
   the [MIT license](http://opensource.org/licenses/MIT)

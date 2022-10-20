@@ -2,22 +2,22 @@
 declare(strict_types=1);
 
 /**
- * ASCII Table
+ * Text Table
  *
- * @package   MarcinOrlowski\AsciiTable
+ * @package   MarcinOrlowski\TextTable
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
  * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/php-ascii-table
+ * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\TextTable;
 
-use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException;
-use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException;
-use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
-use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
+use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
+use MarcinOrlowski\TextTable\Traits\ArrayAccessTrait;
+use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
 
 class ColumnsContainer implements ContainerContract
 {
@@ -43,6 +43,18 @@ class ColumnsContainer implements ContainerContract
     }
 
     /**
+     * Returns `TRUE` if column referenced by specified key exists, `FALSE` otherwise.
+     *
+     * @param string|int $columnKey Column key we are going to populate.
+     *
+     * @return bool
+     */
+    public function hasColumn(string|int $columnKey): bool
+    {
+        return $this->offsetExists($columnKey);
+    }
+
+    /**
      * Adds new column definition to the container.
      *
      * @param string|int $columnKey Column key we are going to populate.
@@ -50,8 +62,8 @@ class ColumnsContainer implements ContainerContract
      *
      * @return self
      *
-     * @throws \MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException
-     * @throws \MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException
+     * @throws ColumnKeyNotFoundException
+     * @throws DuplicateColumnKeyException
      */
     public function addColumn(string|int $columnKey, Column $column): self
     {

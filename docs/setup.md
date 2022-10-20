@@ -1,6 +1,6 @@
-# ASCII Table
+# Text Table
 
-Fast and flexible PHP library rendering plain ASCII tables.
+Fast and flexible PHP library for text tables.
 
 ---
 
@@ -13,5 +13,5 @@ Fast and flexible PHP library rendering plain ASCII tables.
 ## Installation
 
 ```bash
-$ composer require marcin-orlowski/ascii-table
+$ composer require marcin-orlowski/text-table
 ```

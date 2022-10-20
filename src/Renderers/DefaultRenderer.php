@@ -2,27 +2,26 @@
 declare(strict_types=1);
 
 /**
- * ASCII Table
+ * Text Table
  *
- * @package   MarcinOrlowski\AsciiTable
+ * @package   MarcinOrlowski\TextTable
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
  * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/php-ascii-table
+ * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\AsciiTable\Renderers;
+namespace MarcinOrlowski\TextTable\Renderers;
 
-use MarcinOrlowski\AsciiTable\Align;
-use MarcinOrlowski\AsciiTable\AsciiTable;
-use MarcinOrlowski\AsciiTable\Cell;
-use MarcinOrlowski\AsciiTable\Column;
-use MarcinOrlowski\AsciiTable\ColumnsContainer;
-use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException;
-use MarcinOrlowski\AsciiTable\Output\WriterContract;
-use MarcinOrlowski\AsciiTable\Row;
-use MarcinOrlowski\AsciiTable\Utils\StringUtils;
+use MarcinOrlowski\TextTable\Align;
+use MarcinOrlowski\TextTable\Cell;
+use MarcinOrlowski\TextTable\Column;
+use MarcinOrlowski\TextTable\ColumnsContainer;
+use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\TextTable\Row;
+use MarcinOrlowski\TextTable\TextTable;
+use MarcinOrlowski\TextTable\Utils\StringUtils;
 
 class DefaultRenderer implements RendererContract
 {
@@ -31,36 +30,72 @@ class DefaultRenderer implements RendererContract
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function render(AsciiTable $table, WriterContract $writer): void
+    public function render(TextTable $table): array
     {
+        $result = [];
+
         $columns = $table->getColumns();
 
         $sep = $this->renderSeparator($columns);
 
         if (\count($columns) > 0) {
-            $writer->write($sep);
-            $writer->write($this->renderHeader($columns));
+            $result[] = $sep;
+            $result[] = $this->renderHeader($columns);
         }
-        $writer->write($sep);
+        $result[] = $sep;
         $rows = $table->getRows();
         if (\count($rows) > 0) {
             foreach ($rows as $row) {
                 /** @var Row $row */
-                $writer->write($this->renderRow($columns, $row));
+                $result[] = $this->renderRow($columns, $row);
             }
         } else {
             $label = 'NO DATA';
-            if (\mb_strlen($label) > $table->getTotalWidth()) {
-                $label = \mb_substr($label, 0, $table->getTotalWidth() - 1) . '…';
-            } else {
-                $label = StringUtils::pad($label, $table->getTotalWidth(), ' ', \STR_PAD_BOTH);
-
-            }
-            $noData = \sprintf('| %s |' . PHP_EOL, $label);
-            $writer->write($noData);
+            $tableTotalWidth = $this->getTableTotalWidth($table);
+            $label = (\mb_strlen($label) > $tableTotalWidth)
+                ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
+                : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
+            $result[] = \sprintf('| %s |' . PHP_EOL, $label);
         }
-        $writer->write($sep);
+        $result[] = $sep;
+
+        return $result;
     }
+
+
+//    /**
+//     * @inheritDoc
+//     *
+//     * @throws ColumnKeyNotFoundException
+//     */
+//    public function render(TextTable $table, WriterContract $writer): void
+//    {
+//        $columns = $table->getColumns();
+//
+//        $sep = $this->renderSeparator($columns);
+//
+//        if (\count($columns) > 0) {
+//            $writer->write($sep);
+//            $writer->write($this->renderHeader($columns));
+//        }
+//        $writer->write($sep);
+//        $rows = $table->getRows();
+//        if (\count($rows) > 0) {
+//            foreach ($rows as $row) {
+//                /** @var Row $row */
+//                $writer->write($this->renderRow($columns, $row));
+//            }
+//        } else {
+//            $label = 'NO DATA';
+//            $tableTotalWidth = $this->getTableTotalWidth($table);
+//            $label = (\mb_strlen($label) > $tableTotalWidth)
+//                ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
+//                : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
+//            $noData = \sprintf('| %s |' . PHP_EOL, $label);
+//            $writer->write($noData);
+//        }
+//        $writer->write($sep);
+//    }
 
     /* ****************************************************************************************** */
 
@@ -83,8 +118,8 @@ class DefaultRenderer implements RendererContract
                 continue;
             }
 
-            $cell = ($cells->has($columnKey))
-                ? $cells->get($columnKey)
+            $cell = ($cells->hasCell($columnKey))
+                ? $cells->getCell($columnKey)
                 : new Cell();
 
             if ($this->isFirstVisibleColumn($columns, $columnKey)) {
@@ -279,7 +314,7 @@ class DefaultRenderer implements RendererContract
      */
     protected function getColumnAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
-        return $columns->getColumn($columnKey)->getDefaultColumnAlign();
+        return $columns->getColumn($columnKey)->getColumnAlign();
     }
 
     /**
@@ -294,6 +329,28 @@ class DefaultRenderer implements RendererContract
     {
         return $columns->getColumn($columnKey)->getTitleAlign();
     }
+
     /* ****************************************************************************************** */
+
+    /**
+     * Get total width of the visible table WITHOUT edges (so the full table width
+     * in output is then 2 (for left edge) + getTotalWidth() + 2 (for right edge).
+     */
+    protected function getTableTotalWidth(TextTable $table): int
+    {
+        $totalWidth = 0;
+
+        foreach ($table->getColumns() as $column) {
+            /** @var Column $column */
+            if ($column->isVisible()) {
+                $totalWidth += $column->getWidth();
+            }
+        }
+
+        // Next, we need to account column separators as well.
+        $totalWidth += ($table->getVisibleColumnCount() - 1) * \mb_strlen(self::HEADER_BORDER_CENTER);
+
+        return $totalWidth;
+    }
 
 }

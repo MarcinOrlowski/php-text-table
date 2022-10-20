@@ -2,22 +2,22 @@
 declare(strict_types=1);
 
 /**
- * ASCII Table
+ * Text Table
  *
- * @package   MarcinOrlowski\AsciiTable
+ * @package   MarcinOrlowski\TextTable
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
  * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/php-ascii-table
+ * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\TextTable;
 
-use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException;
-use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException;
-use MarcinOrlowski\AsciiTable\Traits\ArrayAccessTrait;
-use MarcinOrlowski\AsciiTable\Traits\IteratorAggregateTrait;
+use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
+use MarcinOrlowski\TextTable\Traits\ArrayAccessTrait;
+use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
 
 class CellsContainer implements ContainerContract
 {
@@ -35,7 +35,7 @@ class CellsContainer implements ContainerContract
      *
      * @throws DuplicateColumnKeyException
      */
-    public function add(string|int $columnKey, Cell $cell): self
+    public function addCell(string|int $columnKey, Cell $cell): self
     {
         if ($this->offsetExists($columnKey)) {
             throw new DuplicateColumnKeyException("Column key already exists: {$columnKey}");
@@ -52,7 +52,7 @@ class CellsContainer implements ContainerContract
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function get(string|int $columnKey): Cell
+    public function getCell(string|int $columnKey): Cell
     {
         if (!$this->offsetExists($columnKey)) {
             throw new ColumnKeyNotFoundException("Unknown column key: {$columnKey}");
@@ -67,7 +67,7 @@ class CellsContainer implements ContainerContract
      *
      * @return bool
      */
-    public function has(string|int $columnKey): bool
+    public function hasCell(string|int $columnKey): bool
     {
         return $this->offsetExists($columnKey);
     }

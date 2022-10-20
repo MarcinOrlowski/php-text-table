@@ -2,27 +2,25 @@
 declare(strict_types=1);
 
 /**
- * ASCII Table
+ * Text Table
  *
- * @package   MarcinOrlowski\AsciiTable
+ * @package   MarcinOrlowski\TextTable
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
  * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      https://github.com/MarcinOrlowski/php-ascii-table
+ * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\AsciiTable;
+namespace MarcinOrlowski\TextTable;
 
-use MarcinOrlowski\AsciiTable\Exceptions\ColumnKeyNotFoundException;
-use MarcinOrlowski\AsciiTable\Exceptions\DuplicateColumnKeyException;
-use MarcinOrlowski\AsciiTable\Exceptions\NoVisibleColumnsException;
-use MarcinOrlowski\AsciiTable\Exceptions\UnsupportedColumnTypeException;
-use MarcinOrlowski\AsciiTable\Output\WriterContract;
-use MarcinOrlowski\AsciiTable\Output\Writers\EchoWriter;
-use MarcinOrlowski\AsciiTable\Renderers\DefaultRenderer;
+use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
+use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
+use MarcinOrlowski\TextTable\Exceptions\UnsupportedColumnTypeException;
+use MarcinOrlowski\TextTable\Renderers\DefaultRenderer;
 
-class AsciiTable
+class TextTable
 {
     /**
      * @param array $headerColumns Optional array of column headers to be created.
@@ -235,26 +233,26 @@ class AsciiTable
     /**
      * Renders given table and outputs it via provided writer.
      *
-     * @param WriterContract|null $writer
-     *
+     * @throws NoVisibleColumnsException
      * @throws ColumnKeyNotFoundException
      */
-    public function render(?WriterContract $writer = null): void
+    public function render(): array
     {
         if ($this->getVisibleColumnCount() === 0) {
             throw new NoVisibleColumnsException();
         }
 
-        if ($writer === null) {
-            $writer = new EchoWriter();
-        }
-
         $renderer = new DefaultRenderer();
-        $renderer->render($this, $writer);
+        return $renderer->render($this);
+    }
+
+    public function renderAsString(): string
+    {
+        return \implode(\PHP_EOL, $this->render());
     }
 
     /**
-     * @param string|int $columnKey
+     * @param string|int $columnKey Key of column to be obtained.
      *
      * @return Column
      *
@@ -265,18 +263,54 @@ class AsciiTable
         return $this->columns->getColumn($columnKey);
     }
 
+    public function hasColumn(string|int $columnKey): bool
+    {
+        return $this->columns->hasColumn($columnKey);
+    }
+
     /**
+     * Sets specified align to be default align for column header and column cells.
+     *
      * @param string|int $columnKey Unique column key to be assigned to this column
-     * @param Align      $align
+     * @param Align      $align     Align to be set.
      *
      * @return self
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function setDefaultColumnAlign(string|int $columnKey, Align $align): self
+    public function setColumnAlign(string|int $columnKey, Align $align): self
     {
-        $this->columns->getColumn($columnKey)->setDefaultColumnAlign($align);
+        $this->setCellAlign($columnKey, $align);
+        $this->setTitleAlign($columnKey, $align);
 
+        return $this;
+    }
+
+    /**
+     * @param string|int $columnKey Unique column key to be assigned to this column
+     * @param Align      $align     Alignment to be set for the column cell's text
+     *
+     * @return $this
+     *
+     * @throws ColumnKeyNotFoundException
+     */
+    public function setCellAlign(string|int $columnKey, Align $align): self
+    {
+        $this->getColumn($columnKey)->setCellAlign($align);
+        return $this;
+    }
+
+    /**
+     * @param string|int $columnKey Unique column key to be assigned to this column
+     * @param Align      $align     Alignment to be set for the column's title text
+     *
+     * @return $this
+     *
+     * @throws ColumnKeyNotFoundException
+     */
+    public function setTitleAlign(string|int $columnKey, Align $align): self
+    {
+        $this->getColumn($columnKey)->setTitleAlign($align);
         return $this;
     }
 
@@ -290,7 +324,7 @@ class AsciiTable
      */
     public function setColumnMaxWidth(string|int $columnKey, int $width): self
     {
-        $this->columns->getColumn($columnKey)->setMaxWidth($width);
+        $this->getColumn($columnKey)->setMaxWidth($width);
 
         return $this;
     }
@@ -304,7 +338,7 @@ class AsciiTable
      */
     public function setColumnVisibility(string|int $columnKey, bool $visible): self
     {
-        $this->columns->getColumn($columnKey)->setVisibility($visible);
+        $this->getColumn($columnKey)->setVisibility($visible);
 
         return $this;
     }
@@ -332,34 +366,17 @@ class AsciiTable
      */
     public function showColumn(string|int $columnKey): self
     {
-        $this->columns->getColumn($columnKey)->setVisibility(true);
+        $this->getColumn($columnKey)->setVisibility(true);
 
         return $this;
     }
 
+    /**
+     * Returns number of columns with visibility set to `true`.
+     */
     public function getVisibleColumnCount(): int
     {
         return \count(\array_filter($this->columns->toArray(), fn(Column $column) => $column->isVisible()));
-    }
-
-    /**
-     * Get total width of the table WITHOUT edges (so the full table width
-     * in output is then 2 (for left edge) + getTotalWidth() + 2 (for right edge).
-     */
-    public function getTotalWidth(): int
-    {
-        $totalWidth = 0;
-
-        foreach ($this->getColumns() as $column) {
-            $totalWidth += $column->getWidth();
-        }
-
-        // Next, we need to account column separators as well.
-        $columnSeparator = ' | ';
-        $columnCnt = \count($this->getColumns());
-        $totalWidth += ($columnCnt - 1) * \mb_strlen($columnSeparator);
-
-        return $totalWidth;
     }
 
 }
