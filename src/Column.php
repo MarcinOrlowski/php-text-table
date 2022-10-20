@@ -43,8 +43,12 @@ class Column extends \Lombok\Helper
         $this->setTitle($title);
         $this->setMaxWidth($maxWidth);
         $this->setAlign($align);
-        $this->setCellAlign($cellAlign);
-        $this->setTitleAlign($titleAlign);
+        if ($cellAlign !== null) {
+            $this->setCellAlign($cellAlign);
+        }
+        if ($titleAlign !== null) {
+            $this->setTitleAlign($titleAlign);
+        }
         $this->setVisibility($visible);
     }
 
