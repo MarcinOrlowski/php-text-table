@@ -202,8 +202,8 @@ class BaseTest extends TestCase
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
         ]);
 
-        $table->setDefaultColumnAlign('ID', Align::RIGHT);
-        $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
+        $table->setColumnAlign('ID', Align::RIGHT);
+        $table->setColumnAlign('SCORE', Align::RIGHT);
 
         $renderedTable = $this->render($table);
 
@@ -334,15 +334,17 @@ class BaseTest extends TestCase
         $table->setColumnMaxWidth('NAME', 5);
         $table->setColumnMaxWidth('SCORE', 25);
 
-        $table->setDefaultColumnAlign('ID', Align::RIGHT);
-        $table->setDefaultColumnAlign('NAME', Align::CENTER);
-        $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
+        $table->setColumnAlign('ID', Align::RIGHT);
+        $table->setCellAlign('NAME', Align::CENTER);
+        $table->getColumn('SCORE')
+            ->setCellAlign(Align::RIGHT)
+            ->setTitleAlign(Align::CENTER);
 
         $renderedTable = $this->render($table);
 
         $expected = [
             '+----------------------+-------+---------------------------+',
-            '| ID                   | NAME  | SCORE                     |',
+            '|                   ID | NAME  |           SCORE           |',
             '+----------------------+-------+---------------------------+',
             '|                    1 |  John |                        12 |',
             '|                    2 | Tommy |                        15 |',
@@ -389,7 +391,7 @@ class BaseTest extends TestCase
     public function testNoData(): void
     {
         $table = new TextTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
-        $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
+        $table->setColumnAlign('SCORE', Align::RIGHT);
 
         $renderedTable = $this->render($table);
 
@@ -478,7 +480,7 @@ class BaseTest extends TestCase
         $columns = ['ID', 'NAME', 'SCORE'];
         $table = new TextTable($columns);
 
-        foreach($columns as $column) {
+        foreach ($columns as $column) {
             $table->hideColumn($column);
         }
 
@@ -517,6 +519,7 @@ class BaseTest extends TestCase
 
         Assert::assertEquals($expected, $renderedTable);
     }
+
     public function testHiddingLastColumn(): void
     {
         $key1 = Generator::getRandomString('key1');
@@ -564,8 +567,8 @@ class BaseTest extends TestCase
             ['SCORE' => 32, 'NAME' => 'Robert'],
         ]);
 
-        $table->setDefaultColumnAlign('ID', Align::RIGHT);
-        $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
+        $table->setColumnAlign('ID', Align::RIGHT);
+        $table->setColumnAlign('SCORE', Align::RIGHT);
 
         $renderedTable = $this->render($table);
 

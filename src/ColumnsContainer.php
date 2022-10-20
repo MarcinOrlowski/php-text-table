@@ -43,6 +43,18 @@ class ColumnsContainer implements ContainerContract
     }
 
     /**
+     * Returns `TRUE` if column referenced by specified key exists, `FALSE` otherwise.
+     *
+     * @param string|int $columnKey Column key we are going to populate.
+     *
+     * @return bool
+     */
+    public function hasColumn(string|int $columnKey): bool
+    {
+        return $this->offsetExists($columnKey);
+    }
+
+    /**
      * Adds new column definition to the container.
      *
      * @param string|int $columnKey Column key we are going to populate.

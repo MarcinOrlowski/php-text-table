@@ -314,7 +314,7 @@ class DefaultRenderer implements RendererContract
      */
     protected function getColumnAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
-        return $columns->getColumn($columnKey)->getDefaultColumnAlign();
+        return $columns->getColumn($columnKey)->getColumnAlign();
     }
 
     /**

@@ -252,7 +252,7 @@ class TextTable
     }
 
     /**
-     * @param string|int $columnKey
+     * @param string|int $columnKey Key of column to be obtained.
      *
      * @return Column
      *
@@ -263,18 +263,54 @@ class TextTable
         return $this->columns->getColumn($columnKey);
     }
 
+    public function hasColumn(string|int $columnKey): bool
+    {
+        return $this->columns->hasColumn($columnKey);
+    }
+
     /**
+     * Sets specified align to be default align for column header and column cells.
+     *
      * @param string|int $columnKey Unique column key to be assigned to this column
-     * @param Align      $align
+     * @param Align      $align     Align to be set.
      *
      * @return self
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function setDefaultColumnAlign(string|int $columnKey, Align $align): self
+    public function setColumnAlign(string|int $columnKey, Align $align): self
     {
-        $this->columns->getColumn($columnKey)->setDefaultColumnAlign($align);
+        $this->setCellAlign($columnKey, $align);
+        $this->setTitleAlign($columnKey, $align);
 
+        return $this;
+    }
+
+    /**
+     * @param string|int $columnKey Unique column key to be assigned to this column
+     * @param Align      $align     Alignment to be set for the column cell's text
+     *
+     * @return $this
+     *
+     * @throws ColumnKeyNotFoundException
+     */
+    public function setCellAlign(string|int $columnKey, Align $align): self
+    {
+        $this->getColumn($columnKey)->setCellAlign($align);
+        return $this;
+    }
+
+    /**
+     * @param string|int $columnKey Unique column key to be assigned to this column
+     * @param Align      $align     Alignment to be set for the column's title text
+     *
+     * @return $this
+     *
+     * @throws ColumnKeyNotFoundException
+     */
+    public function setTitleAlign(string|int $columnKey, Align $align): self
+    {
+        $this->getColumn($columnKey)->setTitleAlign($align);
         return $this;
     }
 
@@ -288,7 +324,7 @@ class TextTable
      */
     public function setColumnMaxWidth(string|int $columnKey, int $width): self
     {
-        $this->columns->getColumn($columnKey)->setMaxWidth($width);
+        $this->getColumn($columnKey)->setMaxWidth($width);
 
         return $this;
     }
@@ -302,7 +338,7 @@ class TextTable
      */
     public function setColumnVisibility(string|int $columnKey, bool $visible): self
     {
-        $this->columns->getColumn($columnKey)->setVisibility($visible);
+        $this->getColumn($columnKey)->setVisibility($visible);
 
         return $this;
     }
@@ -330,7 +366,7 @@ class TextTable
      */
     public function showColumn(string|int $columnKey): self
     {
-        $this->columns->getColumn($columnKey)->setVisibility(true);
+        $this->getColumn($columnKey)->setVisibility(true);
 
         return $this;
     }
