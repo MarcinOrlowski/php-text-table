@@ -49,7 +49,7 @@ which in turn should produce this table:
 // of Column class that is automatically created for other columns.
 $table = new TextTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
 
-$table->setDefaultColumnAlign('SCORE', Align::RIGHT);
+$table->setColumnAlign('SCORE', Align::RIGHT);
 
 // Add 2 rows to the table, assignig cells in order of appearance.
 // Similarly to the column above, the 2nd cell in second row is also
