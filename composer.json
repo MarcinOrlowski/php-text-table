@@ -2,7 +2,7 @@
     "name": "marcin-orlowski/text-table",
     "description": "Fast and flexible PHP library rendering plain ASCII tables.",
     "homepage": "https://github.com/MarcinOrlowski/php-text-table",
-    "version": "1.7.0",
+    "version": "2.0.0",
     "keywords": [
         "php",
         "php8",

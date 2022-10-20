@@ -6,7 +6,7 @@ Fast and flexible PHP library rendering plain ASCII tables.
 
 ## Changes
 
-* dev
+* 2.0.0 (2022-10-20)
   * Main class name changed to `TextTable`.
   * `RendererContract`'s `render()` no longer expects returns `string[]`.
   * Writers and `WriterContract` are completely gone as they are no longer needed.
