@@ -13,5 +13,5 @@ Fast and flexible PHP library for text tables.
 ## Installation
 
 ```bash
-$ composer require marcin-orlowski/ascii-table
+$ composer require marcin-orlowski/text-table
 ```

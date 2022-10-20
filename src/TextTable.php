@@ -246,6 +246,11 @@ class TextTable
         return $renderer->render($this);
     }
 
+    public function renderAsString(): string
+    {
+        return \implode(\PHP_EOL, $this->render());
+    }
+
     /**
      * @param string|int $columnKey
      *

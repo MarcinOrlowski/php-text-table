@@ -16,7 +16,7 @@ This is probably the most common and yet the simplest possible usage:
 
 ```php
 // Create the tablie with 3 columns, of which IDs will be their values.
-$table = new AsciiTable(['ID', 'NAME', 'SCORE']);
+$table = new TextTable(['ID', 'NAME', 'SCORE']);
 
 // Add 2 rows to the table, assignig cells in order of appearance.
 $table->addRows([
@@ -24,8 +24,8 @@ $table->addRows([
     [2, 'Tommy', 15],
 ]);
 
-// Print the whole table using defult output writer.
-$table->render();
+// Print the whole table.
+echo $table->renderAsString();
 ```
 
 which in turn should produce this nice ASCII table:
@@ -47,7 +47,7 @@ which in turn should produce this nice ASCII table:
 // Create the tablie with 3 columns, of which IDs will be their values.
 // The definition of 2nd column is created explicitly, using instance 
 // of Column class that is automatically created for other columns.
-$table = new AsciiTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
+$table = new TextTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
 
 $table->setDefaultColumnAlign('SCORE', Align::RIGHT);
 
@@ -59,8 +59,8 @@ $table->addRows([
     [2, new Cell('Tommy', Align::CENTER), 15],
 ]);
 
-// Print the whole table using defult output writer.
-$table->render();
+// Print the whole table.
+echo $table->renderAsString()
 ```
 
 would produce this nicely formatted ASCII table:
