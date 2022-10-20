@@ -77,7 +77,7 @@ class Row implements ContainerContract
         if (!($cell instanceof Cell)) {
             $cell = new Cell($cell, $align);
         }
-        $this->getContainer()->add($columnKey, $cell);
+        $this->getContainer()->addCell($columnKey, $cell);
 
         return $this;
     }

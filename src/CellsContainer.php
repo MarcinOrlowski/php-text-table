@@ -35,7 +35,7 @@ class CellsContainer implements ContainerContract
      *
      * @throws DuplicateColumnKeyException
      */
-    public function add(string|int $columnKey, Cell $cell): self
+    public function addCell(string|int $columnKey, Cell $cell): self
     {
         if ($this->offsetExists($columnKey)) {
             throw new DuplicateColumnKeyException("Column key already exists: {$columnKey}");
@@ -52,7 +52,7 @@ class CellsContainer implements ContainerContract
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function get(string|int $columnKey): Cell
+    public function getCell(string|int $columnKey): Cell
     {
         if (!$this->offsetExists($columnKey)) {
             throw new ColumnKeyNotFoundException("Unknown column key: {$columnKey}");
@@ -67,7 +67,7 @@ class CellsContainer implements ContainerContract
      *
      * @return bool
      */
-    public function has(string|int $columnKey): bool
+    public function hasCell(string|int $columnKey): bool
     {
         return $this->offsetExists($columnKey);
     }

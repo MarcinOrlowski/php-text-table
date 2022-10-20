@@ -118,8 +118,8 @@ class DefaultRenderer implements RendererContract
                 continue;
             }
 
-            $cell = ($cells->has($columnKey))
-                ? $cells->get($columnKey)
+            $cell = ($cells->hasCell($columnKey))
+                ? $cells->getCell($columnKey)
                 : new Cell();
 
             if ($this->isFirstVisibleColumn($columns, $columnKey)) {
