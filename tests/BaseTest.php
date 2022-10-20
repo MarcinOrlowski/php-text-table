@@ -321,7 +321,6 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
-
     public function testCustomWidthAndAlign(): void
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
@@ -349,6 +348,37 @@ class BaseTest extends TestCase
             '|                    1 |  John |                        12 |',
             '|                    2 | Tommy |                        15 |',
             '+----------------------+-------+---------------------------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    public function testCustomWidthAndMixedAlign(): void
+    {
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
+        $table->addRows([
+            ['ID' => 1, 'SCORE' => new Cell(12, Align::CENTER), 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
+        ]);
+
+        $table->setColumnMaxWidth('ID', 10);
+        $table->setColumnMaxWidth('NAME', 5);
+        $table->setColumnMaxWidth('SCORE', 25);
+
+        $table->setColumnAlign('ID', Align::RIGHT);
+        $table->setCellAlign('NAME', Align::CENTER);
+        $table->getColumn('SCORE')
+            ->setCellAlign(Align::RIGHT)
+            ->setTitleAlign(Align::CENTER);
+
+        $renderedTable = $this->render($table);
+
+        $expected = [
+            '+------------+-------+---------------------------+',
+            '|         ID | NAME  |           SCORE           |',
+            '+------------+-------+---------------------------+',
+            '|          1 |  John |             12            |',
+            '|          2 | Tommy |                        15 |',
+            '+------------+-------+---------------------------+',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -605,7 +635,6 @@ class BaseTest extends TestCase
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
-
 
 }
 
