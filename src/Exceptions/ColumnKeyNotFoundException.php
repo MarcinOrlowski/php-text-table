@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 /**
- * ASCII Table
+ * Text Table
  *
  * @package   MarcinOrlowski\TextTable
  *

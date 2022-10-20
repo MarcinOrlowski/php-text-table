@@ -1,6 +1,6 @@
-# ASCII Table
+# Text Table
 
-Fast and flexible PHP library rendering plain ASCII tables.
+Fast and flexible PHP library for text tables.
 
 ---
 
@@ -79,5 +79,5 @@ would produce this nicely formatted ASCII table:
 ## License
 
 * Written and copyrighted &copy;2022 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* ASCII Table is open-sourced software licensed under
+* Text Table is open-sourced software licensed under
   the [MIT license](http://opensource.org/licenses/MIT)

@@ -1,4 +1,4 @@
-# ASCII Table
+# Text Table
 
 Fast and flexible PHP library rendering plain ASCII tables.
 
