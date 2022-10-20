@@ -4,8 +4,65 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "365458bc888cd467911eb1263c6c0d81",
-    "packages": [],
+    "content-hash": "f6c16b74e8cdb67b0a0e33d504ef8059",
+    "packages": [
+        {
+            "name": "marcin-orlowski/lombok-php",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MarcinOrlowski/lombok-php.git",
+                "reference": "bddb952f501a0e242a5c204444c0c221cebf906f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MarcinOrlowski/lombok-php/zipball/bddb952f501a0e242a5c204444c0c221cebf906f",
+                "reference": "bddb952f501a0e242a5c204444c0c221cebf906f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0|^8.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.5",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lombok\\": "src/",
+                    "LombokTest\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-only"
+            ],
+            "authors": [
+                {
+                    "name": "Marcin Orlowski",
+                    "homepage": "http://MarcinOrlowski.com/"
+                }
+            ],
+            "description": "Write less code!",
+            "homepage": "https://github.com/MarcinOrlowski/lombok-php",
+            "keywords": [
+                "accessors",
+                "annotation",
+                "annotations",
+                "getters",
+                "lombok",
+                "php",
+                "php8",
+                "setters"
+            ],
+            "support": {
+                "issues": "https://github.com/MarcinOrlowski/lombok-php/issues",
+                "source": "https://github.com/MarcinOrlowski/lombok-php/"
+            },
+            "time": "2022-04-16T19:58:27+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "doctrine/instantiator",
@@ -1972,7 +2029,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "ext-mbstring": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.2.0"

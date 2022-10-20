@@ -14,11 +14,18 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
+use Lombok\Getter;
+use Lombok\Setter;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Traits\ArrayAccessTrait;
 use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
 
-class Row implements ContainerContract
+/**
+ * @method CellsContainer getContainer()
+ */
+#[Getter]
+#[Setter]
+class Row extends \Lombok\Helper implements ContainerContract
 {
     use ArrayAccessTrait;
     use IteratorAggregateTrait;
@@ -30,6 +37,8 @@ class Row implements ContainerContract
      */
     public function __construct(array|null $cells = null)
     {
+        parent::__construct();
+
         $this->container = new CellsContainer();
 
         if (!empty($cells)) {
@@ -41,12 +50,8 @@ class Row implements ContainerContract
 
     /* ****************************************************************************************** */
 
+    /** Contains all cells of given row. */
     protected CellsContainer $container;
-
-    public function getContainer(): CellsContainer
-    {
-        return $this->container;
-    }
 
     /**
      * @param array<string|int, Cell|string|int|float|bool|null> $cells
