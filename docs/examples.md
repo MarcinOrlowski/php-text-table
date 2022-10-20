@@ -28,7 +28,7 @@ $table->addRows([
 echo $table->renderAsString();
 ```
 
-which in turn should produce this nice ASCII table:
+which in turn should produce this table:
 
 ```php
 +----+-------+-------+
@@ -63,7 +63,7 @@ $table->addRows([
 echo $table->renderAsString()
 ```
 
-would produce this nicely formatted ASCII table:
+would produce this nicely formatted text table:
 
 ```php
 +----+----------------------+-------+

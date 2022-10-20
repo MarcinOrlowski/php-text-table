@@ -34,7 +34,7 @@ $table->addRows([
 $table->render();
 ```
 
-would produce nice ASCII table:
+would produce nice text table:
 
 ```php
 +----+-------+-------+
