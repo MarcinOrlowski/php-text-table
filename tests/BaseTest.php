@@ -19,24 +19,6 @@ use PHPUnit\Framework\TestCase;
 
 class BaseTest extends TestCase
 {
-    protected function render(TextTable $table): array
-    {
-//        $bufferWriter = new BufferWriter();
-        $renderedTable = $table->render();
-//        $renderedTable = $bufferWriter->getBuffer();
-
-        // Strip trailing PHP_EOL to make comparing results
-        // in tests easier.
-        return \array_map(static function(string $line) {
-            if (\mb_substr($line, -1) === PHP_EOL) {
-                $line = \mb_substr($line, 0, -1);
-            }
-            return $line;
-        }, $renderedTable);
-    }
-
-    /* ****************************************************************************************** */
-
     public function testSimpleTable(): void
     {
         $table = new TextTable();
@@ -51,7 +33,7 @@ class BaseTest extends TestCase
             'C' => 'c',
         ]);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+---+---+---+',
@@ -93,7 +75,7 @@ class BaseTest extends TestCase
         }
         $expected[] = '+---+---+---+';
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -117,7 +99,7 @@ class BaseTest extends TestCase
             $key1 => 'a',
         ]);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+---+---+---+',
@@ -139,7 +121,7 @@ class BaseTest extends TestCase
             ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
             ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
         ]);
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----+-------+-------+',
@@ -160,7 +142,7 @@ class BaseTest extends TestCase
         $table->addRows([
             [1, 'John', 12],
         ]);
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----+------+-------+',
@@ -180,7 +162,7 @@ class BaseTest extends TestCase
         $table->addRows([
             ['ID' => 1, 'SCORE' => 12],
         ]);
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----+-------+',
@@ -205,7 +187,7 @@ class BaseTest extends TestCase
         $table->setColumnAlign('ID', Align::RIGHT);
         $table->setColumnAlign('SCORE', Align::RIGHT);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----+-------+-------+',
@@ -231,7 +213,7 @@ class BaseTest extends TestCase
             ],
         ]);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----+----------------------+-------+',
@@ -257,7 +239,7 @@ class BaseTest extends TestCase
         $table->setColumnMaxWidth('NAME', 5);
         $table->setColumnMaxWidth('SCORE', 25);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----------------------+-------+---------------------------+',
@@ -282,7 +264,7 @@ class BaseTest extends TestCase
         $table->setColumnMaxWidth('NAME', 15);
         $table->setColumnMaxWidth('SCORE', 4);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+------------+-----------------+------+',
@@ -308,7 +290,8 @@ class BaseTest extends TestCase
             ['AKY chovatelské potřeby a krmiva'],
         ]);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
+
         $expected = [
             '+----------------------------------+',
             '| NAME                             |',
@@ -339,7 +322,7 @@ class BaseTest extends TestCase
             ->setCellAlign(Align::RIGHT)
             ->setTitleAlign(Align::CENTER);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----------------------+-------+---------------------------+',
@@ -370,7 +353,7 @@ class BaseTest extends TestCase
             ->setCellAlign(Align::RIGHT)
             ->setTitleAlign(Align::CENTER);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+------------+-------+---------------------------+',
@@ -404,7 +387,7 @@ class BaseTest extends TestCase
 
         $table->setColumnMaxWidth('NAME', $maxLength);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
@@ -423,7 +406,7 @@ class BaseTest extends TestCase
         $table = new TextTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
         $table->setColumnAlign('SCORE', Align::RIGHT);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----+----------------------+-------+',
@@ -443,7 +426,7 @@ class BaseTest extends TestCase
         $table = new TextTable([$key]);
         $table->setColumnMaxWidth($key, $maxLength);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $clippedTitle = \mb_substr($key, 0, $maxLength - 1) . '…';
         $tableSeparatorLine = \sprintf('+-%s-+', \str_repeat('-', $maxLength));
@@ -488,10 +471,9 @@ class BaseTest extends TestCase
             $key1 => 'a',
         ]);
 
-
         $table->hideColumn($key2);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+---+---+',
@@ -515,7 +497,7 @@ class BaseTest extends TestCase
         }
 
         $this->expectException(NoVisibleColumnsException::class);
-        $renderedTable = $this->render($table);
+        $table->render();
     }
 
     public function testHiddingFirstColumn(): void
@@ -537,7 +519,7 @@ class BaseTest extends TestCase
 
         $table->hideColumn($key1);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+---+---+',
@@ -569,7 +551,7 @@ class BaseTest extends TestCase
 
         $table->hideColumn($key3);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+---+---+',
@@ -600,7 +582,7 @@ class BaseTest extends TestCase
         $table->setColumnAlign('ID', Align::RIGHT);
         $table->setColumnAlign('SCORE', Align::RIGHT);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----+--------+-------+',
@@ -623,7 +605,7 @@ class BaseTest extends TestCase
             ['NAME' => 'John'],
         ]);
 
-        $renderedTable = $this->render($table);
+        $renderedTable = $table->render();
 
         $expected = [
             '+----+------+',

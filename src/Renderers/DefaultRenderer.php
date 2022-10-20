@@ -55,47 +55,12 @@ class DefaultRenderer implements RendererContract
             $label = (\mb_strlen($label) > $tableTotalWidth)
                 ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
                 : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
-            $result[] = \sprintf('| %s |' . PHP_EOL, $label);
+            $result[] = \sprintf('| %s |', $label);
         }
         $result[] = $sep;
 
         return $result;
     }
-
-
-//    /**
-//     * @inheritDoc
-//     *
-//     * @throws ColumnKeyNotFoundException
-//     */
-//    public function render(TextTable $table, WriterContract $writer): void
-//    {
-//        $columns = $table->getColumns();
-//
-//        $sep = $this->renderSeparator($columns);
-//
-//        if (\count($columns) > 0) {
-//            $writer->write($sep);
-//            $writer->write($this->renderHeader($columns));
-//        }
-//        $writer->write($sep);
-//        $rows = $table->getRows();
-//        if (\count($rows) > 0) {
-//            foreach ($rows as $row) {
-//                /** @var Row $row */
-//                $writer->write($this->renderRow($columns, $row));
-//            }
-//        } else {
-//            $label = 'NO DATA';
-//            $tableTotalWidth = $this->getTableTotalWidth($table);
-//            $label = (\mb_strlen($label) > $tableTotalWidth)
-//                ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
-//                : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
-//            $noData = \sprintf('| %s |' . PHP_EOL, $label);
-//            $writer->write($noData);
-//        }
-//        $writer->write($sep);
-//    }
 
     /* ****************************************************************************************** */
 
@@ -138,8 +103,6 @@ class DefaultRenderer implements RendererContract
                 : self::HEADER_BORDER_CENTER;
         }
 
-        $result .= PHP_EOL;
-
         return $result;
     }
 
@@ -179,8 +142,6 @@ class DefaultRenderer implements RendererContract
                 ? self::HEADER_BORDER_RIGHT
                 : self::HEADER_BORDER_CENTER;
         }
-
-        $result .= PHP_EOL;
 
         return $result;
     }
@@ -244,8 +205,6 @@ class DefaultRenderer implements RendererContract
                 ? self::HEADER_SEGMENT_RIGHT
                 : self::HEADER_SEGMENT_CENTER;
         }
-
-        $result .= PHP_EOL;
 
         return $result;
     }
