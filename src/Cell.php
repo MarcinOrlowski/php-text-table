@@ -14,11 +14,23 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
-class Cell
+use Lombok\Getter;
+use Lombok\Setter;
+
+/**
+ * @method string getValue()
+ * @method Align getAlign()
+ * @method self setAlign(Align $align)
+ */
+#[Getter]
+#[Setter]
+class Cell extends \Lombok\Helper
 {
     public function __construct(\Stringable|string|int|float|bool|null $value = '',
                                 Align                                  $align = Align::AUTO)
     {
+        parent::__construct();
+
         $this->setValue($value);
         $this->setAlign($align);
     }
@@ -27,11 +39,6 @@ class Cell
 
     /** String representation of cell's value. */
     protected string $value;
-
-    public function getValue(): string
-    {
-        return $this->value;
-    }
 
     protected function setValue(\Stringable|string|int|float|bool|null $value): self
     {
@@ -53,17 +60,7 @@ class Cell
 
     /* ****************************************************************************************** */
 
+    /** @var \MarcinOrlowski\TextTable\Align */
     protected Align $align = Align::AUTO;
-
-    public function getAlign(): Align
-    {
-        return $this->align;
-    }
-
-    protected function setAlign(Align $align): self
-    {
-        $this->align = $align;
-        return $this;
-    }
 
 }

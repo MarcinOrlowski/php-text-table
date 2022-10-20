@@ -14,13 +14,19 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
+use Lombok\Getter;
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Exceptions\UnsupportedColumnTypeException;
 use MarcinOrlowski\TextTable\Renderers\DefaultRenderer;
 
-class TextTable
+/**
+ * @method ColumnsContainer getColumns()
+ * @method RowsContainer getRows()
+ */
+#[Getter]
+class TextTable extends \Lombok\Helper
 {
     /**
      * @param array $headerColumns Optional array of column headers to be created.
@@ -55,15 +61,8 @@ class TextTable
     /* ****************************************************************************************** */
 
     /** Table column definitions and meta data */
+    #[Getter]
     protected ColumnsContainer $columns;
-
-    /**
-     * Returns table column definitions and meta data container.
-     */
-    public function getColumns(): ColumnsContainer
-    {
-        return $this->columns;
-    }
 
     /**
      * Adds new column with specific index. Note columns are registered in the order they are added.
@@ -132,16 +131,9 @@ class TextTable
 
     /* ****************************************************************************************** */
 
-    /** Holds all table rows */
+    /** Holds all table rows. */
+    #[Getter]
     protected RowsContainer $rows;
-
-    /**
-     * Returns table rows container.
-     */
-    public function getRows(): RowsContainer
-    {
-        return $this->rows;
-    }
 
     /**
      * Appends row to the end of table.
@@ -180,7 +172,8 @@ class TextTable
             // then it is assumed that source array elements are in sequence and will be automatically
             // assigned to cell at position matching their index in source array.
             $srcHasNumKeysOnly = \count($srcRow) === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
-            $columnsHasStringKeysOnly = \count($columns) === \count(\array_filter(\array_keys($columns->toArray()), \is_string(...)));
+            $columnsHasStringKeysOnly = \count($columns) === \count(
+                    \array_filter(\array_keys($columns->toArray()), \is_string(...)));
 
             if ($srcHasNumKeysOnly && $columnsHasStringKeysOnly) {
                 $columnKeys = \array_keys($columns->toArray());
@@ -196,14 +189,11 @@ class TextTable
             }
         }
 
+        /** @var Cell[] $row */
         foreach ($row as $columnKey => $cell) {
-            /**
-             * @var string|int $columnKey
-             * @var Cell       $cell
-             */
+            /**  @var string|int $columnKey */
             // Stretch the column width (if needed and possible) to fit the cell content.
-            $columnMeta = $this->columns->getColumn($columnKey);
-            $columnMeta->updateMaxWidth(\mb_strlen($cell->getValue()));
+            $this->getColumn($columnKey)->updateMaxWidth(\mb_strlen($cell->getValue()));
         }
 
         $this->rows[] = $row;
@@ -246,6 +236,13 @@ class TextTable
         return $renderer->render($this);
     }
 
+    /**
+     * Returns rendered table as plain string, with all rows concatenated together using PHP_EOL
+     * as line separator.
+     *
+     * @throws NoVisibleColumnsException
+     * @throws ColumnKeyNotFoundException
+     */
     public function renderAsString(): string
     {
         return \implode(\PHP_EOL, $this->render());
@@ -376,7 +373,7 @@ class TextTable
      */
     public function getVisibleColumnCount(): int
     {
-        return \count(\array_filter($this->columns->toArray(), fn(Column $column) => $column->isVisible()));
+        return \count(\array_filter($this->columns->toArray(), fn(Column $column) => $column->isVisibility()));
     }
 
 }

@@ -127,7 +127,7 @@ class DefaultRenderer implements RendererContract
              * @var string|int $columnKey
              * @var Column     $column
              */
-            if (!$column->isVisible()) {
+            if (!$column->isVisibility()) {
                 continue;
             }
 
@@ -192,7 +192,7 @@ class DefaultRenderer implements RendererContract
              * @var string|int $columnKey
              * @var Column     $column
              */
-            if (!$column->isVisible()) {
+            if (!$column->isVisibility()) {
                 continue;
             }
 
@@ -273,7 +273,7 @@ class DefaultRenderer implements RendererContract
      */
     protected function getColumnAlign(ColumnsContainer $columns, string|int $columnKey): Align
     {
-        return $columns->getColumn($columnKey)->getColumnAlign();
+        return $columns->getColumn($columnKey)->getCellAlign();
     }
 
     /**
@@ -301,7 +301,7 @@ class DefaultRenderer implements RendererContract
 
         foreach ($table->getColumns() as $column) {
             /** @var Column $column */
-            if ($column->isVisible()) {
+            if ($column->isVisibility()) {
                 $totalWidth += $column->getWidth();
             }
         }

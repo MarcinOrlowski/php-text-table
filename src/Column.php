@@ -14,7 +14,22 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
-class Column
+use Lombok\Getter;
+use Lombok\Setter;
+
+/**
+ * @method string getTitle()
+ * @method Align getTitleAlign()
+ * @method self setTitleAlign(Align $align)
+ * @method Align getCellAlign()
+ * @method self setCellAlign(Align $cellAlign)
+ * @method int getMaxWidth()
+ * @method self setMaxWidth(int $width)
+ * @method self setVisibility(bool $visibility)
+ */
+#[Getter]
+#[Setter]
+class Column extends \Lombok\Helper
 {
     public function __construct(string $title,
                                 Align  $align = Align::AUTO,
@@ -23,6 +38,8 @@ class Column
                                 Align  $titleAlign = Align::AUTO,
                                 bool   $visible = true)
     {
+        parent::__construct();
+
         $this->setTitle($title);
         $this->setMaxWidth($maxWidth);
         $this->setAlign($align);
@@ -45,11 +62,6 @@ class Column
 
     /** Column title string */
     protected string $title;
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
 
     protected function setTitle(string $title): self
     {
@@ -80,59 +92,20 @@ class Column
     /** Column title text alignment */
     protected Align $titleAlign = Align::LEFT;
 
-    public function getTitleAlign(): Align
-    {
-        return $this->titleAlign;
-    }
-
-    /**
-     * Sets align for column title text.
-     *
-     * @param Align $align Align to set.
-     *
-     * @return $this
-     */
-    public function setTitleAlign(Align $align): self
-    {
-        $this->titleAlign = $align;
-
-        return $this;
-    }
-
     /* ****************************************************************************************** */
 
     /**
      * Default column content alignment. Will be used for each cell in that column unless custom
      * cell has own (non Align::AUTO) alignment specified.
      */
-    protected Align $columnAlign = Align::AUTO;
-
-    public function getColumnAlign(): Align
-    {
-        return $this->columnAlign;
-    }
-
-    public function setCellAlign(Align $columnAlign): self
-    {
-        $this->columnAlign = $columnAlign;
-        return $this;
-    }
+    protected Align $cellAlign = Align::AUTO;
 
     /* ****************************************************************************************** */
 
-    /** Max allowed width of the column. Content longer than `$maxWidth` will be automatically truncated */
+    /**
+     * Max allowed width of the column. Content longer than `$maxWidth` will be automatically truncated
+     */
     protected int $maxWidth = 0;
-
-    protected function getMaxWidth(): int
-    {
-        return $this->maxWidth;
-    }
-
-    public function setMaxWidth(int $width): self
-    {
-        $this->maxWidth = $width;
-        return $this;
-    }
 
     public function updateMaxWidth(int $width): self
     {
@@ -144,29 +117,12 @@ class Column
 
     /* ****************************************************************************************** */
 
-    protected bool $visible = true;
+    #[Setter]
+    protected bool $visibility = true;
 
     public function isVisible(): bool
     {
-        return $this->visible;
-    }
-
-    /** @deprecated */
-    public function hide(): self
-    {
-        return $this->setVisibility(false);
-    }
-
-    /** @deprecated */
-    public function show(): self
-    {
-        return $this->setVisibility(true);
-    }
-
-    public function setVisibility(bool $visible): self
-    {
-        $this->visible = $visible;
-        return $this;
+        return $this->visibility;
     }
 
 }
