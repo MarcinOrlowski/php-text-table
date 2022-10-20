@@ -19,12 +19,14 @@ class Column
     public function __construct(string $title,
                                 Align  $align = Align::AUTO,
                                 int    $maxWidth = 0,
+                                Align  $cellAlign = Align::AUTO,
                                 Align  $titleAlign = Align::AUTO,
                                 bool   $visible = true)
     {
         $this->setTitle($title);
         $this->setMaxWidth($maxWidth);
-        $this->setCellAlign($align);
+        $this->setAlign($align);
+        $this->setCellAlign($cellAlign);
         $this->setTitleAlign($titleAlign);
         $this->setVisibility($visible);
     }
@@ -59,6 +61,23 @@ class Column
 
     /* ****************************************************************************************** */
 
+    /**
+     * Sets align for both column title and cell content.
+     *
+     * @param Align $align Align to set.
+     *
+     * @return $this
+     */
+    public function setAlign(Align $align): self
+    {
+        $this->setCellAlign($align);
+        $this->setTitleAlign($align);
+        return $this;
+    }
+
+    /* ****************************************************************************************** */
+
+    /** Column title text alignment */
     protected Align $titleAlign = Align::LEFT;
 
     public function getTitleAlign(): Align
@@ -66,6 +85,13 @@ class Column
         return $this->titleAlign;
     }
 
+    /**
+     * Sets align for column title text.
+     *
+     * @param Align $align Align to set.
+     *
+     * @return $this
+     */
     public function setTitleAlign(Align $align): self
     {
         $this->titleAlign = $align;

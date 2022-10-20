@@ -10,6 +10,7 @@ Fast and flexible PHP library for text tables.
   * Main class name changed to `TextTable`.
   * `RendererContract`'s `render()` no longer expects returns `string[]`.
   * Writers and `WriterContract` are completely gone as they are no longer needed.
+  * `Cell`'s constructor allows to set title/cell align separately.
 
 
 * 1.7.0 (2022-10-19)
