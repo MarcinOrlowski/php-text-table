@@ -6,6 +6,9 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
+* @dev
+  * Added `MsDosRenderer` producing tables reminiscent of ancient MS DOS times. 
+
 * 2.1.0 (2022-10-21)
   * Added `FancyRenderer` producing nicer looking table frames. It's now default one.
   * Former `DefaultRenderer` is now `PlusMinusRenderer`.
