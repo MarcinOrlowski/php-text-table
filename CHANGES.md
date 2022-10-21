@@ -6,6 +6,10 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
+* @dev
+  * Added `FancyRenderer` producing nicer looking table frames. It's now default one.
+  * Former `DefaultRenderer` is now `PlusMinusRenderer`.
+
 * 2.0.0 (2022-10-20)
   * Main class name changed to `TextTable`.
   * `RendererContract`'s `render()` no longer expects returns `string[]`.
