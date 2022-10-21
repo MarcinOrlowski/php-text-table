@@ -23,7 +23,7 @@ use MarcinOrlowski\TextTable\Row;
 use MarcinOrlowski\TextTable\TextTable;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
 
-class DefaultRenderer implements RendererContract
+abstract class BaseRenderer implements RendererContract
 {
     /**
      * @inheritDoc
@@ -32,51 +32,58 @@ class DefaultRenderer implements RendererContract
      */
     public function render(TextTable $table): array
     {
+        $ctx = new RenderContext($table);
+
         $result = [];
 
-        $columns = $table->getColumns();
-
-        $sep = $this->renderSeparator($columns);
-
-        if (\count($columns) > 0) {
-            $result[] = $sep;
-            $result[] = $this->renderHeader($columns);
-        }
-        $result[] = $sep;
-        $rows = $table->getRows();
-        if (\count($rows) > 0) {
-            foreach ($rows as $row) {
+        $result[] = $this->renderSeparator($ctx);
+        $result[] = $this->renderHeader($ctx);
+        $result[] = $this->renderSeparator($ctx);
+        if ($table->getRowCount() > 0) {
+            foreach ($table->getRows() as $row) {
                 /** @var Row $row */
-                $result[] = $this->renderRow($columns, $row);
+                $result[] = $this->renderRow($ctx, $row);
             }
         } else {
-            $label = 'NO DATA';
-            $tableTotalWidth = $this->getTableTotalWidth($table);
-            $label = (\mb_strlen($label) > $tableTotalWidth)
-                ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
-                : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
-            $result[] = \sprintf('| %s |', $label);
+            $result[] = $this->renderNoDataRow($table);
+            $ctx->incRenderedRowIdx();
         }
-        $result[] = $sep;
+        $result[] = $this->renderSeparator($ctx);
 
         return $result;
     }
 
+    protected function renderNoDataRow(TextTable $table): string
+    {
+        $label = 'NO DATA';
+        $tableTotalWidth = $this->getTableTotalWidth($table);
+        $label = (\mb_strlen($label) > $tableTotalWidth)
+            ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
+            : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
+        return \sprintf(static::ROW_FRAME_LEFT . $label . static::ROW_FRAME_RIGHT);
+    }
+
     /* ****************************************************************************************** */
+
+    public const ROW_FRAME_LEFT   = '?';
+    public const ROW_FRAME_CENTER = '?';
+    public const ROW_FRAME_RIGHT  = '?';
 
     /**
      * Render single data row.
      *
-     * @param ColumnsContainer $columns Table column definition container.
-     * @param Row              $row     Row to render
+     * @param RenderContext $ctx Rendering context object.
+     * @param Row           $row Row to render
      *
      * @return string
      *
      * @throws ColumnKeyNotFoundException
      */
-    protected function renderRow(ColumnsContainer $columns, Row $row): string
+    protected function renderRow(RenderContext $ctx, Row $row): string
     {
         $result = '';
+
+        $columns = $ctx->getTable()->getColumns();
         $cells = $row->getContainer();
         foreach ($columns as $columnKey => $column) {
             if (!$column->isVisible()) {
@@ -87,8 +94,8 @@ class DefaultRenderer implements RendererContract
                 ? $cells->getCell($columnKey)
                 : new Cell();
 
-            if ($this->isFirstVisibleColumn($columns, $columnKey)) {
-                $result .= self::HEADER_BORDER_LEFT;
+            if ($ctx->isFirstVisibleColumn($columnKey)) {
+                $result .= static::ROW_FRAME_LEFT;
             }
 
             // Using default column align
@@ -98,113 +105,140 @@ class DefaultRenderer implements RendererContract
 
             $result .= $this->pad($columns, $columnKey, $cell->getValue(), $align);
 
-            $result .= $this->isLastVisibleColumn($columns, $columnKey)
-                ? self::HEADER_BORDER_RIGHT
-                : self::HEADER_BORDER_CENTER;
+            $result .= $ctx->isLastVisibleColumn($columnKey)
+                ? static::ROW_FRAME_RIGHT
+                : static::ROW_FRAME_CENTER;
         }
+
+        $ctx->incRenderedRowIdx()->incTableRowIdx();
 
         return $result;
     }
 
     /* ****************************************************************************************** */
 
-    protected const HEADER_BORDER_LEFT   = '| ';
-    protected const HEADER_BORDER_CENTER = ' | ';
-    protected const HEADER_BORDER_RIGHT  = ' |';
-
     /**
-     * @param ColumnsContainer $columns Table column definition container.
+     * @param RenderContext $ctx Rendering context object.
      *
      * @return string
      *
      * @throws ColumnKeyNotFoundException
      */
-    protected function renderHeader(ColumnsContainer $columns): string
+    protected function renderHeader(RenderContext $ctx): string
     {
+        $columns = $ctx->getTable()->getColumns();
+
         $result = '';
         foreach ($columns as $columnKey => $column) {
             /**
              * @var string|int $columnKey
              * @var Column     $column
              */
-            if (!$column->isVisibility()) {
+            if (!$column->isVisible()) {
                 continue;
             }
 
-            if ($this->isFirstVisibleColumn($columns, $columnKey)) {
-                $result .= self::HEADER_BORDER_LEFT;
+            if ($ctx->isFirstVisibleColumn($columnKey)) {
+                $result .= static::ROW_FRAME_LEFT;
             }
 
             $titleAlign = $column->getTitleAlign();
             $result .= $this->pad($columns, $columnKey, $column->getTitle(), $titleAlign);
 
-            $result .= $this->isLastVisibleColumn($columns, $columnKey)
-                ? self::HEADER_BORDER_RIGHT
-                : self::HEADER_BORDER_CENTER;
+            $result .= $ctx->isLastVisibleColumn($columnKey)
+                ? static::ROW_FRAME_RIGHT
+                : static::ROW_FRAME_CENTER;
         }
+
+        // Do not increment data row index for header rows!
+        $ctx->incRenderedRowIdx();
 
         return $result;
     }
 
     /* ****************************************************************************************** */
 
-    protected function isFirstVisibleColumn(ColumnsContainer $columns, $columnKey): bool
-    {
-        foreach ($columns as $key => $column) {
-            if ($column->isVisible()) {
-                return $key === $columnKey;
-            }
-        }
-        return false;
-    }
-
-    protected function isLastVisibleColumn(ColumnsContainer $columns, $columnKey): bool
-    {
-        $lastVisibleColumnKey = null;
-        foreach ($columns as $key => $column) {
-            if (!$column->isVisible()) {
-                continue;
-            }
-            $lastVisibleColumnKey = $key;
-        }
-        return $lastVisibleColumnKey === $columnKey;
-    }
-
-    /* ****************************************************************************************** */
-
-    protected const HEADER_SEGMENT_LEFT   = '+-';
-    protected const HEADER_SEGMENT_CENTER = '-+-';
-    protected const HEADER_SEGMENT_RIGHT  = '-+';
+    public const SEGMENT_ROW_FILL         = '?';
+    public const SEGMENT_FIRST_ROW_LEFT   = '?';
+    public const SEGMENT_FIRST_ROW_CENTER = '?';
+    public const SEGMENT_FIRST_ROW_RIGHT  = '?';
+    public const SEGMENT_ROW_LEFT         = '?';
+    public const SEGMENT_ROW_CENTER       = '?';
+    public const SEGMENT_ROW_RIGHT        = '?';
+    public const SEGMENT_LAST_ROW_LEFT    = '?';
+    public const SEGMENT_LAST_ROW_CENTER  = '?';
+    public const SEGMENT_LAST_ROW_RIGHT   = '?';
 
     /**
      * Renders separator row (usually to separate header/footer from
      * the table content).
      *
-     * @param ColumnsContainer $columns Table column definition container.
+     * @param RenderContext $ctx   Rendering context object.
+     * @param TextTable     $table Table to render separator row for.
      *
      * @return string
      */
-    protected function renderSeparator(ColumnsContainer $columns): string
+    protected function renderSeparator(RenderContext $ctx): string
     {
+        $columns = $ctx->getTable()->getColumns();
+
         $result = '';
+
+        if ($ctx->isLastVisibleRow()) {
+            $isFirstRow = false;
+            $isLastRow = true;
+        } elseif ($ctx->isFirstVisibleRow()) {
+            $isFirstRow = true;
+            $isLastRow = false;
+        } else {
+            $isFirstRow = false;
+            $isLastRow = false;
+        }
+
         foreach ($columns as $columnKey => $column) {
             /**
              * @var string|int $columnKey
              * @var Column     $column
              */
-            if (!$column->isVisibility()) {
+            if (!$column->isVisible()) {
                 continue;
             }
 
-            if ($this->isFirstVisibleColumn($columns, $columnKey)) {
-                $result .= self::HEADER_SEGMENT_LEFT;
+            /// FIXME - hide first column and we a fucked
+            if ($isFirstRow) {
+                $segment = static::SEGMENT_FIRST_ROW_LEFT;
+            } elseif ($isLastRow) {
+                $segment = static::SEGMENT_LAST_ROW_LEFT;
+            } else {
+                $segment = static::SEGMENT_ROW_LEFT;
+            }
+            if ($ctx->isFirstVisibleColumn($columnKey)) {
+                $result .= $segment;
             }
 
-            $result .= str_repeat('-', $column->getWidth());
-            $result .= $this->isLastVisibleColumn($columns, $columnKey)
-                ? self::HEADER_SEGMENT_RIGHT
-                : self::HEADER_SEGMENT_CENTER;
+            $result .= \str_repeat(static::SEGMENT_ROW_FILL, $column->getWidth());
+
+            if ($ctx->isLastVisibleColumn($columnKey)) {
+                if ($isFirstRow) {
+                    $segment = static::SEGMENT_FIRST_ROW_RIGHT;
+                } elseif ($isLastRow) {
+                    $segment = static::SEGMENT_LAST_ROW_RIGHT;
+                } else {
+                    $segment = static::SEGMENT_ROW_RIGHT;
+                }
+            } else {
+                if ($isFirstRow) {
+                    $segment = static::SEGMENT_FIRST_ROW_CENTER;
+                } elseif ($isLastRow) {
+                    $segment = static::SEGMENT_LAST_ROW_CENTER;
+                } else {
+                    $segment = static::SEGMENT_ROW_CENTER;
+                }
+            }
+            $result .= $segment;
         }
+
+        $ctx->incRenderedRowIdx();
 
         return $result;
     }
@@ -307,7 +341,7 @@ class DefaultRenderer implements RendererContract
         }
 
         // Next, we need to account column separators as well.
-        $totalWidth += ($table->getVisibleColumnCount() - 1) * \mb_strlen(self::HEADER_BORDER_CENTER);
+        $totalWidth += ($table->getVisibleColumnCount() - 1) * \mb_strlen(static::ROW_FRAME_CENTER);
 
         return $totalWidth;
     }

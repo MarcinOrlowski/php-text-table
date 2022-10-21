@@ -19,7 +19,8 @@ use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Exceptions\UnsupportedColumnTypeException;
-use MarcinOrlowski\TextTable\Renderers\DefaultRenderer;
+use MarcinOrlowski\TextTable\Renderers\FancyRenderer;
+use MarcinOrlowski\TextTable\Renderers\RendererContract;
 
 /**
  * @method ColumnsContainer getColumns()
@@ -37,6 +38,7 @@ class TextTable extends \Lombok\Helper
      */
     public function __construct(array $headerColumns = [])
     {
+        parent::__construct();
         $this->init($headerColumns);
     }
 
@@ -136,7 +138,15 @@ class TextTable extends \Lombok\Helper
     protected RowsContainer $rows;
 
     /**
-     * Appends row to the end of table.
+     * Returns number of data rows (not including table header)
+     */
+    public function getRowCount(): int
+    {
+        return \count($this->rows);
+    }
+
+    /**
+     * Appends new row to the end of table.
      *
      * @param Row|array|null $srcRow When `array` is given, then it is expected to be the each of the
      *                               column is the row's cell value. It should be either instance of
@@ -223,16 +233,18 @@ class TextTable extends \Lombok\Helper
     /**
      * Renders given table and outputs it via provided writer.
      *
+     * @param RendererContract|null $renderer Renderer to use. If none is given, DefaultRenderer is used.
+     *
      * @throws NoVisibleColumnsException
      * @throws ColumnKeyNotFoundException
      */
-    public function render(): array
+    public function render(?RendererContract $renderer = null): array
     {
         if ($this->getVisibleColumnCount() === 0) {
             throw new NoVisibleColumnsException();
         }
 
-        $renderer = new DefaultRenderer();
+        $renderer ??= new FancyRenderer();
         return $renderer->render($this);
     }
 
