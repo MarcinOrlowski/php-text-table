@@ -42,10 +42,10 @@ abstract class BaseRenderer implements RendererContract
         if ($table->getRowCount() > 0) {
             foreach ($table->getRows() as $row) {
                 /** @var Row $row */
-                $result[] = $this->renderRow($ctx, $row);
+                $result[] = $this->renderDataRow($ctx, $row);
             }
         } else {
-            $result[] = $this->renderNoDataRow($table);
+            $result[] = $this->renderNoDataRow($ctx);
             $ctx->incRenderedRowIdx();
         }
         $result[] = $this->renderSeparator($ctx);
@@ -53,8 +53,20 @@ abstract class BaseRenderer implements RendererContract
         return $result;
     }
 
-    protected function renderNoDataRow(TextTable $table): string
+    /**
+     * @inheritDoc
+     *
+     * @throws ColumnKeyNotFoundException
+     */
+    public function renderAsString(TextTable $table): string
     {
+        return \implode(PHP_EOL, $this->render($table));
+    }
+
+    protected function renderNoDataRow(RenderContext $ctx): string
+    {
+        $table = $ctx->getTable();
+
         $label = 'NO DATA';
         $tableTotalWidth = $this->getTableTotalWidth($table);
         $label = (\mb_strlen($label) > $tableTotalWidth)
@@ -79,7 +91,7 @@ abstract class BaseRenderer implements RendererContract
      *
      * @throws ColumnKeyNotFoundException
      */
-    protected function renderRow(RenderContext $ctx, Row $row): string
+    protected function renderDataRow(RenderContext $ctx, Row $row): string
     {
         $result = '';
 
@@ -173,8 +185,7 @@ abstract class BaseRenderer implements RendererContract
      * Renders separator row (usually to separate header/footer from
      * the table content).
      *
-     * @param RenderContext $ctx   Rendering context object.
-     * @param TextTable     $table Table to render separator row for.
+     * @param RenderContext $ctx Rendering context object.
      *
      * @return string
      */
@@ -345,5 +356,7 @@ abstract class BaseRenderer implements RendererContract
 
         return $totalWidth;
     }
+
+    /* ****************************************************************************************** */
 
 }

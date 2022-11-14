@@ -19,10 +19,14 @@ use PHPUnit\Framework\TestCase;
 
 class BaseTest extends TestCase
 {
-    protected function renderTable(TextTable $table): array
+    protected function renderTable(TextTable $table, bool $echoTable = false): array
     {
         $renderer = new PlusMinusRenderer();
-        return $renderer->render($table);
+        $rendered = $renderer->render($table);
+        if ($echoTable) {
+            echo \implode(\PHP_EOL, $rendered) . \PHP_EOL;
+        }
+        return $rendered;
     }
 
     public function testSimpleTable(): void

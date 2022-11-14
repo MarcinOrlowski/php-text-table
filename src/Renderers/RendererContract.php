@@ -22,7 +22,16 @@ interface RendererContract
     /**
      * Renders provided `Table` using provided output writer.
      *
-     * @param TextTable $table Instance of `AsciiTable` to render.
+     * @param TextTable $table Instance of `TextTable` to render.
      */
     public function render(TextTable $table): array;
+
+    /**
+     * Helper that returns rendered table as single string.
+     *
+     * @param TextTable $table Instance of `TextTable` to render.
+     *
+     * @return string
+     */
+    public function renderAsString(TextTable $table): string;
 }
