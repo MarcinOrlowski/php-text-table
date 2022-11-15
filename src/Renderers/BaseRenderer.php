@@ -19,6 +19,7 @@ use MarcinOrlowski\TextTable\Cell;
 use MarcinOrlowski\TextTable\Column;
 use MarcinOrlowski\TextTable\ColumnsContainer;
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Row;
 use MarcinOrlowski\TextTable\TextTable;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
@@ -33,6 +34,11 @@ abstract class BaseRenderer implements RendererContract
     public function render(TextTable $table): array
     {
         $ctx = new RenderContext($table);
+
+        // Ensure we have at least one column visible
+        if ($ctx->getTable()->getVisibleColumnCount() === 0) {
+            throw new NoVisibleColumnsException();
+        }
 
         $result = [];
 
