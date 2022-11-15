@@ -347,7 +347,7 @@ class TextTable extends \Lombok\Helper
      */
     public function setColumnVisibility(string|int $columnKey, bool $visible): self
     {
-        $this->getColumn($columnKey)->setVisibility($visible);
+        $this->getColumn($columnKey)->setVisible($visible);
 
         return $this;
     }
@@ -375,7 +375,7 @@ class TextTable extends \Lombok\Helper
      */
     public function showColumn(string|int $columnKey): self
     {
-        $this->getColumn($columnKey)->setVisibility(true);
+        $this->getColumn($columnKey)->setVisible(true);
 
         return $this;
     }
@@ -385,7 +385,7 @@ class TextTable extends \Lombok\Helper
      */
     public function getVisibleColumnCount(): int
     {
-        return \count(\array_filter($this->columns->toArray(), fn(Column $column) => $column->isVisibility()));
+        return \count(\array_filter($this->columns->toArray(), static fn(Column $column): bool => $column->isVisible()));
     }
 
 }

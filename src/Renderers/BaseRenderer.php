@@ -72,7 +72,7 @@ abstract class BaseRenderer implements RendererContract
         $label = (\mb_strlen($label) > $tableTotalWidth)
             ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
             : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
-        return \sprintf(static::ROW_FRAME_LEFT . $label . static::ROW_FRAME_RIGHT);
+        return static::ROW_FRAME_LEFT . $label . static::ROW_FRAME_RIGHT;
     }
 
     /* ****************************************************************************************** */
@@ -346,7 +346,7 @@ abstract class BaseRenderer implements RendererContract
 
         foreach ($table->getColumns() as $column) {
             /** @var Column $column */
-            if ($column->isVisibility()) {
+            if ($column->isVisible()) {
                 $totalWidth += $column->getWidth();
             }
         }
