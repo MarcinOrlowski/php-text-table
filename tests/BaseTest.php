@@ -450,6 +450,90 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    public function testNoDataWithHiddenFirstColumn(): void
+    {
+        $table = new TextTable([
+            'ID',
+            'HIDDEN',
+            new Column('NAME', maxWidth: 20),
+            'SCORE',
+        ]);
+        $table->hideColumn('ID');
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '+--------+----------------------+-------+',
+            '| HIDDEN | NAME                 | SCORE |',
+            '+--------+----------------------+-------+',
+            '|                NO DATA                |',
+            '+--------+----------------------+-------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    public function testNoDataWithHiddenMiddleColumn(): void
+    {
+        $table = new TextTable([
+            'ID',
+            'HIDDEN',
+            new Column('NAME', maxWidth: 20),
+            'SCORE',
+        ]);
+        $table->hideColumn('HIDDEN');
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '+----+----------------------+-------+',
+            '| ID | NAME                 | SCORE |',
+            '+----+----------------------+-------+',
+            '|              NO DATA              |',
+            '+----+----------------------+-------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    public function testNoDataWithHiddenLastColumn(): void
+    {
+        $table = new TextTable([
+            'ID',
+            'HIDDEN',
+            new Column('NAME', maxWidth: 20),
+            'SCORE',
+        ]);
+        $table->hideColumn('SCORE');
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '+----+--------+----------------------+',
+            '| ID | HIDDEN | NAME                 |',
+            '+----+--------+----------------------+',
+            '|               NO DATA              |',
+            '+----+--------+----------------------+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    public function testNoDataWithHiddenAllColumns(): void
+    {
+        $table = new TextTable([
+            'ID',
+            'HIDDEN',
+            'SCORE',
+        ]);
+        $table->hideColumn([
+            'ID',
+            'HIDDEN',
+            'SCORE',
+        ]);
+
+        $this->expectException(NoVisibleColumnsException::class);
+        $renderedTable = $this->renderTable($table);
+    }
+
+
     protected function formatNoData(int $maxLength): string
     {
         $noDataLabel = 'NO DATA';
