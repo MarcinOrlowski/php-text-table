@@ -8,7 +8,7 @@ Fast and flexible PHP library for text tables.
 
 * @dev
   * Added `MsDosRenderer` producing tables reminiscent of ancient MS DOS times.
-  * Added `renderAsString()` to `RendererContract`
+  * Added `renderAsString()` to `RendererContract` (and all renderers).
   * The `hideColumn()` method now also accepts `array` of column IDs to hide.
   * Rendering table with all columns hidden always throws `NoVisibleColumnsException`.
   * Added more tests.
