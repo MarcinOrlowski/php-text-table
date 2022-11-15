@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace MarcinOrlowski\TextTable\Renderers;
 
 use MarcinOrlowski\TextTable\TextTable;
-use MarcinOrlowski\TextTable\Output\WriterContract;
 
 interface RendererContract
 {
