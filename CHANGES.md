@@ -12,6 +12,7 @@ Fast and flexible PHP library for text tables.
   * The `hideColumn()` method now also accepts `array` of column IDs to hide.
   * Rendering table with all columns hidden always throws `NoVisibleColumnsException`.
   * Added more tests.
+  * `addCell()` now accepts `float` values too.
 
 
 * 2.1.0 (2022-10-21)
