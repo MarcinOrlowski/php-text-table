@@ -19,6 +19,7 @@ use MarcinOrlowski\TextTable\Cell;
 use MarcinOrlowski\TextTable\Column;
 use MarcinOrlowski\TextTable\ColumnsContainer;
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
+use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Row;
 use MarcinOrlowski\TextTable\TextTable;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
@@ -34,6 +35,11 @@ abstract class BaseRenderer implements RendererContract
     {
         $ctx = new RenderContext($table);
 
+        // Ensure we have at least one column visible
+        if ($ctx->getTable()->getVisibleColumnCount() === 0) {
+            throw new NoVisibleColumnsException();
+        }
+
         $result = [];
 
         $result[] = $this->renderSeparator($ctx);
@@ -42,10 +48,10 @@ abstract class BaseRenderer implements RendererContract
         if ($table->getRowCount() > 0) {
             foreach ($table->getRows() as $row) {
                 /** @var Row $row */
-                $result[] = $this->renderRow($ctx, $row);
+                $result[] = $this->renderDataRow($ctx, $row);
             }
         } else {
-            $result[] = $this->renderNoDataRow($table);
+            $result[] = $this->renderNoDataRow($ctx);
             $ctx->incRenderedRowIdx();
         }
         $result[] = $this->renderSeparator($ctx);
@@ -53,14 +59,26 @@ abstract class BaseRenderer implements RendererContract
         return $result;
     }
 
-    protected function renderNoDataRow(TextTable $table): string
+    /**
+     * @inheritDoc
+     *
+     * @throws ColumnKeyNotFoundException
+     */
+    public function renderAsString(TextTable $table): string
     {
+        return \implode(PHP_EOL, $this->render($table));
+    }
+
+    protected function renderNoDataRow(RenderContext $ctx): string
+    {
+        $table = $ctx->getTable();
+
         $label = 'NO DATA';
         $tableTotalWidth = $this->getTableTotalWidth($table);
         $label = (\mb_strlen($label) > $tableTotalWidth)
             ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
             : StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
-        return \sprintf(static::ROW_FRAME_LEFT . $label . static::ROW_FRAME_RIGHT);
+        return static::ROW_FRAME_LEFT . $label . static::ROW_FRAME_RIGHT;
     }
 
     /* ****************************************************************************************** */
@@ -79,7 +97,7 @@ abstract class BaseRenderer implements RendererContract
      *
      * @throws ColumnKeyNotFoundException
      */
-    protected function renderRow(RenderContext $ctx, Row $row): string
+    protected function renderDataRow(RenderContext $ctx, Row $row): string
     {
         $result = '';
 
@@ -173,8 +191,7 @@ abstract class BaseRenderer implements RendererContract
      * Renders separator row (usually to separate header/footer from
      * the table content).
      *
-     * @param RenderContext $ctx   Rendering context object.
-     * @param TextTable     $table Table to render separator row for.
+     * @param RenderContext $ctx Rendering context object.
      *
      * @return string
      */
@@ -335,7 +352,7 @@ abstract class BaseRenderer implements RendererContract
 
         foreach ($table->getColumns() as $column) {
             /** @var Column $column */
-            if ($column->isVisibility()) {
+            if ($column->isVisible()) {
                 $totalWidth += $column->getWidth();
             }
         }
@@ -345,5 +362,7 @@ abstract class BaseRenderer implements RendererContract
 
         return $totalWidth;
     }
+
+    /* ****************************************************************************************** */
 
 }

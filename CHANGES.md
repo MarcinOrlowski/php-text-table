@@ -6,9 +6,19 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
+* 2.2.0 (2022-11-21)
+  * Added `MsDosRenderer` producing tables reminiscent of ancient MS DOS times.
+  * Added `renderAsString()` to `RendererContract` (and all renderers).
+  * The `hideColumn()` method now also accepts `array` of column IDs to hide.
+  * Rendering table with all columns hidden always throws `NoVisibleColumnsException`.
+  * Added more tests.
+  * `addCell()` now accepts `float` values too.
+
+
 * 2.1.0 (2022-10-21)
   * Added `FancyRenderer` producing nicer looking table frames. It's now default one.
   * Former `DefaultRenderer` is now `PlusMinusRenderer`.
+
 
 * 2.0.0 (2022-10-20)
   * Main class name changed to `TextTable`.

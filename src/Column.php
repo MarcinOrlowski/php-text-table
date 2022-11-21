@@ -25,7 +25,8 @@ use Lombok\Setter;
  * @method self setCellAlign(Align $cellAlign)
  * @method int getMaxWidth()
  * @method self setMaxWidth(int $width)
- * @method self setVisibility(bool $visibility)
+ * @method self setVisible(bool $visible)
+ * @method bool isVisible()
  */
 #[Getter]
 #[Setter]
@@ -49,7 +50,7 @@ class Column extends \Lombok\Helper
         if ($titleAlign !== null) {
             $this->setTitleAlign($titleAlign);
         }
-        $this->setVisibility($visible);
+        $this->setVisible($visible);
     }
 
     /* ****************************************************************************************** */
@@ -121,12 +122,6 @@ class Column extends \Lombok\Helper
 
     /* ****************************************************************************************** */
 
-    #[Setter]
-    protected bool $visibility = true;
-
-    public function isVisible(): bool
-    {
-        return $this->visibility;
-    }
+    protected bool $visible = true;
 
 }

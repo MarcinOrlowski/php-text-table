@@ -235,15 +235,10 @@ class TextTable extends \Lombok\Helper
      *
      * @param RendererContract|null $renderer Renderer to use. If none is given, DefaultRenderer is used.
      *
-     * @throws NoVisibleColumnsException
      * @throws ColumnKeyNotFoundException
      */
     public function render(?RendererContract $renderer = null): array
     {
-        if ($this->getVisibleColumnCount() === 0) {
-            throw new NoVisibleColumnsException();
-        }
-
         $renderer ??= new FancyRenderer();
         return $renderer->render($this);
     }
@@ -347,21 +342,27 @@ class TextTable extends \Lombok\Helper
      */
     public function setColumnVisibility(string|int $columnKey, bool $visible): self
     {
-        $this->getColumn($columnKey)->setVisibility($visible);
+        $this->getColumn($columnKey)->setVisible($visible);
 
         return $this;
     }
 
     /**
-     * @param string|int $columnKey Key of the column to be hidden. Hiding hidden column has no effect.
+     * @param array|string|int $columnKey Key of the column to be hidden. Hiding hidden column has no effect.
      *
      * @return $this
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function hideColumn(string|int $columnKey): self
+    public function hideColumn(array|string|int $columnKey): self
     {
-        $this->setColumnVisibility($columnKey, false);
+        $keys = \is_array($columnKey)
+            ? $columnKey
+            : (array)$columnKey;
+
+        foreach ($keys as $key) {
+            $this->setColumnVisibility($key, false);
+        }
 
         return $this;
     }
@@ -375,7 +376,7 @@ class TextTable extends \Lombok\Helper
      */
     public function showColumn(string|int $columnKey): self
     {
-        $this->getColumn($columnKey)->setVisibility(true);
+        $this->getColumn($columnKey)->setVisible(true);
 
         return $this;
     }
@@ -385,7 +386,7 @@ class TextTable extends \Lombok\Helper
      */
     public function getVisibleColumnCount(): int
     {
-        return \count(\array_filter($this->columns->toArray(), fn(Column $column) => $column->isVisibility()));
+        return \count(\array_filter($this->columns->toArray(), static fn(Column $column): bool => $column->isVisible()));
     }
 
 }

@@ -30,12 +30,12 @@ class CellsContainer implements ContainerContract
     /**
      * Adds new cell to the row's cell container. Throws exception if cell with given key already exists.
      *
-     * @param string|int $columnKey Key of the column we want this cell to belong to.
-     * @param Cell       $cell      Instance of `Cell` to be added.
+     * @param string|float|int $columnKey Key of the column we want this cell to belong to.
+     * @param Cell             $cell      Instance of `Cell` to be added.
      *
      * @throws DuplicateColumnKeyException
      */
-    public function addCell(string|int $columnKey, Cell $cell): self
+    public function addCell(string|float|int $columnKey, Cell $cell): self
     {
         if ($this->offsetExists($columnKey)) {
             throw new DuplicateColumnKeyException("Column key already exists: {$columnKey}");

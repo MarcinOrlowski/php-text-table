@@ -68,16 +68,16 @@ class Row extends \Lombok\Helper implements ContainerContract
     }
 
     /**
-     * @param string|int      $columnKey
-     * @param Cell|string|int $cell
-     * @param Align           $align
+     * @param string|int            $columnKey
+     * @param Cell|string|float|int $cell
+     * @param Align                 $align
      *
      * @return $this
      * @throws DuplicateColumnKeyException
      */
-    public function addCell(string|int      $columnKey,
-                            Cell|string|int $cell,
-                            Align           $align = Align::AUTO): self
+    public function addCell(string|int            $columnKey,
+                            Cell|string|float|int $cell,
+                            Align                 $align = Align::AUTO): self
     {
         if (!($cell instanceof Cell)) {
             $cell = new Cell($cell, $align);
