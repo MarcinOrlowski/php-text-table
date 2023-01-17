@@ -14,14 +14,8 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
-use MarcinOrlowski\TextTable\Traits\ArrayAccessTrait;
-use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
-
-class RowsContainer implements \Countable, \IteratorAggregate, \ArrayAccess, ArrayableContract
+class RowsContainer extends BaseContainer
 {
-    use ArrayAccessTrait;
-    use IteratorAggregateTrait;
-
     /** @var Row[] $container */
     protected array $container = [];
 
