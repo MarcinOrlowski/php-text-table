@@ -16,14 +16,9 @@ namespace MarcinOrlowski\TextTable;
 
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
-use MarcinOrlowski\TextTable\Traits\ArrayAccessTrait;
-use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
 
-class CellsContainer implements ContainerContract
+class CellsContainer extends BaseContainer
 {
-    use ArrayAccessTrait;
-    use IteratorAggregateTrait;
-
     /** @var Cell[] $container */
     protected array $container = [];
 

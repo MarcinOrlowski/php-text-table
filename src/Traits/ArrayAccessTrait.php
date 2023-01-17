@@ -23,14 +23,6 @@ use Traversable;
 trait ArrayAccessTrait
 {
     /** @inheritDoc */
-    public function count(): int
-    {
-        return \count($this->container);
-    }
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
     public function offsetExists(mixed $offset): bool
     {
         /** @var string|int $offset */
@@ -81,16 +73,6 @@ trait ArrayAccessTrait
         } else {
             unset($this->container[ $offset ]);
         }
-    }
-
-    /* ****************************************************************************************** */
-
-    /** @inheritDoc */
-    public function toArray(): array
-    {
-        return $this->container instanceof ArrayableContract
-            ? $this->container->toArray()
-            : $this->container;
     }
 
     /* ****************************************************************************************** */

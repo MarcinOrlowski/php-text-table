@@ -12,11 +12,20 @@ declare(strict_types=1);
  * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
-namespace MarcinOrlowski\TextTable;
+namespace MarcinOrlowski\TextTable\Traits;
 
-class RowsContainer extends BaseContainer
+use MarcinOrlowski\TextTable\ArrayableContract;
+use Traversable;
+
+/**
+ * implements Countable contract;
+ */
+trait CountableTrait
 {
-    /** @var Row[] $container */
-    protected array $container = [];
+    /** @inheritDoc */
+    public function count(): int
+    {
+        return \count($this->container);
+    }
 
 }
