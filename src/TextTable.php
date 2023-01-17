@@ -181,6 +181,10 @@ class TextTable extends \Lombok\Helper
 
         $columns = $this->getColumns();
 
+        $itemsToAddCount = $srcRow instanceof Row
+            ? $srcRow->count()
+            : \count($srcRow);
+
         $row = $srcRow;
         if (!($srcRow instanceof Row)) {
             $row = new Row();
@@ -188,7 +192,7 @@ class TextTable extends \Lombok\Helper
             // If source array has only numeric keys, and column definitions are using non-numeric keys,
             // then it is assumed that source array elements are in sequence and will be automatically
             // assigned to cell at position matching their index in source array.
-            $srcHasNumKeysOnly = \count($srcRow) === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
+            $srcHasNumKeysOnly = $itemsToAddCount === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
             $columnsHasStringKeysOnly = \count($columns) === \count(
                     \array_filter(\array_keys($columns->toArray()), \is_string(...)));
 
@@ -200,6 +204,11 @@ class TextTable extends \Lombok\Helper
                     $columnKey = $columnKeys[ $srcIdx ];
                     $row->addCell($columnKey, $cell);
                     $srcIdx++;
+
+                    if ($srcIdx >= $this->getColumnCount()) {
+                        // FIXME: add option to configure TextTable to throw in such case.
+                        break;
+                    }
                 }
             } else {
                 $row->addCells($srcRow);

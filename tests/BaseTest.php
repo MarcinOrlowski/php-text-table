@@ -712,5 +712,27 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    /* ****************************************************************************************** */
+
+    /**
+     * Ensulres all works fine if we declare less columns than we then want to add then nothing
+     * bad would happen - just exceeding columns will be dropped.
+     */
+    public function testColumnMismatchInsertTooMuch(): void
+    {
+        $table = new TextTable(['A', 'B']);
+        $table->addRow(['A', 'B', 'C']);
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '+---+---+',
+            '| A | B |',
+            '+---+---+',
+            '| A | B |',
+            '+---+---+',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
 }
 
