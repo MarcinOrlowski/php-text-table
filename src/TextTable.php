@@ -133,6 +133,13 @@ class TextTable extends \Lombok\Helper
 
     /* ****************************************************************************************** */
 
+    public function getColumnCount(): int
+    {
+        return \count($this->getColumns());
+    }
+
+    /* ****************************************************************************************** */
+
     /** Holds all table rows. */
     #[Getter]
     protected RowsContainer $rows;
