@@ -4,10 +4,7 @@ declare(strict_types=1);
 /**
  * Text Table
  *
- * @package   MarcinOrlowski\TextTable
- *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
- * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      https://github.com/MarcinOrlowski/php-text-table
  */
@@ -84,8 +81,7 @@ class TextTable extends \Lombok\Helper
         if (\is_string($columnVal)) {
             $columnVal = new Column($columnVal);
         } else if (!($columnVal instanceof Column)) {
-            throw new UnsupportedColumnTypeException(
-                \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnKey));
+            throw UnsupportedColumnTypeException::forColumnKeyVal($columnKey, $columnVal);
         }
 
         $this->columns->addColumn($columnKey, $columnVal);
@@ -133,6 +129,13 @@ class TextTable extends \Lombok\Helper
 
     /* ****************************************************************************************** */
 
+    public function getColumnCount(): int
+    {
+        return \count($this->getColumns());
+    }
+
+    /* ****************************************************************************************** */
+
     /** Holds all table rows. */
     #[Getter]
     protected RowsContainer $rows;
@@ -174,6 +177,10 @@ class TextTable extends \Lombok\Helper
 
         $columns = $this->getColumns();
 
+        $itemsToAddCount = $srcRow instanceof Row
+            ? $srcRow->count()
+            : \count($srcRow);
+
         $row = $srcRow;
         if (!($srcRow instanceof Row)) {
             $row = new Row();
@@ -181,7 +188,7 @@ class TextTable extends \Lombok\Helper
             // If source array has only numeric keys, and column definitions are using non-numeric keys,
             // then it is assumed that source array elements are in sequence and will be automatically
             // assigned to cell at position matching their index in source array.
-            $srcHasNumKeysOnly = \count($srcRow) === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
+            $srcHasNumKeysOnly = $itemsToAddCount === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
             $columnsHasStringKeysOnly = \count($columns) === \count(
                     \array_filter(\array_keys($columns->toArray()), \is_string(...)));
 
@@ -193,6 +200,11 @@ class TextTable extends \Lombok\Helper
                     $columnKey = $columnKeys[ $srcIdx ];
                     $row->addCell($columnKey, $cell);
                     $srcIdx++;
+
+                    if ($srcIdx >= $this->getColumnCount()) {
+                        // FIXME: add option to configure TextTable to throw in such case.
+                        break;
+                    }
                 }
             } else {
                 $row->addCells($srcRow);

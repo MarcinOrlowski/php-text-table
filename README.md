@@ -2,6 +2,12 @@
 
 Fast and flexible PHP library for text tables.
 
+
+[![Latest Stable Version](http://poser.pugx.org/marcin-orlowski/text-table/v)](https://packagist.org/packages/marcin-orlowski/text-table)
+[![Total Downloads](http://poser.pugx.org/marcin-orlowski/text-table/downloads)](https://packagist.org/packages/marcin-orlowski/text-table)
+[![License](http://poser.pugx.org/marcin-orlowski/text-table/license)](https://packagist.org/packages/marcin-orlowski/text-table)
+[![PHP Version Require](http://poser.pugx.org/marcin-orlowski/text-table/require/php)](https://packagist.org/packages/marcin-orlowski/text-table)
+
 ---
 
 Table of contents
@@ -51,6 +57,6 @@ See more [usage examples](docs/examples.md).
 
 ## License
 
-* Written and copyrighted &copy;2022 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
+* Written and copyrighted &copy;2022-2023 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
 * Text Table is open-sourced software licensed under
   the [MIT license](http://opensource.org/licenses/MIT)

@@ -6,6 +6,13 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
+* 2.3.0
+  * Fixed support for adding row with more columns than table declared [#2].
+  * Added `TextTable::getColumnCount()` helper method.
+  * Added factory methods to each of special exception classes.
+  * Switched to PHPUnit v10
+
+
 * 2.2.0 (2022-11-21)
   * Added `MsDosRenderer` producing tables reminiscent of ancient MS DOS times.
   * Added `renderAsString()` to `RendererContract` (and all renderers).

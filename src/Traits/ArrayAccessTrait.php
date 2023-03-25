@@ -4,10 +4,7 @@ declare(strict_types=1);
 /**
  * Text Table
  *
- * @package   MarcinOrlowski\TextTable
- *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
- * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      https://github.com/MarcinOrlowski/php-text-table
  */
@@ -15,6 +12,7 @@ declare(strict_types=1);
 namespace MarcinOrlowski\TextTable\Traits;
 
 use MarcinOrlowski\TextTable\ArrayableContract;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use Traversable;
 
 /**
@@ -22,14 +20,6 @@ use Traversable;
  */
 trait ArrayAccessTrait
 {
-    /** @inheritDoc */
-    public function count(): int
-    {
-        return \count($this->container);
-    }
-
-    /* ****************************************************************************************** */
-
     /** @inheritDoc */
     public function offsetExists(mixed $offset): bool
     {
@@ -85,14 +75,9 @@ trait ArrayAccessTrait
 
     /* ****************************************************************************************** */
 
-    /** @inheritDoc */
-    public function toArray(): array
+    public static function forCode(int|string $columnKey): static
     {
-        return $this->container instanceof ArrayableContract
-            ? $this->container->toArray()
-            : $this->container;
+        throw DuplicateColumnKeyException::forColumnKey($columnKey);
     }
-
-    /* ****************************************************************************************** */
 
 }

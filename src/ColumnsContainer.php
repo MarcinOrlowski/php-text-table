@@ -4,10 +4,7 @@ declare(strict_types=1);
 /**
  * Text Table
  *
- * @package   MarcinOrlowski\TextTable
- *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
- * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      https://github.com/MarcinOrlowski/php-text-table
  */
@@ -16,14 +13,9 @@ namespace MarcinOrlowski\TextTable;
 
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
-use MarcinOrlowski\TextTable\Traits\ArrayAccessTrait;
-use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
 
-class ColumnsContainer implements ContainerContract
+class ColumnsContainer extends BaseContainer
 {
-    use ArrayAccessTrait;
-    use IteratorAggregateTrait;
-
     /** @var Column[] $container */
     protected array $container = [];
 
@@ -37,7 +29,7 @@ class ColumnsContainer implements ContainerContract
     public function getColumn(string|int $columnKey): Column
     {
         if (!$this->offsetExists($columnKey)) {
-            throw new ColumnKeyNotFoundException("Unknown column key: {$columnKey}");
+            throw ColumnKeyNotFoundException::forColumnKey($columnKey);
         }
         return $this->container[ $columnKey ];
     }
@@ -68,7 +60,7 @@ class ColumnsContainer implements ContainerContract
     public function addColumn(string|int $columnKey, Column $column): self
     {
         if ($this->offsetExists($columnKey)) {
-            throw new DuplicateColumnKeyException("Column index already exists: {$columnKey}");
+            throw DuplicateColumnKeyException::forColumnKey($columnKey);
         }
 
         $this->container[ $columnKey ] = $column;

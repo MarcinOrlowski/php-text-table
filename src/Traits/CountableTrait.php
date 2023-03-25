@@ -11,21 +11,18 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable\Traits;
 
+use MarcinOrlowski\TextTable\ArrayableContract;
 use Traversable;
 
 /**
- * implements ContainerContract;
+ * implements Countable contract;
  */
-trait IteratorAggregateTrait
+trait CountableTrait
 {
     /** @inheritDoc */
-    public function getIterator(): Traversable
+    public function count(): int
     {
-        return $this->container instanceof Traversable
-            ? $this->container->getIterator()
-            : new \ArrayIterator($this->container);
+        return \count($this->container);
     }
-
-    /* ****************************************************************************************** */
 
 }
