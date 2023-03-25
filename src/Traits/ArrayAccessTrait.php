@@ -4,10 +4,7 @@ declare(strict_types=1);
 /**
  * Text Table
  *
- * @package   MarcinOrlowski\TextTable
- *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
- * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      https://github.com/MarcinOrlowski/php-text-table
  */
@@ -15,6 +12,7 @@ declare(strict_types=1);
 namespace MarcinOrlowski\TextTable\Traits;
 
 use MarcinOrlowski\TextTable\ArrayableContract;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use Traversable;
 
 /**
@@ -76,5 +74,10 @@ trait ArrayAccessTrait
     }
 
     /* ****************************************************************************************** */
+
+    public static function forCode(int|string $columnKey): static
+    {
+        throw DuplicateColumnKeyException::forColumnKey($columnKey);
+    }
 
 }

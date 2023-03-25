@@ -4,10 +4,7 @@ declare(strict_types=1);
 /**
  * Text Table
  *
- * @package   MarcinOrlowski\TextTable
- *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
- * @copyright 2022 Marcin Orlowski
  * @license   http://www.opensource.org/licenses/mit-license.php MIT
  * @link      https://github.com/MarcinOrlowski/php-text-table
  */
@@ -56,9 +53,7 @@ class RenderContext extends \Lombok\Helper
 
     /* ****************************************************************************************** */
 
-    /**
-     * Returns `TRUE` if specified data column is first one to be rendered in a row.
-     */
+    /** Returns `TRUE` if specified data column is first one to be rendered in a row. */
     public function isFirstVisibleColumn(string|int $columnKey): bool
     {
         foreach ($this->getTable()->getColumns() as $key => $column) {
@@ -69,9 +64,7 @@ class RenderContext extends \Lombok\Helper
         return false;
     }
 
-    /**
-     * Returns `TRUE` if specified data column is last one to be rendered in a row.
-     */
+    /** Returns `TRUE` if specified data column is last one to be rendered in a row. */
     public function isLastVisibleColumn(string|int $columnKey): bool
     {
         $lastVisibleColumnKey = null;
@@ -86,20 +79,15 @@ class RenderContext extends \Lombok\Helper
 
     /* ****************************************************************************************** */
 
-    /**
-     * Returns `TRUE` if currently rendered row is first visible row of the table.
-     */
+    /** Returns `TRUE` if currently rendered row is first visible row of the table. */
     public function isFirstVisibleRow(): bool
     {
         return $this->getRenderedRowIdx() === 0;
     }
 
-    /**
-     * Returns `TRUE` if currently rendered row is last visible row of the table.
-     */
+    /** Returns `TRUE` if currently rendered row is last visible row of the table. */
     public function isLastVisibleRow(): bool
     {
         return $this->getTableRowIdx() === $this->getTable()->getRowCount();
     }
-
 }
