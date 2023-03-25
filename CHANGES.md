@@ -6,7 +6,7 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
-* 2.3.0
+* 2.3.0 (2023-03-25)
   * Fixed support for adding row with more columns than table declared [#2].
   * Added `TextTable::getColumnCount()` helper method.
   * Added factory methods to each of special exception classes.
