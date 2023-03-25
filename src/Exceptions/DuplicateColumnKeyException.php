@@ -13,5 +13,9 @@ namespace MarcinOrlowski\TextTable\Exceptions;
 
 class DuplicateColumnKeyException extends \Exception
 {
-
+    public static function forColumnKey(string|int $columnKey): static
+    {
+        $msg = \sprintf('Duplicate column key: %s', $columnKey);
+        return self($msg);
+    }
 }

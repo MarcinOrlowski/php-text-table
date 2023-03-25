@@ -81,8 +81,7 @@ class TextTable extends \Lombok\Helper
         if (\is_string($columnVal)) {
             $columnVal = new Column($columnVal);
         } else if (!($columnVal instanceof Column)) {
-            throw new UnsupportedColumnTypeException(
-                \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnKey));
+            throw UnsupportedColumnTypeException::forColumnKeyVal($columnKey, $columnVal);
         }
 
         $this->columns->addColumn($columnKey, $columnVal);

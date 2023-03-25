@@ -30,7 +30,7 @@ class CellsContainer extends BaseContainer
     public function addCell(string|float|int $columnKey, Cell $cell): self
     {
         if ($this->offsetExists($columnKey)) {
-            throw new DuplicateColumnKeyException("Column key already exists: {$columnKey}");
+            throw DuplicateColumnKeyException::forColumnKey($columnKey);
         }
 
         $this->container[ $columnKey ] = $cell;
@@ -47,7 +47,7 @@ class CellsContainer extends BaseContainer
     public function getCell(string|int $columnKey): Cell
     {
         if (!$this->offsetExists($columnKey)) {
-            throw new ColumnKeyNotFoundException("Unknown column key: {$columnKey}");
+            throw ColumnKeyNotFoundException::forColumnKey($columnKey);
         }
         return $this->container[ $columnKey ];
     }

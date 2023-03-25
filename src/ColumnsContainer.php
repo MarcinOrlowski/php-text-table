@@ -29,7 +29,7 @@ class ColumnsContainer extends BaseContainer
     public function getColumn(string|int $columnKey): Column
     {
         if (!$this->offsetExists($columnKey)) {
-            throw new ColumnKeyNotFoundException("Unknown column key: {$columnKey}");
+            throw ColumnKeyNotFoundException::forColumnKey($columnKey);
         }
         return $this->container[ $columnKey ];
     }
@@ -60,7 +60,7 @@ class ColumnsContainer extends BaseContainer
     public function addColumn(string|int $columnKey, Column $column): self
     {
         if ($this->offsetExists($columnKey)) {
-            throw new DuplicateColumnKeyException("Column index already exists: {$columnKey}");
+            throw DuplicateColumnKeyException::forColumnKey($columnKey);
         }
 
         $this->container[ $columnKey ] = $column;

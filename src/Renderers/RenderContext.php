@@ -22,13 +22,9 @@ use MarcinOrlowski\TextTable\TextTable;
 #[Getter]
 class RenderContext extends \Lombok\Helper
 {
-    protected TextTable $table;
-
-    public function __construct(TextTable $table)
+    public function __construct(protected TextTable $table)
     {
         parent::__construct();
-
-        $this->table = $table;
     }
 
     /** Number of currently rendered **data row** (so actual table data row, no decoration counted) */
