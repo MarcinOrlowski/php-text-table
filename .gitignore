@@ -10,4 +10,6 @@
 /.pre-commit-config.yaml
 /
 
+/.phpunit.cache/
+
 /NOTES.md

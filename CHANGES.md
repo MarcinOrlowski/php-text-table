@@ -10,6 +10,7 @@ Fast and flexible PHP library for text tables.
   * Fixed support for adding row with more columns than table declared [#2].
   * Added `TextTable::getColumnCount()` helper method.
   * Added factory methods to each of special exception classes.
+  * Switched to PHPUnit v10
 
 
 * 2.2.0 (2022-11-21)
