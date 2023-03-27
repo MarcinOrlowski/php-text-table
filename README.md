@@ -43,12 +43,12 @@ $table->render();
 would produce nice text table:
 
 ```php
-+----+-------+-------+
-| ID | NAME  | SCORE |
-+----+-------+-------+
-| 1  | John  | 12    |
-| 2  | Tommy | 15    |
-+----+-------+-------+
+┌────┬───────┬───────┐
+│ ID │ NAME  │ SCORE │
+├────┼───────┼───────┤
+│ 1  │ John  │ 12    │
+│ 2  │ Tommy │ 15    │
+└────┴───────┴───────┘
 ```
 
 See more [usage examples](docs/examples.md).

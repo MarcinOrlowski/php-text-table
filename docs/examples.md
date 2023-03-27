@@ -9,7 +9,6 @@ Fast and flexible PHP library for text tables.
 1. Simplest use case
 1. Custom align & and cells' width limit
 
-
 ### Simplest use case
 
 This is probably the most common and yet the simplest possible usage:
@@ -31,6 +30,47 @@ echo $table->renderAsString();
 which in turn should produce this table:
 
 ```php
+┌────┬───────┬───────┐
+│ ID │ NAME  │ SCORE │
+├────┼───────┼───────┤
+│ 1  │ John  │ 12    │
+│ 2  │ Tommy │ 15    │
+└────┴───────┴───────┘
+```
+
+---
+
+### Use different table renderer
+
+The common usage of `TextTable` library is to eventually present used the
+content of the table in the nice tabular form. As the table itself is just
+a data structure, "visualisation" of the table is done via the dedicated
+renderer which will return the table as a string. It therefore can influence
+the final look of the table, incl. the way it is formatted.
+
+To override the renreder, simply pass instance of the renderer of your
+choice to the `TextTable`'s rendering shortcuts:
+
+```php
+use MarcinOrlowski\TextTable\Renderers\PlusMinusRenderer;
+
+...
+$renderer = new PlusMinusRenderer();
+echo($table->renderAsString($renderer));
+```
+
+or
+
+```php
+...
+$renderer = new PlusMinusRenderer();
+echo($table->renderAsString($renderer));
+```
+
+would produce table rendered using `+`, `-` and `|` characters
+instead of table shaped characters:
+
+```php
 +----+-------+-------+
 | ID | NAME  | SCORE |
 +----+-------+-------+
@@ -39,9 +79,19 @@ which in turn should produce this table:
 +----+-------+-------+
 ```
 
+**NOTE:** You can provide your own renderer (i.e. producing `HTML` or whatever you wish,
+by implementing `RendererContract` in your class.
+
+For available built-in renderers, see [src/Renderers/](../src/Renderers/) sources.
+
+**HINT:** If you want to just introduce new frame characters, just extend built-in
+[AsciiTableRenderer](../src/Renderers/AsciiTableRenderer.php) and provide characters of your choices
+only. See i.e. [src/Renderers/MsDosRenderer.php](../src/Renderers/MsDosRenderer.php) code for
+reference.
+
 ---
 
-### Custom align & and cells' width limit
+### Custom align and cells' width limit
 
 ```php
 // Create the tablie with 3 columns, of which IDs will be their values.
@@ -59,19 +109,20 @@ $table->addRows([
     [2, new Cell('Tommy', Align::CENTER), 15],
 ]);
 
-// Print the whole table.
-echo $table->renderAsString()
+// print the whole table using MS-DOS style frames.
+$renderer = new MsDosRenderer();
+echo $renderer->renderAsString()
 ```
 
 would produce this nicely formatted text table:
 
 ```php
-+----+----------------------+-------+
-| ID | NAME                 | SCORE |
-+----+----------------------+-------+
-| 1  | John                 |    12 |
-| 2  |        Tommy         |    15 |
-+----+----------------------+-------+
+╔════╦══════════════════════╦═══════╗
+║ ID ║ NAME                 ║ SCORE ║
+╠════╬══════════════════════╬═══════╣
+║ 1  ║ John                 ║    12 ║
+║ 2  ║        Tommy         ║    15 ║
+╚════╩══════════════════════╩═══════╝
 ```
 
 ---

@@ -21,7 +21,7 @@ use MarcinOrlowski\TextTable\Row;
 use MarcinOrlowski\TextTable\TextTable;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
 
-abstract class BaseRenderer implements RendererContract
+abstract class AsciiTableRenderer implements RendererContract
 {
     /**
      * @inheritDoc
@@ -39,7 +39,7 @@ abstract class BaseRenderer implements RendererContract
 
         $result = [];
 
-        $result[] = $this->renderSeparator($ctx);
+        $result[] = $this->renderTopSeparator($ctx);
         $result[] = $this->renderHeader($ctx);
         $result[] = $this->renderSeparator($ctx);
         if ($table->getRowCount() > 0) {
@@ -51,7 +51,7 @@ abstract class BaseRenderer implements RendererContract
             $result[] = $this->renderNoDataRow($ctx);
             $ctx->incRenderedRowIdx();
         }
-        $result[] = $this->renderSeparator($ctx);
+        $result[] = $this->renderBottomSeparator($ctx);
 
         return $result;
     }
@@ -153,9 +153,7 @@ abstract class BaseRenderer implements RendererContract
                 $result .= static::ROW_FRAME_LEFT;
             }
 
-            $titleAlign = $column->getTitleAlign();
-            $result .= $this->pad($columns, $columnKey, $column->getTitle(), $titleAlign);
-
+            $result .= $this->pad($columns, $columnKey, $column->getTitle(), $column->getTitleAlign());
             $result .= $ctx->isLastVisibleColumn($columnKey)
                 ? static::ROW_FRAME_RIGHT
                 : static::ROW_FRAME_CENTER;
@@ -180,9 +178,57 @@ abstract class BaseRenderer implements RendererContract
     public const SEGMENT_LAST_ROW_CENTER  = '?';
     public const SEGMENT_LAST_ROW_RIGHT   = '?';
 
+
+    protected function renderBottomSeparator(RenderContext $ctx): string
+    {
+        $columns = $ctx->getTable()->getColumns();
+        $result = static::SEGMENT_LAST_ROW_LEFT;
+        foreach ($columns as $columnKey => $column) {
+            /**
+             * @var string|int $columnKey
+             * @var Column     $column
+             */
+            if (!$column->isVisible()) {
+                continue;
+            }
+
+            $result .= \str_repeat(static::SEGMENT_ROW_FILL, $column->getWidth());
+            $result .= $ctx->isLastVisibleColumn($columnKey)
+                ? static::SEGMENT_LAST_ROW_RIGHT
+                : static::SEGMENT_LAST_ROW_CENTER;
+        }
+
+        $ctx->incRenderedRowIdx();
+        return $result;
+    }
+
+    protected function renderTopSeparator(RenderContext $ctx): string
+    {
+        $columns = $ctx->getTable()->getColumns();
+        $result = static::SEGMENT_FIRST_ROW_LEFT;
+        foreach ($columns as $columnKey => $column) {
+            /**
+             * @var string|int $columnKey
+             * @var Column     $column
+             */
+            if (!$column->isVisible()) {
+                continue;
+            }
+
+            $result .= \str_repeat(static::SEGMENT_ROW_FILL, $column->getWidth());
+            $result .= $ctx->isLastVisibleColumn($columnKey)
+                ? static::SEGMENT_FIRST_ROW_RIGHT
+                : static::SEGMENT_FIRST_ROW_CENTER;
+        }
+
+        $ctx->incRenderedRowIdx();
+        return $result;
+    }
+
     /**
      * Renders separator row (usually to separate header/footer from
-     * the table content).
+     * the table content). To render top/bottom most edge separators
+     * use {@see renderTopSeparator()} and {@see renderBottomSeparator()}
      *
      * @param RenderContext $ctx Rendering context object.
      */
@@ -192,15 +238,23 @@ abstract class BaseRenderer implements RendererContract
 
         $result = '';
 
-        if ($ctx->isLastVisibleRow()) {
-            $isFirstRow = false;
-            $isLastRow = true;
-        } elseif ($ctx->isFirstVisibleRow()) {
-            $isFirstRow = true;
-            $isLastRow = false;
+        // check if table is empty (otherwise islastvisiblerow() will return
+        // true as row 0 is the last of 0 row dataset, rendering last closing table
+        // row characters instead of first row characters) which is visible for
+        // any non-symetric blocks (i.e. MsDos style blocks)
+        if ($ctx->getTable()->getRowCount() > 0) {
+            if ($ctx->isLastVisibleRow()) {
+                $isFirstRow = false;
+                $isLastRow = true;
+            } elseif ($ctx->isFirstVisibleRow()) {
+                $isFirstRow = true;
+                $isLastRow = false;
+            } else {
+                $isFirstRow = false;
+                $isLastRow = false;
+            }
         } else {
-            $isFirstRow = false;
-            $isLastRow = false;
+            //
         }
 
         foreach ($columns as $columnKey => $column) {

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable\Renderers;
 
-class FancyRenderer extends BaseRenderer
+class FancyRenderer extends AsciiTableRenderer
 {
     public const ROW_FRAME_LEFT   = '│ ';
     public const ROW_FRAME_CENTER = ' │ ';
