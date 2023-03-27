@@ -15,3 +15,5 @@ Fast and flexible PHP library for text tables.
 ```bash
 $ composer require marcin-orlowski/text-table
 ```
+
+See [project page on Packagist.org](https://packagist.org/packages/marcin-orlowski/text-table).
