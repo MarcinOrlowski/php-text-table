@@ -9,7 +9,7 @@ use MarcinOrlowski\TextTable\Align;
 use MarcinOrlowski\TextTable\Cell;
 use MarcinOrlowski\TextTable\Column;
 use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
-use MarcinOrlowski\TextTable\Renderers\PlusMinusRenderer;
+use MarcinOrlowski\TextTable\Renderers\MsDosRenderer;
 use MarcinOrlowski\TextTable\TextTable;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
 use PHPUnit\Framework\Assert;
@@ -21,7 +21,7 @@ class BaseTest extends TestCase
 {
     protected function renderTable(TextTable $table, bool $echoTable = false): array
     {
-        $renderer = new PlusMinusRenderer();
+        $renderer = new MsDosRenderer();
         $rendered = $renderer->render($table);
         if ($echoTable) {
             echo \implode(\PHP_EOL, $rendered) . \PHP_EOL;
@@ -46,11 +46,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+---+---+---+',
-            '| A | B | C |',
-            '+---+---+---+',
-            '| a | b | c |',
-            '+---+---+---+',
+            '╔═══╦═══╦═══╗',
+            '║ A ║ B ║ C ║',
+            '╠═══╬═══╬═══╣',
+            '║ a ║ b ║ c ║',
+            '╚═══╩═══╩═══╝',
         ];
 
         Assert::assertEquals($expected, $renderedTable);
@@ -70,9 +70,9 @@ class BaseTest extends TestCase
         $rowCnt = Generator::getRandomInt(2, 10);
 
         $expected = [
-            '+---+---+---+',
-            '| A | B | C |',
-            '+---+---+---+',
+            '╔═══╦═══╦═══╗',
+            '║ A ║ B ║ C ║',
+            '╠═══╬═══╬═══╣',
         ];
 
         for ($i = 0; $i < $rowCnt; $i++) {
@@ -81,9 +81,10 @@ class BaseTest extends TestCase
                 'B' => "b",
                 'C' => "c",
             ]);
-            $expected[] = '| a | b | c |';
+            $expected[] = '║ a ║ b ║ c ║';
         }
-        $expected[] = '+---+---+---+';
+        $expected[] = '╚═══╩═══╩═══╝';
+
 
         $renderedTable = $this->renderTable($table);
 
@@ -112,11 +113,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+---+---+---+',
-            '| A | B | C |',
-            '+---+---+---+',
-            '| a | b | c |',
-            '+---+---+---+',
+            '╔═══╦═══╦═══╗',
+            '║ A ║ B ║ C ║',
+            '╠═══╬═══╬═══╣',
+            '║ a ║ b ║ c ║',
+            '╚═══╩═══╩═══╝',
         ];
 
         Assert::assertEquals($expected, $renderedTable);
@@ -134,12 +135,12 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+-------+-------+',
-            '| ID | NAME  | SCORE |',
-            '+----+-------+-------+',
-            '| 1  | John  | 12    |',
-            '| 2  | Tommy | 15    |',
-            '+----+-------+-------+',
+            '╔════╦═══════╦═══════╗',
+            '║ ID ║ NAME  ║ SCORE ║',
+            '╠════╬═══════╬═══════╣',
+            '║ 1  ║ John  ║ 12    ║',
+            '║ 2  ║ Tommy ║ 15    ║',
+            '╚════╩═══════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -155,11 +156,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+------+-------+',
-            '| ID | NAME | SCORE |',
-            '+----+------+-------+',
-            '| 1  | John | 12    |',
-            '+----+------+-------+',
+            '╔════╦══════╦═══════╗',
+            '║ ID ║ NAME ║ SCORE ║',
+            '╠════╬══════╬═══════╣',
+            '║ 1  ║ John ║ 12    ║',
+            '╚════╩══════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -175,11 +176,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+-------+',
-            '| ID | SCORE |',
-            '+----+-------+',
-            '| 1  | 12    |',
-            '+----+-------+',
+            '╔════╦═══════╗',
+            '║ ID ║ SCORE ║',
+            '╠════╬═══════╣',
+            '║ 1  ║ 12    ║',
+            '╚════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -200,12 +201,12 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+-------+-------+',
-            '| ID | NAME  | SCORE |',
-            '+----+-------+-------+',
-            '|  1 | John  |    12 |',
-            '|  2 | Tommy |    15 |',
-            '+----+-------+-------+',
+            '╔════╦═══════╦═══════╗',
+            '║ ID ║ NAME  ║ SCORE ║',
+            '╠════╬═══════╬═══════╣',
+            '║  1 ║ John  ║    12 ║',
+            '║  2 ║ Tommy ║    15 ║',
+            '╚════╩═══════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -226,11 +227,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+----------------------+-------+',
-            '| ID | NAME                 | SCORE |',
-            '+----+----------------------+-------+',
-            '| 1  |         John         | 12    |',
-            '+----+----------------------+-------+',
+            '╔════╦══════════════════════╦═══════╗',
+            '║ ID ║ NAME                 ║ SCORE ║',
+            '╠════╬══════════════════════╬═══════╣',
+            '║ 1  ║         John         ║ 12    ║',
+            '╚════╩══════════════════════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -252,12 +253,12 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----------------------+-------+---------------------------+',
-            '| ID                   | NAME  | SCORE                     |',
-            '+----------------------+-------+---------------------------+',
-            '| 1                    | John  | 12                        |',
-            '| 2                    | Tommy | 15                        |',
-            '+----------------------+-------+---------------------------+',
+            '╔══════════════════════╦═══════╦═══════════════════════════╗',
+            '║ ID                   ║ NAME  ║ SCORE                     ║',
+            '╠══════════════════════╬═══════╬═══════════════════════════╣',
+            '║ 1                    ║ John  ║ 12                        ║',
+            '║ 2                    ║ Tommy ║ 15                        ║',
+            '╚══════════════════════╩═══════╩═══════════════════════════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -277,12 +278,12 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+------------+-----------------+------+',
-            '| ID         | NAME            | SCO… |',
-            '+------------+-----------------+------+',
-            '| 1          | Foo             | 12   |',
-            '| 2          | PBOX POH Poříč… | 15   |',
-            '+------------+-----------------+------+',
+            '╔════════════╦═════════════════╦══════╗',
+            '║ ID         ║ NAME            ║ SCO… ║',
+            '╠════════════╬═════════════════╬══════╣',
+            '║ 1          ║ Foo             ║ 12   ║',
+            '║ 2          ║ PBOX POH Poříč… ║ 15   ║',
+            '╚════════════╩═════════════════╩══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -303,13 +304,13 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----------------------------------+',
-            '| NAME                             |',
-            '+----------------------------------+',
-            '| Řídící depo Praha 704            |',
-            '| Oční optika M. Ečerová           |',
-            '| AKY chovatelské potřeby a krmiva |',
-            '+----------------------------------+',
+            '╔══════════════════════════════════╗',
+            '║ NAME                             ║',
+            '╠══════════════════════════════════╣',
+            '║ Řídící depo Praha 704            ║',
+            '║ Oční optika M. Ečerová           ║',
+            '║ AKY chovatelské potřeby a krmiva ║',
+            '╚══════════════════════════════════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -335,12 +336,12 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----------------------+-------+---------------------------+',
-            '|                   ID | NAME  |           SCORE           |',
-            '+----------------------+-------+---------------------------+',
-            '|                    1 |  John |                        12 |',
-            '|                    2 | Tommy |                        15 |',
-            '+----------------------+-------+---------------------------+',
+            '╔══════════════════════╦═══════╦═══════════════════════════╗',
+            '║                   ID ║ NAME  ║           SCORE           ║',
+            '╠══════════════════════╬═══════╬═══════════════════════════╣',
+            '║                    1 ║  John ║                        12 ║',
+            '║                    2 ║ Tommy ║                        15 ║',
+            '╚══════════════════════╩═══════╩═══════════════════════════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -366,12 +367,12 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+------------+-------+---------------------------+',
-            '|         ID | NAME  |           SCORE           |',
-            '+------------+-------+---------------------------+',
-            '|          1 |  John |             12            |',
-            '|          2 | Tommy |                        15 |',
-            '+------------+-------+---------------------------+',
+            '╔════════════╦═══════╦═══════════════════════════╗',
+            '║         ID ║ NAME  ║           SCORE           ║',
+            '╠════════════╬═══════╬═══════════════════════════╣',
+            '║          1 ║  John ║             12            ║',
+            '║          2 ║ Tommy ║                        15 ║',
+            '╚════════════╩═══════╩═══════════════════════════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -400,11 +401,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
-            \sprintf('| %s%s |', $key, \str_repeat(' ', $maxLength - \mb_strlen($key))),
-            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
-            "| {$clipped} |",
-            \sprintf('+-%s-+', StringUtils::pad('', $maxLength, '-')),
+            \sprintf('╔═%s═╗', StringUtils::pad('', $maxLength, '═')),
+            \sprintf('║ %s%s ║', $key, \str_repeat(' ', $maxLength - \mb_strlen($key))),
+            \sprintf('╠═%s═╣', StringUtils::pad('', $maxLength, '═')),
+            "║ {$clipped} ║",
+            \sprintf('╚═%s═╝', StringUtils::pad('', $maxLength, '═')),
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -419,11 +420,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+----------------------+-------+',
-            '| ID | NAME                 | SCORE |',
-            '+----+----------------------+-------+',
-            '|              NO DATA              |',
-            '+----+----------------------+-------+',
+            '╔════╦══════════════════════╦═══════╗',
+            '║ ID ║ NAME                 ║ SCORE ║',
+            '╠════╬══════════════════════╬═══════╣',
+            '║              NO DATA              ║',
+            '╚════╩══════════════════════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -439,13 +440,12 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $clippedTitle = \mb_substr($key, 0, $maxLength - 1) . '…';
-        $tableSeparatorLine = \sprintf('+-%s-+', \str_repeat('-', $maxLength));
         $expected = [
-            $tableSeparatorLine,
-            \sprintf('| %s |', $clippedTitle),
-            $tableSeparatorLine,
-            \sprintf('| %s |', $this->formatNoData($maxLength)),
-            $tableSeparatorLine,
+            \sprintf('╔═%s═╗', \str_repeat('═', $maxLength)),
+            \sprintf('║ %s ║', $clippedTitle),
+            \sprintf('╠═%s═╣', \str_repeat('═', $maxLength)),
+            \sprintf('║ %s ║', $this->formatNoData($maxLength)),
+            \sprintf('╚═%s═╝', \str_repeat('═', $maxLength)),
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -463,11 +463,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+--------+----------------------+-------+',
-            '| HIDDEN | NAME                 | SCORE |',
-            '+--------+----------------------+-------+',
-            '|                NO DATA                |',
-            '+--------+----------------------+-------+',
+            '╔════════╦══════════════════════╦═══════╗',
+            '║ HIDDEN ║ NAME                 ║ SCORE ║',
+            '╠════════╬══════════════════════╬═══════╣',
+            '║                NO DATA                ║',
+            '╚════════╩══════════════════════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -485,11 +485,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+----------------------+-------+',
-            '| ID | NAME                 | SCORE |',
-            '+----+----------------------+-------+',
-            '|              NO DATA              |',
-            '+----+----------------------+-------+',
+            '╔════╦══════════════════════╦═══════╗',
+            '║ ID ║ NAME                 ║ SCORE ║',
+            '╠════╬══════════════════════╬═══════╣',
+            '║              NO DATA              ║',
+            '╚════╩══════════════════════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -507,11 +507,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+--------+----------------------+',
-            '| ID | HIDDEN | NAME                 |',
-            '+----+--------+----------------------+',
-            '|               NO DATA              |',
-            '+----+--------+----------------------+',
+            '╔════╦════════╦══════════════════════╗',
+            '║ ID ║ HIDDEN ║ NAME                 ║',
+            '╠════╬════════╬══════════════════════╣',
+            '║               NO DATA              ║',
+            '╚════╩════════╩══════════════════════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -570,11 +570,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+---+---+',
-            '| A | C |',
-            '+---+---+',
-            '| a | c |',
-            '+---+---+',
+            '╔═══╦═══╗',
+            '║ A ║ C ║',
+            '╠═══╬═══╣',
+            '║ a ║ c ║',
+            '╚═══╩═══╝',
         ];
 
         Assert::assertEquals($expected, $renderedTable);
@@ -616,11 +616,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+---+---+',
-            '| B | C |',
-            '+---+---+',
-            '| b | c |',
-            '+---+---+',
+            '╔═══╦═══╗',
+            '║ B ║ C ║',
+            '╠═══╬═══╣',
+            '║ b ║ c ║',
+            '╚═══╩═══╝',
         ];
 
         Assert::assertEquals($expected, $renderedTable);
@@ -648,11 +648,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+---+---+',
-            '| A | B |',
-            '+---+---+',
-            '| a | b |',
-            '+---+---+',
+            '╔═══╦═══╗',
+            '║ A ║ B ║',
+            '╠═══╬═══╣',
+            '║ a ║ b ║',
+            '╚═══╩═══╝',
         ];
 
         Assert::assertEquals($expected, $renderedTable);
@@ -679,14 +679,14 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+--------+-------+',
-            '| ID | NAME   | SCORE |',
-            '+----+--------+-------+',
-            '|    |        |    15 |',
-            '|  1 | John   |    12 |',
-            '|  2 | Alan   |       |',
-            '|    | Robert |    32 |',
-            '+----+--------+-------+',
+            '╔════╦════════╦═══════╗',
+            '║ ID ║ NAME   ║ SCORE ║',
+            '╠════╬════════╬═══════╣',
+            '║    ║        ║    15 ║',
+            '║  1 ║ John   ║    12 ║',
+            '║  2 ║ Alan   ║       ║',
+            '║    ║ Robert ║    32 ║',
+            '╚════╩════════╩═══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -702,12 +702,12 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+----+------+',
-            '| ID | NAME |',
-            '+----+------+',
-            '| 1  |      |',
-            '|    | John |',
-            '+----+------+',
+            '╔════╦══════╗',
+            '║ ID ║ NAME ║',
+            '╠════╬══════╣',
+            '║ 1  ║      ║',
+            '║    ║ John ║',
+            '╚════╩══════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
@@ -726,11 +726,11 @@ class BaseTest extends TestCase
         $renderedTable = $this->renderTable($table);
 
         $expected = [
-            '+---+---+',
-            '| A | B |',
-            '+---+---+',
-            '| A | B |',
-            '+---+---+',
+            '╔═══╦═══╗',
+            '║ A ║ B ║',
+            '╠═══╬═══╣',
+            '║ A ║ B ║',
+            '╚═══╩═══╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
