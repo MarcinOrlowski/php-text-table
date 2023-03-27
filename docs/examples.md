@@ -9,7 +9,6 @@ Fast and flexible PHP library for text tables.
 1. Simplest use case
 1. Custom align & and cells' width limit
 
-
 ### Simplest use case
 
 This is probably the most common and yet the simplest possible usage:
@@ -84,6 +83,11 @@ instead of table shaped characters:
 by implementing `RendererContract` in your class.
 
 For available built-in renderers, see [src/Renderers/](../src/Renderers/) sources.
+
+**HINT:** If you want to just introduce new frame characters, just extend built-in
+[AsciiTableRenderer](../src/Renderers/AsciiTableRenderer.php) and provide characters of your choices
+only. See i.e. [src/Renderers/MsDosRenderer.php](../src/Renderers/MsDosRenderer.php) code for
+reference.
 
 ---
 

@@ -21,7 +21,7 @@ use MarcinOrlowski\TextTable\Row;
 use MarcinOrlowski\TextTable\TextTable;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
 
-abstract class BaseRenderer implements RendererContract
+abstract class AsciiTableRenderer implements RendererContract
 {
     /**
      * @inheritDoc
