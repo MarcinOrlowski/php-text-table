@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10ffc1752138686baf682f4d6c4bc1e8",
+    "content-hash": "1e6b60e8c288a245ee89aec6c58c941d",
     "packages": [
         {
             "name": "marcin-orlowski/lombok-php",
@@ -66,26 +66,26 @@
     "packages-dev": [
         {
             "name": "marcin-orlowski/phpunit-extra-asserts",
-            "version": "3.4.0",
+            "version": "5.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/MarcinOrlowski/phpunit-extra-asserts.git",
-                "reference": "b4f02ac10b55e6d9fdd98e25ef15f83ed630646f"
+                "reference": "129d9d75554207dae8c2b675988150a4edf1a1bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MarcinOrlowski/phpunit-extra-asserts/zipball/b4f02ac10b55e6d9fdd98e25ef15f83ed630646f",
-                "reference": "b4f02ac10b55e6d9fdd98e25ef15f83ed630646f",
+                "url": "https://api.github.com/repos/MarcinOrlowski/phpunit-extra-asserts/zipball/129d9d75554207dae8c2b675988150a4edf1a1bb",
+                "reference": "129d9d75554207dae8c2b675988150a4edf1a1bb",
                 "shasum": ""
             },
             "require": {
-                "marcin-orlowski/type-asserts": "^1.2.0",
-                "php": "^7.4||^8.0||^8.1"
+                "marcin-orlowski/type-asserts": "^2.0.0",
+                "php": "^8.0||^8.1"
             },
             "require-dev": {
-                "phpstan/phpstan": "^1.8",
+                "phpstan/phpstan": "^1.9.1",
                 "phpunit/php-code-coverage": "^9.0",
-                "phpunit/phpunit": "^9.0"
+                "phpunit/phpunit": "^9.5.26"
             },
             "type": "library",
             "autoload": {
@@ -100,13 +100,12 @@
             "authors": [
                 {
                     "name": "Marcin Orlowski",
-                    "homepage": "http://MarcinOrlowski.com/"
+                    "homepage": "https://MarcinOrlowski.com/"
                 }
             ],
             "description": "Extra asserts and helpers to make your unit testing easier.",
             "homepage": "https://github.com/MarcinOrlowski/phpunit-extra-asserts",
             "keywords": [
-                "PHP7",
                 "asserts",
                 "helper",
                 "php8",
@@ -118,24 +117,24 @@
                 "issues": "https://github.com/MarcinOrlowski/phpunit-extra-asserts/issues",
                 "source": "https://github.com/MarcinOrlowski/phpunit-extra-asserts/"
             },
-            "time": "2022-09-26T21:01:22+00:00"
+            "time": "2023-03-04T10:41:11+00:00"
         },
         {
             "name": "marcin-orlowski/type-asserts",
-            "version": "1.2.0",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/MarcinOrlowski/type-asserts.git",
-                "reference": "60fbfcb449c031f84855f8d7b1f53dfaa6150c56"
+                "url": "https://github.com/MarcinOrlowski/php-type-asserts.git",
+                "reference": "a985cf560b1c59d12422a3810857d5730b5551c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/MarcinOrlowski/type-asserts/zipball/60fbfcb449c031f84855f8d7b1f53dfaa6150c56",
-                "reference": "60fbfcb449c031f84855f8d7b1f53dfaa6150c56",
+                "url": "https://api.github.com/repos/MarcinOrlowski/php-type-asserts/zipball/a985cf560b1c59d12422a3810857d5730b5551c8",
+                "reference": "a985cf560b1c59d12422a3810857d5730b5551c8",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.4||^8.0||^8.1"
+                "php": "^8.0||^8.1"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.8",
@@ -159,9 +158,8 @@
                 }
             ],
             "description": "Data type assertions.",
-            "homepage": "https://github.com/MarcinOrlowski/type-asserts",
+            "homepage": "https://github.com/MarcinOrlowski/php-type-asserts",
             "keywords": [
-                "PHP7",
                 "asserts",
                 "helper",
                 "php8",
@@ -172,10 +170,10 @@
                 "validator"
             ],
             "support": {
-                "issues": "https://github.com/MarcinOrlowski/type-asserts/issues",
-                "source": "https://github.com/MarcinOrlowski/type-asserts/"
+                "issues": "https://github.com/MarcinOrlowski/php-type-asserts/issues",
+                "source": "https://github.com/MarcinOrlowski/php-type-asserts/"
             },
-            "time": "2022-09-26T17:20:01+00:00"
+            "time": "2022-11-04T20:59:01+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1792,63 +1790,6 @@
                 }
             ],
             "time": "2023-02-07T11:34:05+00:00"
-        },
-        {
-            "name": "squizlabs/php_codesniffer",
-            "version": "3.7.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "ed8e00df0a83aa96acf703f8c2979ff33341f879"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ed8e00df0a83aa96acf703f8c2979ff33341f879",
-                "reference": "ed8e00df0a83aa96acf703f8c2979ff33341f879",
-                "shasum": ""
-            },
-            "require": {
-                "ext-simplexml": "*",
-                "ext-tokenizer": "*",
-                "ext-xmlwriter": "*",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0"
-            },
-            "bin": [
-                "bin/phpcs",
-                "bin/phpcbf"
-            ],
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Greg Sherwood",
-                    "role": "lead"
-                }
-            ],
-            "description": "PHP_CodeSniffer tokenizes PHP, JavaScript and CSS files and detects violations of a defined set of coding standards.",
-            "homepage": "https://github.com/squizlabs/PHP_CodeSniffer",
-            "keywords": [
-                "phpcs",
-                "standards",
-                "static analysis"
-            ],
-            "support": {
-                "issues": "https://github.com/squizlabs/PHP_CodeSniffer/issues",
-                "source": "https://github.com/squizlabs/PHP_CodeSniffer",
-                "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
-            },
-            "time": "2023-02-22T23:07:41+00:00"
         },
         {
             "name": "theseer/tokenizer",
