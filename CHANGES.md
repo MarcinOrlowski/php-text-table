@@ -16,8 +16,13 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
+* @dev (2023-08-??)
+  * `TextTable` c'tor now also accepts rows for instant initialization.
+  * Centering in odd-character width column now puts content closed to left edge. 
+  * Docs cleanup
+
 * 2.4.0 (2023-03-27)
-  * Updated documentations and examples.
+  * Updated documentation and examples.
   * Fixed rendering of empty tables causing incorrect frames to be used.
   * Renamed `BaseRenderer` to `AsciiTableRenderer`.
 
