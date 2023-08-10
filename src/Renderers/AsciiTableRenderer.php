@@ -125,7 +125,8 @@ abstract class AsciiTableRenderer implements RendererContract
                 : static::ROW_FRAME_CENTER;
         }
 
-        $ctx->incRenderedRowIdx()->incTableRowIdx();
+        $ctx->incRenderedRowIdx();
+        $ctx->incTableRowIdx();
 
         return $result;
     }
