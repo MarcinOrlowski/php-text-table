@@ -13,11 +13,12 @@
 
 Fast and flexible PHP library for text tables.
 
-
 [![Latest Stable Version](http://poser.pugx.org/marcin-orlowski/text-table/v)](https://packagist.org/packages/marcin-orlowski/text-table)
 [![Total Downloads](http://poser.pugx.org/marcin-orlowski/text-table/downloads)](https://packagist.org/packages/marcin-orlowski/text-table)
 [![License](http://poser.pugx.org/marcin-orlowski/text-table/license)](https://packagist.org/packages/marcin-orlowski/text-table)
 [![PHP Version Require](http://poser.pugx.org/marcin-orlowski/text-table/require/php)](https://packagist.org/packages/marcin-orlowski/text-table)
+
+Also available as [Python package](https://github.com/MarcinOrlowski/python-flex-text-table/).
 
 ---
 
