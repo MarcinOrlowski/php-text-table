@@ -1,5 +1,15 @@
 # Text Table
 
+```ascii
+..######.#####.##...##.######...######...#....#####..##....#####..
+....##...##.....##.##....##.......##....###...##..##.##....##.....
+....##...##......###.....##.......##...##.##..##..##.##....##.....
+....##...####.....#......##.......##..##...##.#####..##....####...
+....##...##......###.....##.......##..#######.##..##.##....##.....
+....##...##.....##.##....##.......##..##...##.##..##.##....##.....
+....##...#####.##...##...##.......##..##...##.#####..#####.#####..
+```
+
 Fast and flexible PHP library for text tables.
 
 ---
@@ -130,5 +140,5 @@ would produce this nicely formatted text table:
 ## License
 
 * Written and copyrighted &copy;2022 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* Text Table is open-sourced software licensed under
+* Text Table is open-sourced software licensed under 
   the [MIT license](http://opensource.org/licenses/MIT)
