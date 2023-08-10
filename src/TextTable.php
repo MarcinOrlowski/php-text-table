@@ -42,10 +42,10 @@ class TextTable extends \Lombok\Helper
      * @throws DuplicateColumnKeyException
      * @throws UnsupportedColumnTypeException
      */
-    public function __construct(array $headerColumns = [])
+    public function __construct(array $headerColumns = [], array $rows = [])
     {
         parent::__construct();
-        $this->init($headerColumns);
+        $this->init($headerColumns, $rows);
     }
 
     /**
@@ -64,11 +64,12 @@ class TextTable extends \Lombok\Helper
      * @throws DuplicateColumnKeyException
      * @throws UnsupportedColumnTypeException
      */
-    public function init(array $headerColumns = []): self
+    public function init(array $headerColumns = [], array $rows = []): self
     {
         $this->columns = new ColumnsContainer();
         $this->rows = new RowsContainer();
         $this->addColumns($headerColumns);
+        $this->addRows($rows);
 
         return $this;
     }
@@ -196,27 +197,25 @@ class TextTable extends \Lombok\Helper
 
         $columns = $this->getColumns();
 
-        $itemsToAddCount = $srcRow instanceof Row
-            ? $srcRow->count()
-            : \count($srcRow);
+        $itemsToAddCount = \count($srcRow);
 
         $row = $srcRow;
-        if (!($srcRow instanceof Row)) {
+        if (\is_array($srcRow)) {
             $row = new Row();
 
             // If source array has only numeric keys, and column definitions are using non-numeric keys,
             // then it is assumed that source array elements are in sequence and will be automatically
             // assigned to cell at position matching their index in source array.
             $srcHasNumKeysOnly = $itemsToAddCount === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
-            $columnsHasStringKeysOnly = \count($columns) === \count(
+            $columnsHaveStringKeysOnly = \count($columns) === \count(
                     \array_filter(\array_keys($columns->toArray()), \is_string(...)));
 
-            if ($srcHasNumKeysOnly && $columnsHasStringKeysOnly) {
+            if ($srcHasNumKeysOnly && $columnsHaveStringKeysOnly) {
                 $columnKeys = \array_keys($columns->toArray());
 
                 $srcIdx = 0;
                 foreach ($srcRow as $cell) {
-                    $columnKey = $columnKeys[ $srcIdx ];
+                    $columnKey = $columnKeys[$srcIdx];
                     $row->addCell($columnKey, $cell);
                     $srcIdx++;
 
@@ -237,7 +236,7 @@ class TextTable extends \Lombok\Helper
             $this->getColumn($columnKey)->updateMaxWidth(\mb_strlen($cell->getValue()));
         }
 
-        $this->rows[] = $row;
+        $this->rows[$this->getRowCount()] = $row;
 
         return $this;
     }
