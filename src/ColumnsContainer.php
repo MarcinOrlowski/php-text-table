@@ -31,7 +31,7 @@ class ColumnsContainer extends BaseContainer
         if (!$this->offsetExists($columnKey)) {
             throw ColumnKeyNotFoundException::forColumnKey($columnKey);
         }
-        return $this->container[ $columnKey ];
+        return $this->container[$columnKey];
     }
 
     /**
@@ -63,7 +63,7 @@ class ColumnsContainer extends BaseContainer
             throw DuplicateColumnKeyException::forColumnKey($columnKey);
         }
 
-        $this->container[ $columnKey ] = $column;
+        $this->container[$columnKey] = $column;
 
         $this->getColumn($columnKey)->updateMaxWidth(\mb_strlen($column->getTitle()));
 

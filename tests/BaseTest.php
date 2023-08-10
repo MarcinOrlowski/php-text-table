@@ -29,6 +29,8 @@ class BaseTest extends TestCase
         return $rendered;
     }
 
+    /* ****************************************************************************************** */
+
     public function testSimpleTable(): void
     {
         $table = new TextTable();
