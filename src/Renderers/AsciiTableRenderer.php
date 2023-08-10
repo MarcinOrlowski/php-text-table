@@ -254,7 +254,8 @@ abstract class AsciiTableRenderer implements RendererContract
                 $isLastRow = false;
             }
         } else {
-            //
+            $isFirstRow = false;
+            $isLastRow = false;
         }
 
         foreach ($columns as $columnKey => $column) {
