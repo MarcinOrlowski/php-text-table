@@ -46,6 +46,7 @@
         "marcin-orlowski/phpunit-extra-asserts": "^5.0"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit -c phpunit.xml -c phpunit.xml.dist"
+        "test": "vendor/bin/phpunit -c phpunit.xml -c phpunit.xml.dist",
+        "lint": "vendor/bin/phpstan analyse -c phpstan.neon -c phpstan.neon.dist src tests"
     }
 }
