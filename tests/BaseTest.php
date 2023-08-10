@@ -510,7 +510,7 @@ class BaseTest extends TestCase
             '╔════╦════════╦══════════════════════╗',
             '║ ID ║ HIDDEN ║ NAME                 ║',
             '╠════╬════════╬══════════════════════╣',
-            '║               NO DATA              ║',
+            '║              NO DATA               ║',
             '╚════╩════════╩══════════════════════╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
