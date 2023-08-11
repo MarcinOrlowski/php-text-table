@@ -2,7 +2,7 @@
     "name": "marcin-orlowski/text-table",
     "description": "Fast and flexible PHP library for text tables.",
     "homepage": "https://github.com/MarcinOrlowski/php-text-table",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "keywords": [
         "php",
         "php8",

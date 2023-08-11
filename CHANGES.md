@@ -21,6 +21,11 @@ Fast and flexible PHP library for text tables.
   * Centering in odd-character width column now puts content closed to left edge. 
   * Docs cleanup
 
+
+* 2.4.1 (2023-08-10)
+  * Fixed `AsciiTableRenderer` throwing notices on empty tables.
+
+
 * 2.4.0 (2023-03-27)
   * Updated documentation and examples.
   * Fixed rendering of empty tables causing incorrect frames to be used.
