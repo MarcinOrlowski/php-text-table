@@ -13,10 +13,11 @@ namespace MarcinOrlowski\TextTable\Exceptions;
 
 class ColumnKeyNotFoundException extends \Exception
 {
-    public static function forColumnKey(string $columnKey): static
+    public static function forColumnKey(string|int $columnKey): static
     {
         $msg = \sprintf('Column key not found: %s', $columnKey);
-        return self($msg);
+
+        return new self($msg);
     }
 
 }

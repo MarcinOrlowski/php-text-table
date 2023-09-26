@@ -65,4 +65,19 @@ class StringUtils
     }
 
     /* ****************************************************************************************** */
+
+    /**
+     * Ensures given column key is string, and if not, converts it to string by prepending "c_"
+     * prefix. to avoid PHP treating the columnKey as array index, which is not what we want.
+     *
+     * @param string|int $columnKey Column key we are going to sanitize.
+     */
+    public static function sanitizeColumnKey(string|int $columnKey): string
+    {
+        if (\is_numeric($columnKey)) {
+            $columnKey = "c_{$columnKey}";
+        }
+
+        return $columnKey;
+    }
 }

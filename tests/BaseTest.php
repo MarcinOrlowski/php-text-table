@@ -26,6 +26,7 @@ class BaseTest extends TestCase
         if ($echoTable) {
             echo \implode(\PHP_EOL, $rendered) . \PHP_EOL;
         }
+
         return $rendered;
     }
 
@@ -35,15 +36,15 @@ class BaseTest extends TestCase
     {
         $table = new TextTable();
         $table->addColumns([
-                               'A',
-                               'B',
-                               'C',
-                           ]);
+            'A',
+            'B',
+            'C',
+        ]);
         $table->addRow([
-                           'A' => 'a',
-                           'B' => 'b',
-                           'C' => 'c',
-                       ]);
+            'A' => 'a',
+            'B' => 'b',
+            'C' => 'c',
+        ]);
 
         $renderedTable = $this->renderTable($table);
 
@@ -64,10 +65,10 @@ class BaseTest extends TestCase
     {
         $table = new TextTable();
         $table->addColumns([
-                               'A',
-                               'B',
-                               'C',
-                           ]);
+            'A',
+            'B',
+            'C',
+        ]);
 
         $rowCnt = Generator::getRandomInt(2, 10);
 
@@ -79,10 +80,10 @@ class BaseTest extends TestCase
 
         for ($i = 0; $i < $rowCnt; $i++) {
             $table->addRow([
-                               'A' => "a",
-                               'B' => "b",
-                               'C' => "c",
-                           ]);
+                'A' => "a",
+                'B' => "b",
+                'C' => "c",
+            ]);
             $expected[] = '║ a ║ b ║ c ║';
         }
         $expected[] = '╚═══╩═══╩═══╝';
@@ -102,15 +103,15 @@ class BaseTest extends TestCase
         $key3 = Generator::getRandomString('key3');
         $table = new TextTable();
         $table->addColumns([
-                               $key1 => 'A',
-                               $key2 => 'B',
-                               $key3 => 'C',
-                           ]);
+            $key1 => 'A',
+            $key2 => 'B',
+            $key3 => 'C',
+        ]);
         $table->addRow([
-                           $key3 => 'c',
-                           $key2 => 'b',
-                           $key1 => 'a',
-                       ]);
+            $key3 => 'c',
+            $key2 => 'b',
+            $key1 => 'a',
+        ]);
 
         $renderedTable = $this->renderTable($table);
 
@@ -131,9 +132,9 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-                            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
-                            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
-                        ]);
+            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
+        ]);
         $renderedTable = $this->renderTable($table);
 
         $expected = [
@@ -153,8 +154,8 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-                            [1, 'John', 12],
-                        ]);
+            [1, 'John', 12],
+        ]);
         $renderedTable = $this->renderTable($table);
 
         $expected = [
@@ -173,8 +174,8 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', new Column('SCORE')]);
         $table->addRows([
-                            ['ID' => 1, 'SCORE' => 12],
-                        ]);
+            ['ID' => 1, 'SCORE' => 12],
+        ]);
         $renderedTable = $this->renderTable($table);
 
         $expected = [
@@ -193,9 +194,9 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-                            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
-                            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
-                        ]);
+            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
+        ]);
 
         $table->setColumnAlign('ID', Align::RIGHT);
         $table->setColumnAlign('SCORE', Align::RIGHT);
@@ -218,13 +219,13 @@ class BaseTest extends TestCase
         $table = new TextTable(['ID',
                                 new Column('NAME', maxWidth: 20),
                                 'SCORE',
-                               ]);
+        ]);
         $table->addRows([
-                            [1,
-                             new Cell('John', Align::CENTER),
-                             12,
-                            ],
-                        ]);
+            [1,
+             new Cell('John', Align::CENTER),
+             12,
+            ],
+        ]);
 
         $renderedTable = $this->renderTable($table);
 
@@ -244,9 +245,9 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-                            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
-                            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
-                        ]);
+            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
+        ]);
 
         $table->setColumnMaxWidth('ID', 20);
         $table->setColumnMaxWidth('NAME', 5);
@@ -269,9 +270,9 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-                            [1, 'Foo', 12],
-                            [2, 'PBOX POH Poříčí (Restaura)', 15],
-                        ]);
+            [1, 'Foo', 12],
+            [2, 'PBOX POH Poříčí (Restaura)', 15],
+        ]);
 
         $table->setColumnMaxWidth('ID', 10);
         $table->setColumnMaxWidth('NAME', 15);
@@ -294,14 +295,14 @@ class BaseTest extends TestCase
     {
         // Create display table
         $table = new TextTable([
-                                   new Column('NAME', maxWidth: 25),
-                               ]);
+            new Column('NAME', maxWidth: 25),
+        ]);
 
         $table->addRows([
-                            ['Řídící depo Praha 704'],
-                            ['Oční optika M. Ečerová'],
-                            ['AKY chovatelské potřeby a krmiva'],
-                        ]);
+            ['Řídící depo Praha 704'],
+            ['Oční optika M. Ečerová'],
+            ['AKY chovatelské potřeby a krmiva'],
+        ]);
 
         $renderedTable = $this->renderTable($table);
 
@@ -321,9 +322,9 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-                            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
-                            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
-                        ]);
+            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
+        ]);
 
         $table->setColumnMaxWidth('ID', 20);
         $table->setColumnMaxWidth('NAME', 5);
@@ -352,9 +353,9 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-                            ['ID' => 1, 'SCORE' => new Cell(12, Align::CENTER), 'NAME' => 'John'],
-                            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
-                        ]);
+            ['ID' => 1, 'SCORE' => new Cell(12, Align::CENTER), 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
+        ]);
 
         $table->setColumnMaxWidth('ID', 10);
         $table->setColumnMaxWidth('NAME', 5);
@@ -393,10 +394,10 @@ class BaseTest extends TestCase
 
         $table = new TextTable([$key]);
         $table->addRows([
-                            [
-                                $key => $longName,
-                            ],
-                        ]);
+            [
+                $key => $longName,
+            ],
+        ]);
 
         $table->setColumnMaxWidth('NAME', $maxLength);
 
@@ -455,11 +456,11 @@ class BaseTest extends TestCase
     public function testNoDataWithHiddenFirstColumn(): void
     {
         $table = new TextTable([
-                                   'ID',
-                                   'HIDDEN',
-                                   new Column('NAME', maxWidth: 20),
-                                   'SCORE',
-                               ]);
+            'ID',
+            'HIDDEN',
+            new Column('NAME', maxWidth: 20),
+            'SCORE',
+        ]);
         $table->hideColumn('ID');
 
         $renderedTable = $this->renderTable($table);
@@ -477,11 +478,11 @@ class BaseTest extends TestCase
     public function testNoDataWithHiddenMiddleColumn(): void
     {
         $table = new TextTable([
-                                   'ID',
-                                   'HIDDEN',
-                                   new Column('NAME', maxWidth: 20),
-                                   'SCORE',
-                               ]);
+            'ID',
+            'HIDDEN',
+            new Column('NAME', maxWidth: 20),
+            'SCORE',
+        ]);
         $table->hideColumn('HIDDEN');
 
         $renderedTable = $this->renderTable($table);
@@ -499,11 +500,11 @@ class BaseTest extends TestCase
     public function testNoDataWithHiddenLastColumn(): void
     {
         $table = new TextTable([
-                                   'ID',
-                                   'HIDDEN',
-                                   new Column('NAME', maxWidth: 20),
-                                   'SCORE',
-                               ]);
+            'ID',
+            'HIDDEN',
+            new Column('NAME', maxWidth: 20),
+            'SCORE',
+        ]);
         $table->hideColumn('SCORE');
 
         $renderedTable = $this->renderTable($table);
@@ -521,15 +522,15 @@ class BaseTest extends TestCase
     public function testNoDataWithHiddenAllColumns(): void
     {
         $table = new TextTable([
-                                   'ID',
-                                   'HIDDEN',
-                                   'SCORE',
-                               ]);
+            'ID',
+            'HIDDEN',
+            'SCORE',
+        ]);
         $table->hideColumn([
-                               'ID',
-                               'HIDDEN',
-                               'SCORE',
-                           ]);
+            'ID',
+            'HIDDEN',
+            'SCORE',
+        ]);
 
         $this->expectException(NoVisibleColumnsException::class);
         $renderedTable = $this->renderTable($table);
@@ -557,15 +558,15 @@ class BaseTest extends TestCase
         $key3 = Generator::getRandomString('key3');
         $table = new TextTable();
         $table->addColumns([
-                               $key1 => 'A',
-                               $key2 => 'B',
-                               $key3 => 'C',
-                           ]);
+            $key1 => 'A',
+            $key2 => 'B',
+            $key3 => 'C',
+        ]);
         $table->addRow([
-                           $key3 => 'c',
-                           $key2 => 'b',
-                           $key1 => 'a',
-                       ]);
+            $key3 => 'c',
+            $key2 => 'b',
+            $key1 => 'a',
+        ]);
 
         $table->hideColumn($key2);
 
@@ -603,15 +604,15 @@ class BaseTest extends TestCase
         $key3 = Generator::getRandomString('key3');
         $table = new TextTable();
         $table->addColumns([
-                               $key1 => 'A',
-                               $key2 => 'B',
-                               $key3 => 'C',
-                           ]);
+            $key1 => 'A',
+            $key2 => 'B',
+            $key3 => 'C',
+        ]);
         $table->addRow([
-                           $key3 => 'c',
-                           $key2 => 'b',
-                           $key1 => 'a',
-                       ]);
+            $key3 => 'c',
+            $key2 => 'b',
+            $key1 => 'a',
+        ]);
 
         $table->hideColumn($key1);
 
@@ -635,15 +636,15 @@ class BaseTest extends TestCase
         $key3 = Generator::getRandomString('key3');
         $table = new TextTable();
         $table->addColumns([
-                               $key1 => 'A',
-                               $key2 => 'B',
-                               $key3 => 'C',
-                           ]);
+            $key1 => 'A',
+            $key2 => 'B',
+            $key3 => 'C',
+        ]);
         $table->addRow([
-                           $key3 => 'c',
-                           $key2 => 'b',
-                           $key1 => 'a',
-                       ]);
+            $key3 => 'c',
+            $key2 => 'b',
+            $key1 => 'a',
+        ]);
 
         $table->hideColumn($key3);
 
@@ -669,11 +670,11 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME', 'SCORE']);
         $table->addRows([
-                            ['SCORE' => 15,],
-                            [1, 'John', 12],
-                            ['ID' => 2, 'NAME' => 'Alan'],
-                            ['SCORE' => 32, 'NAME' => 'Robert'],
-                        ]);
+            ['SCORE' => 15,],
+            [1, 'John', 12],
+            ['ID' => 2, 'NAME' => 'Alan'],
+            ['SCORE' => 32, 'NAME' => 'Robert'],
+        ]);
 
         $table->setColumnAlign('ID', Align::RIGHT);
         $table->setColumnAlign('SCORE', Align::RIGHT);
@@ -697,9 +698,9 @@ class BaseTest extends TestCase
     {
         $table = new TextTable(['ID', 'NAME']);
         $table->addRows([
-                            [1],
-                            ['NAME' => 'John'],
-                        ]);
+            [1],
+            ['NAME' => 'John'],
+        ]);
 
         $renderedTable = $this->renderTable($table);
 
@@ -733,6 +734,50 @@ class BaseTest extends TestCase
             '╠═══╬═══╣',
             '║ A ║ B ║',
             '╚═══╩═══╝',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+
+    /**
+     * Ensures column keys can be numeric strings and they are handled correctly (and not as PHP
+     * array indices).
+     */
+    public function testNumericStringsAsColumnLabels(): void
+    {
+        $table = new TextTable(['1', '2']);
+        $table->addRow(['A', 'B']);
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '╔═══╦═══╗',
+            '║ 1 ║ 2 ║',
+            '╠═══╬═══╣',
+            '║ A ║ B ║',
+            '╚═══╩═══╝',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    /* ****************************************************************************************** */
+
+    /**
+     * Ensures support for numeric column keys does not interfere with column indices' support.
+     */
+    public function testColumnNumericIndices(): void
+    {
+        $table = new TextTable(['2', '1', 'C']);
+        $table->addRow([3 => '3', 1 => 'A', 2 => 'B']);
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '╔═══╦═══╦═══╗',
+            '║ 2 ║ 1 ║ C ║',
+            '╠═══╬═══╬═══╣',
+            '║ 3 ║ A ║ B ║',
+            '╚═══╩═══╩═══╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
     }
