@@ -22,4 +22,9 @@ abstract class BaseContainer extends \Lombok\Helper implements ContainerContract
     use ArrayableTrait;
     use CountableTrait;
     use IteratorAggregateTrait;
+
+    public function toArray(): array
+    {
+        return $this->container->toArray();
+    }
 }
