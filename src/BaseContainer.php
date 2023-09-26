@@ -11,11 +11,16 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
-use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
-
 abstract class BaseContainer extends \Lombok\Helper implements ContainerContract
 {
-    use IteratorAggregateTrait;
+    /* **[ IteratorAggregate ]******************************************************************* */
+
+    public function getIterator(): Traversable
+    {
+        return $this->container instanceof Traversable
+            ? $this->container->getIterator()
+            : new \ArrayIterator($this->container);
+    }
 
     /* **[ Countable ]*************************************************************************** */
 
@@ -77,4 +82,5 @@ abstract class BaseContainer extends \Lombok\Helper implements ContainerContract
             unset($this->container[$offset]);
         }
     }
+
 }
