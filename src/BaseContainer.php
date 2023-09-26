@@ -11,8 +11,19 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
+use Traversable;
+
 abstract class BaseContainer extends \Lombok\Helper implements ContainerContract
 {
+    /**
+     * Type of container depends on the class extending this base class.
+     * This declaration here is to make linters happy.
+     *
+     * @var mixed
+     */
+    protected mixed $container;
+
+
     /* **[ IteratorAggregate ]******************************************************************* */
 
     public function getIterator(): Traversable
