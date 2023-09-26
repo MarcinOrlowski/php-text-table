@@ -18,6 +18,7 @@ use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Exceptions\UnsupportedColumnTypeException;
 use MarcinOrlowski\TextTable\Renderers\FancyRenderer;
 use MarcinOrlowski\TextTable\Renderers\RendererContract;
+use MarcinOrlowski\TextTable\Utils\StringUtils;
 
 /**
  * @method ColumnsContainer getColumns()
@@ -35,8 +36,6 @@ class TextTable extends \Lombok\Helper
      * TextTable(..., [1, 2, 3])), you MUST wrap it in another `array`: new TextTable(..., [[1, 2,
      * 3]]) otherwise your row data will be treated as *array of rows*, and not as array of column
      * data, which will lead to runtime errors.
-     *
-     * @return self
      *
      * @throws ColumnKeyNotFoundException
      * @throws DuplicateColumnKeyException
@@ -81,7 +80,7 @@ class TextTable extends \Lombok\Helper
     protected ColumnsContainer $columns;
 
     /**
-     * Adds new column with specific index. Note columns are registered in the order they are
+     * Adds new column with specific key. Note columns are registered in the order they are
      * added.
      *
      * @param string|int    $columnKey Unique column key to be assigned to this column.
@@ -97,6 +96,7 @@ class TextTable extends \Lombok\Helper
      */
     public function addColumn(string|int $columnKey, Column|string $columnVal): self
     {
+        $columnKey = StringUtils::sanitizeColumnKey($columnKey);
         if (\is_string($columnVal)) {
             $columnVal = new Column($columnVal);
         } else if (!($columnVal instanceof Column)) {
@@ -129,11 +129,13 @@ class TextTable extends \Lombok\Helper
     public function addColumns(array $columns): self
     {
         foreach ($columns as $columnKey => $columnVal) {
+            // If column key is numeric, we assume it is an index and we need to auto-create
+            // column key for it from the column title.
             if (\is_int($columnKey)) {
                 if (\is_string($columnVal)) {
-                    $columnKey = $columnVal;
+                    $columnKey = StringUtils::sanitizeColumnKey($columnVal);
                 } else if ($columnVal instanceof Column) {
-                    $columnKey = $columnVal->getTitle();
+                    $columnKey = StringUtils::sanitizeColumnKey($columnVal->getTitle());
                 } else {
                     throw new \InvalidArgumentException(
                         'Unsupported column data type: ' . \get_debug_type($columnVal));

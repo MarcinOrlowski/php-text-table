@@ -21,7 +21,7 @@ Fast and flexible PHP library for text tables.
 
 ### Simplest use case
 
-This is probably the most common and yet the simplest possible usage:
+This is likely the most common and yet the simplest possible usage:
 
 ```php
 // Create the tablie with 3 columns, of which IDs will be their values.
@@ -52,14 +52,13 @@ which in turn should produce this table:
 
 ### Use different table renderer
 
-The common usage of `TextTable` library is to eventually present used the
-content of the table in the nice tabular form. As the table itself is just
-a data structure, "visualisation" of the table is done via the dedicated
-renderer which will return the table as a string. It therefore can influence
-the final look of the table, incl. the way it is formatted.
+The primary use of the `TextTable` library is to present the table's content in a visually appealing
+tabular form. Since the table is merely a data structure, its "visualization" is performed via a
+dedicated renderer that returns the table as a string. This can influence the final appearance of
+the table, including its formatting.
 
-To override the renreder, simply pass instance of the renderer of your
-choice to the `TextTable`'s rendering shortcuts:
+To override the renderer, simply pass an instance of your chosen renderer to the `TextTable`'s
+rendering shortcuts:
 
 ```php
 use MarcinOrlowski\TextTable\Renderers\PlusMinusRenderer;
@@ -77,8 +76,8 @@ $renderer = new PlusMinusRenderer();
 echo($table->renderAsString($renderer));
 ```
 
-would produce table rendered using `+`, `-` and `|` characters
-instead of table shaped characters:
+These would produce a table rendered using `+`, `-`, and `|` characters, instead of using
+table-shaped characters:
 
 ```php
 +----+-------+-------+
@@ -89,14 +88,14 @@ instead of table shaped characters:
 +----+-------+-------+
 ```
 
-**NOTE:** You can provide your own renderer (i.e. producing `HTML` or whatever you wish,
-by implementing `RendererContract` in your class.
+**NOTE:** You can provide your own renderer (e.g., producing `HTML` or whatever you wish) by
+implementing the `RendererContract` in your class.
 
-For available built-in renderers, see [src/Renderers/](../src/Renderers/) sources.
+For available built-in renderers, see the [src/Renderers/](../src/Renderers/) source code.
 
-**HINT:** If you want to just introduce new frame characters, just extend built-in
-[AsciiTableRenderer](../src/Renderers/AsciiTableRenderer.php) and provide characters of your choices
-only. See i.e. [src/Renderers/MsDosRenderer.php](../src/Renderers/MsDosRenderer.php) code for
+**HINT:** If you want to introduce new frame characters, simply extend the
+built-in [AsciiTableRenderer](../src/Renderers/AsciiTableRenderer.php) and provide the characters of
+your choice. See [src/Renderers/MsDosRenderer.php](../src/Renderers/MsDosRenderer.php) for
 reference.
 
 ---
@@ -104,22 +103,22 @@ reference.
 ### Custom align and cells' width limit
 
 ```php
-// Create the tablie with 3 columns, of which IDs will be their values.
-// The definition of 2nd column is created explicitly, using instance 
-// of Column class that is automatically created for other columns.
+// Create the table with 3 columns, where the IDs will be their values.
+// The definition of the 2nd column is created explicitly, using an instance 
+// of the Column class. Instances for the other columns are created automatically.
 $table = new TextTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
 
 $table->setColumnAlign('SCORE', Align::RIGHT);
 
-// Add 2 rows to the table, assignig cells in order of appearance.
-// Similarly to the column above, the 2nd cell in second row is also
-// created directly using instance of Cell, to gain more control. 
+// Add 2 rows to the table, assigning cells in the order they appear.
+// Similar to the column example above, the 2nd cell in the second row is 
+// explicitly created using an instance of the Cell class for greater control.
 $table->addRows([
     [1, 'John', 12],
     [2, new Cell('Tommy', Align::CENTER), 15],
 ]);
 
-// print the whole table using MS-DOS style frames.
+// Print the entire table using MS-DOS style frames.
 $renderer = new MsDosRenderer();
 echo $renderer->renderAsString()
 ```
@@ -139,6 +138,6 @@ would produce this nicely formatted text table:
 
 ## License
 
-* Written and copyrighted &copy;2022 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
-* Text Table is open-sourced software licensed under 
+* Written and copyrighted &copy;2022-2023 by Marcin Orlowski
+* Text Table is open-sourced software licensed under
   the [MIT license](http://opensource.org/licenses/MIT)

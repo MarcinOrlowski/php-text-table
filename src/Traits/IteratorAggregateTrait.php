@@ -18,7 +18,6 @@ use Traversable;
  */
 trait IteratorAggregateTrait
 {
-    /** @inheritDoc */
     public function getIterator(): Traversable
     {
         return $this->container instanceof Traversable

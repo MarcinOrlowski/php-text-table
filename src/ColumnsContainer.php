@@ -13,6 +13,7 @@ namespace MarcinOrlowski\TextTable;
 
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
+use MarcinOrlowski\TextTable\Utils\StringUtils;
 
 class ColumnsContainer extends BaseContainer
 {
@@ -28,9 +29,11 @@ class ColumnsContainer extends BaseContainer
      */
     public function getColumn(string|int $columnKey): Column
     {
+        $columnKey = StringUtils::sanitizeColumnKey($columnKey);
         if (!$this->hasColumn($columnKey)) {
             throw ColumnKeyNotFoundException::forColumnKey($columnKey);
         }
+
         return $this->container[$columnKey];
     }
 
@@ -43,6 +46,8 @@ class ColumnsContainer extends BaseContainer
      */
     public function hasColumn(string|int $columnKey): bool
     {
+        $columnKey = StringUtils::sanitizeColumnKey($columnKey);
+
         return $this->offsetExists($columnKey);
     }
 
@@ -59,6 +64,8 @@ class ColumnsContainer extends BaseContainer
      */
     public function addColumn(string|int $columnKey, Column $column): self
     {
+        $columnKey = StringUtils::sanitizeColumnKey($columnKey);
+
         if ($this->hasColumn($columnKey)) {
             throw DuplicateColumnKeyException::forColumnKey($columnKey);
         }
@@ -69,7 +76,5 @@ class ColumnsContainer extends BaseContainer
 
         return $this;
     }
-
-    /* ****************************************************************************************** */
 
 }

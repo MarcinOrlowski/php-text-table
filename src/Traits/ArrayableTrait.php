@@ -18,7 +18,6 @@ use MarcinOrlowski\TextTable\ArrayableContract;
  */
 trait ArrayableTrait
 {
-    /** @inheritDoc */
     public function toArray(): array
     {
         return $this->container instanceof ArrayableContract
