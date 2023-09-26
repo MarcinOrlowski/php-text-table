@@ -57,7 +57,6 @@ class Cell extends \Lombok\Helper
 
     /* ****************************************************************************************** */
 
-    /** @var \MarcinOrlowski\TextTable\Align */
     protected Align $align = Align::AUTO;
 
 }

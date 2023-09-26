@@ -11,16 +11,13 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable\Traits;
 
-use MarcinOrlowski\TextTable\ArrayableContract;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
-use Traversable;
 
 /**
  * implements ContainerContract;
  */
 trait ArrayAccessTrait
 {
-    /** @inheritDoc */
     public function offsetExists(mixed $offset): bool
     {
         /** @var string|int $offset */
@@ -29,13 +26,12 @@ trait ArrayAccessTrait
             : \array_key_exists($offset, $this->container);
     }
 
-    /** @inheritDoc */
     public function offsetGet(mixed $offset): mixed
     {
         /** @var string|int $offset */
         return $this->container instanceof \ArrayAccess
             ? $this->container->offsetGet($offset)
-            : $this->container[ $offset ];
+            : $this->container[$offset];
     }
 
     /**
@@ -57,19 +53,18 @@ trait ArrayAccessTrait
                 $this->container[] = $value;
             } else {
                 /** @var string|int $offset */
-                $this->container[ $offset ] = $value;
+                $this->container[$offset] = $value;
             }
         }
     }
 
-    /** @inheritDoc */
     public function offsetUnset(mixed $offset): void
     {
         /** @var string|int $offset */
         if ($this->container instanceof \ArrayAccess) {
             $this->container->offsetUnset($offset);
         } else {
-            unset($this->container[ $offset ]);
+            unset($this->container[$offset]);
         }
     }
 

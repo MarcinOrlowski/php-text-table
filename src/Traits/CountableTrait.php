@@ -19,10 +19,8 @@ use Traversable;
  */
 trait CountableTrait
 {
-    /** @inheritDoc */
     public function count(): int
     {
         return \count($this->container);
     }
-
 }
