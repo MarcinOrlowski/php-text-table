@@ -23,11 +23,6 @@ use MarcinOrlowski\TextTable\Utils\StringUtils;
 
 abstract class AsciiTableRenderer implements RendererContract
 {
-    /**
-     * @inheritDoc
-     *
-     * @throws ColumnKeyNotFoundException
-     */
     public function render(TextTable $table): array
     {
         $ctx = new RenderContext($table);
@@ -56,11 +51,6 @@ abstract class AsciiTableRenderer implements RendererContract
         return $result;
     }
 
-    /**
-     * @inheritDoc
-     *
-     * @throws ColumnKeyNotFoundException
-     */
     public function renderAsString(TextTable $table): string
     {
         return \implode(PHP_EOL, $this->render($table));

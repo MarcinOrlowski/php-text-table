@@ -15,6 +15,8 @@ use Lombok\Getter;
 use Lombok\Setter;
 
 /**
+ * This class is used to store column's configuration.
+ *
  * @method string getTitle()
  * @method Align getTitleAlign()
  * @method self setTitleAlign(Align $align)
@@ -29,6 +31,18 @@ use Lombok\Setter;
 #[Setter]
 class Column extends \Lombok\Helper
 {
+    /**
+     * @param string $title      Column title string
+     * @param Align  $align      Column text alignment. Shortcut to apply to both title and cell
+     *                           content.
+     * @param int    $maxWidth   Max allowed width of the column. Content longer than `$maxWidth`
+     *                           will be automatically truncated
+     * @param Align  $cellAlign  Default column content alignment. Will be used for each cell in
+     *                           that column unless custom cell has own (non Align::AUTO) alignment
+     *                           specified.
+     * @param Align  $titleAlign Column title text alignment
+     * @param bool   $visible    If set to `false`, column will be skipped when rendering table.
+     */
     public function __construct(string $title,
                                 Align  $align = Align::AUTO,
                                 int    $maxWidth = 0,
@@ -65,6 +79,13 @@ class Column extends \Lombok\Helper
     /** Column title string */
     protected string $title;
 
+    /**
+     * Sets column title string.
+     *
+     * @param string $title Column title string
+     *
+     * @return $this Self reference for fluent interface.
+     */
     protected function setTitle(string $title): self
     {
         $this->title = $title;
@@ -86,6 +107,7 @@ class Column extends \Lombok\Helper
     {
         $this->setCellAlign($align);
         $this->setTitleAlign($align);
+
         return $this;
     }
 
@@ -105,15 +127,24 @@ class Column extends \Lombok\Helper
     /* ****************************************************************************************** */
 
     /**
-     * Max allowed width of the column. Content longer than `$maxWidth` will be automatically truncated
+     * Max allowed width of the column. Content longer than `$maxWidth` will be automatically
+     * truncated
      */
     protected int $maxWidth = 0;
 
+    /**
+     * Updates max width of the column if given value is greater than current one.
+     *
+     * @param int $width New max width to be set.
+     *
+     * @return $this
+     */
     public function updateMaxWidth(int $width): self
     {
         if ($width > $this->maxWidth) {
             $this->maxWidth = $width;
         }
+
         return $this;
     }
 

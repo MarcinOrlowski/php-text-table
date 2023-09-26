@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
+/**
+ * Container class holding all the table's rows.
+ */
 class RowsContainer extends BaseContainer
 {
     /** @var Row[] $container */

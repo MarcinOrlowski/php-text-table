@@ -15,6 +15,9 @@ use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
 
+/**
+ * Class contains definitions of columns used by the table.
+ */
 class ColumnsContainer extends BaseContainer
 {
     /** @var Column[] $container */
