@@ -11,13 +11,18 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
-use MarcinOrlowski\TextTable\Traits\CountableTrait;
 use MarcinOrlowski\TextTable\Traits\IteratorAggregateTrait;
 
 abstract class BaseContainer extends \Lombok\Helper implements ContainerContract
 {
-    use CountableTrait;
     use IteratorAggregateTrait;
+
+    /* **[ Countable ]*************************************************************************** */
+
+    public function count(): int
+    {
+        return \count($this->container);
+    }
 
     /* **[ ArrayableContract ]******************************************************************* */
 
