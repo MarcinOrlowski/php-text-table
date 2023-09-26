@@ -27,20 +27,14 @@ use MarcinOrlowski\TextTable\Renderers\RendererContract;
 class TextTable extends \Lombok\Helper
 {
     /**
-     * @param array $headerColumns Optional array of column headers to be created.
+     * @param string[]|Column[] $headerColumns Optional array of column headers to be created.
+     * @param Row[]|array[]     $rows          Optional row lib list of data to be added as table
+     *                                         rows.
      *
-     * @throws ColumnKeyNotFoundException
-     * @throws DuplicateColumnKeyException
-     * @throws UnsupportedColumnTypeException
-     */
-    public function __construct(array $headerColumns = [])
-    {
-        parent::__construct();
-        $this->init($headerColumns);
-    }
-
-    /**
-     * @param array $headerColumns Optional array of column headers to be created.
+     * NOTE: if you want to add single row with columns data provided as list (i.e. new
+     * TextTable(..., [1, 2, 3])), you MUST wrap it in another `array`: new TextTable(..., [[1, 2,
+     * 3]]) otherwise your row data will be treated as *array of rows*, and not as array of column
+     * data, which will lead to runtime errors.
      *
      * @return self
      *
@@ -48,11 +42,34 @@ class TextTable extends \Lombok\Helper
      * @throws DuplicateColumnKeyException
      * @throws UnsupportedColumnTypeException
      */
-    public function init(array $headerColumns = []): self
+    public function __construct(array $headerColumns = [], array $rows = [])
+    {
+        parent::__construct();
+        $this->init($headerColumns, $rows);
+    }
+
+    /**
+     * @param string[]|Column[] $headerColumns Optional array of column headers to be created.
+     * @param Row[]|array[]     $rows          Optional row lib list of data to be added as table
+     *                                         rows.
+     *
+     * NOTE: if you want to add single row with columns data provided as list (i.e. new
+     * TextTable(..., [1, 2, 3])), you MUST wrap it in another `array`: new TextTable(..., [[1, 2,
+     * 3]]) otherwise your row data will be treated as *array of rows*, and not as array of column
+     * data, which will lead to runtime errors.
+     *
+     * @return self
+     *
+     * @throws ColumnKeyNotFoundException
+     * @throws DuplicateColumnKeyException
+     * @throws UnsupportedColumnTypeException
+     */
+    public function init(array $headerColumns = [], array $rows = []): self
     {
         $this->columns = new ColumnsContainer();
         $this->rows = new RowsContainer();
         $this->addColumns($headerColumns);
+        $this->addRows($rows);
 
         return $this;
     }
@@ -64,11 +81,13 @@ class TextTable extends \Lombok\Helper
     protected ColumnsContainer $columns;
 
     /**
-     * Adds new column with specific index. Note columns are registered in the order they are added.
+     * Adds new column with specific index. Note columns are registered in the order they are
+     * added.
      *
      * @param string|int    $columnKey Unique column key to be assigned to this column.
-     * @param Column|string $columnVal Either instance of `Column` or string to be used as column title
-     *                                 (for which instance of `Column` will be automatically created).
+     * @param Column|string $columnVal Either instance of `Column` or string to be used as column
+     *                                 title (for which instance of `Column` will be automatically
+     *                                 created).
      *
      * @return self
      *
@@ -90,16 +109,16 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * Adds multiple columns at once. Note columns are registered in the order they are present in source
-     * array.
+     * Adds multiple columns at once. Note columns are registered in the order they are present in
+     * source array.
      *
-     * Note that this method **auto-creates** column keys for all **non-string** table keys. For such
-     * case the key will be derived either from passed `string` for from `Column` instance' title string.
-     * All explicitly specified `string` keys will be preserved and used.
+     * Note that this method **auto-creates** column keys for all **non-string** table keys. For
+     * such case the key will be derived either from passed `string` for from `Column` instance'
+     * title string. All explicitly specified `string` keys will be preserved and used.
      *
-     * @param string[]|Column[] $columns List of columns to be added, given either via instance of `Column`
-     *                                   or as string to be used as column title (for which instance of
-     *                                   `Column` will be automatically created).
+     * @param string[]|Column[] $columns List of columns to be added, given either via instance of
+     *                                   `Column` or as string to be used as column title (for
+     *                                   which instance of `Column` will be automatically created).
      *
      * @return self
      *
@@ -151,18 +170,19 @@ class TextTable extends \Lombok\Helper
     /**
      * Appends new row to the end of table.
      *
-     * @param Row|array|null $srcRow When `array` is given, then it is expected to be the each of the
-     *                               column is the row's cell value. It should be either instance of
-     *                               `Cell` class or `string|int`. If primitive is given, the instance
-     *                               of `Cell` will automatically be created. The `array` elements should
-     *                               be either in form `columnKey => value` or can be all given without
-     *                               own keys and then, the proper `columnKey` will be picked based on
-     *                               table column definitions (i.e. for `$srcRow` being `['a', 'b']`, the
-     *                               `b` value will be put into cell of the 2nd column). This auto-assigment
-     *                               works only when `$srcRow` array uses no custom keys **and** table
-     *                               column definition are **all** using `string` keys. For all the other
-     *                               cases explicit `columnKey` must be given. Passing `null` as `$srcRow`
-     *                               causes no effect.
+     * @param Row|array|null $srcRow When array is given, it is expected that each of the columns
+     *                               represents the row's cell value. The elements should be either
+     *                               instances of the Cell class or string|int. If a primitive is
+     *                               given, an instance of Cell will automatically be created. The
+     *                               array elements can be in the form columnKey => value or can be
+     *                               provided without their own keys. In the latter case, the
+     *                               proper columnKey will be selected based on the table column
+     *                               definitions (i.e. for $srcRow being ['a', 'b'], the b value
+     *                               will be placed into the cell of the second column). This
+     *                               auto-assignment works only when $srcRow array uses no custom
+     *                               keys and table column definitions all use string keys. In all
+     *                               other cases, an explicit column key must be specified. Passing
+     *                               null as $srcRow has no effect.
      *
      * @return self
      *
@@ -177,27 +197,25 @@ class TextTable extends \Lombok\Helper
 
         $columns = $this->getColumns();
 
-        $itemsToAddCount = $srcRow instanceof Row
-            ? $srcRow->count()
-            : \count($srcRow);
+        $itemsToAddCount = \count($srcRow);
 
         $row = $srcRow;
-        if (!($srcRow instanceof Row)) {
+        if (\is_array($srcRow)) {
             $row = new Row();
 
             // If source array has only numeric keys, and column definitions are using non-numeric keys,
             // then it is assumed that source array elements are in sequence and will be automatically
             // assigned to cell at position matching their index in source array.
             $srcHasNumKeysOnly = $itemsToAddCount === \count(\array_filter(\array_keys($srcRow), \is_int(...)));
-            $columnsHasStringKeysOnly = \count($columns) === \count(
+            $columnsHaveStringKeysOnly = \count($columns) === \count(
                     \array_filter(\array_keys($columns->toArray()), \is_string(...)));
 
-            if ($srcHasNumKeysOnly && $columnsHasStringKeysOnly) {
+            if ($srcHasNumKeysOnly && $columnsHaveStringKeysOnly) {
                 $columnKeys = \array_keys($columns->toArray());
 
                 $srcIdx = 0;
                 foreach ($srcRow as $cell) {
-                    $columnKey = $columnKeys[ $srcIdx ];
+                    $columnKey = $columnKeys[$srcIdx];
                     $row->addCell($columnKey, $cell);
                     $srcIdx++;
 
@@ -218,7 +236,7 @@ class TextTable extends \Lombok\Helper
             $this->getColumn($columnKey)->updateMaxWidth(\mb_strlen($cell->getValue()));
         }
 
-        $this->rows[] = $row;
+        $this->rows[$this->getRowCount()] = $row;
 
         return $this;
     }
@@ -245,7 +263,8 @@ class TextTable extends \Lombok\Helper
     /**
      * Renders given table and outputs it via provided writer.
      *
-     * @param RendererContract|null $renderer Renderer to use. If none is given, DefaultRenderer is used.
+     * @param RendererContract|null $renderer Renderer to use. If none is given, default renderer
+     *                                        is used.
      *
      * @throws ColumnKeyNotFoundException
      */
@@ -360,7 +379,8 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param array|string|int $columnKey Key of the column to be hidden. Hiding hidden column has no effect.
+     * @param array|string|int $columnKey Key of the column to be hidden. Hiding hidden column has
+     *                                    no effect.
      *
      * @return $this
      *
@@ -380,7 +400,8 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param string|int $columnKey Key of the column to be shown. Showing visible column has no effect.
+     * @param string|int $columnKey Key of the column to be shown. Showing visible column has no
+     *                              effect.
      *
      * @return $this
      *

@@ -2,7 +2,7 @@
     "name": "marcin-orlowski/text-table",
     "description": "Fast and flexible PHP library for text tables.",
     "homepage": "https://github.com/MarcinOrlowski/php-text-table",
-    "version": "2.4.1",
+    "version": "2.5.0",
     "keywords": [
         "php",
         "php8",
@@ -17,7 +17,7 @@
     "authors": [
         {
             "name": "Marcin Orlowski",
-            "homepage": "https://MarcinOrlowski.com/"
+            "homepage": "http://MarcinOrlowski.com/"
         }
     ],
     "support": {
@@ -41,11 +41,12 @@
         "marcin-orlowski/lombok-php": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^10.3",
         "phpstan/phpstan": "^1.8",
         "marcin-orlowski/phpunit-extra-asserts": "^5.0"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit -c phpunit.xml -c phpunit.xml.dist"
+        "test": "vendor/bin/phpunit -c phpunit.xml -c phpunit.xml.dist",
+        "lint": "vendor/bin/phpstan analyse -c phpstan.neon -c phpstan.neon.dist src tests"
     }
 }

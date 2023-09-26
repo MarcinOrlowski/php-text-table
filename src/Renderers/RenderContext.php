@@ -31,20 +31,18 @@ class RenderContext extends \Lombok\Helper
     protected int $tableRowIdx = 0;
 
     /** Increments data row index by one. */
-    public function incTableRowIdx(): self
+    public function incTableRowIdx(): void
     {
         $this->tableRowIdx++;
-        return $this;
     }
 
     /** Number of currently rendered **visual row** (incl. decoration rows like frames etc) */
     protected int $renderedRowIdx = 0;
 
     /** Increments rendered row index by one. */
-    public function incRenderedRowIdx(): self
+    public function incRenderedRowIdx(): void
     {
         $this->renderedRowIdx++;
-        return $this;
     }
 
     /* ****************************************************************************************** */

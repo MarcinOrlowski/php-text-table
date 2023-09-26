@@ -34,9 +34,7 @@ class Row extends BaseContainer
         $this->container = new CellsContainer();
 
         if (!empty($cells)) {
-            foreach ($cells as $columnKey => $cell) {
-                $this->addCell($columnKey, $cell);
-            }
+            $this->addCells($cells);
         }
     }
 

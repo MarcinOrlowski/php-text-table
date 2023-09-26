@@ -39,7 +39,7 @@ class StringUtilsTest extends TestCase
     {
         $strLen = Generator::getRandomInt(10, 30);
         $str = Generator::getRandomString(length: $strLen);
-        $padLen = +Generator::getRandomInt(10, 20);
+        $padLen = Generator::getRandomInt(10, 20);
         $maxLen = $strLen + $padLen;
 
         $padded = StringUtils::pad($str, $maxLen, ' ', \STR_PAD_RIGHT);
@@ -49,14 +49,18 @@ class StringUtilsTest extends TestCase
         Assert::assertEquals($expected, $padded);
     }
 
-    public function testPaddingBoth(): void
+    public function testPaddingBothOddEven(): void
     {
-        $strLen = Generator::getRandomInt(10, 30);
+        // Strlen is odd
+        $strLen = (generator::getRandomInt(10, 30) | 1);
         $str = Generator::getRandomString(length: $strLen);
-        $padLen = Generator::getRandomInt(10, 20);
+
+        // padlen is even
+        $padLen = Generator::getRandomInt(10, 20) & ~1;
+
         $maxLen = $strLen + $padLen;
 
-        $padLenHalf = (int)(($padLen / 2) + 0.5);
+        $padLenHalf = (int)($padLen / 2);
 
         $padded = StringUtils::pad($str, $maxLen, ' ', \STR_PAD_BOTH);
         Assert::assertEquals($maxLen, \mb_strlen($padded));
@@ -66,6 +70,29 @@ class StringUtilsTest extends TestCase
         $expected = \mb_substr($expected, 0, $maxLen);
         Assert::assertEquals($expected, $padded);
     }
+
+    public function testPaddingBothEvenOdd(): void
+    {
+        // strlen is even
+        $strLen = (generator::getRandomInt(10, 30) & ~1);
+        $str = Generator::getRandomString(length: $strLen);
+        // padlen is odd
+        $padLen = Generator::getRandomInt(10, 20) | 1;
+
+        $maxLen = $strLen + $padLen;
+
+        $padLenHalf = (int)($padLen / 2);
+
+        $padded = StringUtils::pad($str, $maxLen, ' ', \STR_PAD_BOTH);
+        Assert::assertEquals($maxLen, \mb_strlen($padded));
+
+        $padLeft = \str_repeat(' ', $padLenHalf);
+        $padRight = \str_repeat(' ', $padLenHalf + 1);
+        $expected = $padLeft . $str . $padRight;
+        $expected = \mb_substr($expected, 0, $maxLen);
+        Assert::assertEquals($expected, $padded);
+    }
+
 
     /**
      * Tests if padding too long string is handled properly.

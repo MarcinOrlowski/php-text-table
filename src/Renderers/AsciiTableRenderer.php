@@ -66,6 +66,8 @@ abstract class AsciiTableRenderer implements RendererContract
         return \implode(PHP_EOL, $this->render($table));
     }
 
+    /* ****************************************************************************************** */
+
     protected function renderNoDataRow(RenderContext $ctx): string
     {
         $table = $ctx->getTable();
@@ -123,7 +125,8 @@ abstract class AsciiTableRenderer implements RendererContract
                 : static::ROW_FRAME_CENTER;
         }
 
-        $ctx->incRenderedRowIdx()->incTableRowIdx();
+        $ctx->incRenderedRowIdx();
+        $ctx->incTableRowIdx();
 
         return $result;
     }
@@ -177,7 +180,6 @@ abstract class AsciiTableRenderer implements RendererContract
     public const SEGMENT_LAST_ROW_LEFT    = '?';
     public const SEGMENT_LAST_ROW_CENTER  = '?';
     public const SEGMENT_LAST_ROW_RIGHT   = '?';
-
 
     protected function renderBottomSeparator(RenderContext $ctx): string
     {
@@ -238,10 +240,9 @@ abstract class AsciiTableRenderer implements RendererContract
 
         $result = '';
 
-        // check if table is empty (otherwise islastvisiblerow() will return
-        // true as row 0 is the last of 0 row dataset, rendering last closing table
-        // row characters instead of first row characters) which is visible for
-        // any non-symetric blocks (i.e. MsDos style blocks)
+        // check if table is empty (otherwise isLastVisibleRow() will return true as row 0 is the
+        // last of 0 row dataset, rendering last closing table row characters instead of first
+        // row characters) which is visible for any non-symetric blocks (i.e. MsDos style blocks)
         if ($ctx->getTable()->getRowCount() > 0) {
             if ($ctx->isLastVisibleRow()) {
                 $isFirstRow = false;
@@ -267,7 +268,7 @@ abstract class AsciiTableRenderer implements RendererContract
                 continue;
             }
 
-            /// FIXME - hide first column and we a fucked
+            // FIXME - hide first column and we are fucked
             if ($isFirstRow) {
                 $segment = static::SEGMENT_FIRST_ROW_LEFT;
             } elseif ($isLastRow) {
@@ -315,7 +316,8 @@ abstract class AsciiTableRenderer implements RendererContract
      * @param ColumnsContainer $columns   Table column definition container.
      * @param string|int       $columnKey Column key we are going to populate.
      * @param string           $value     Value to pad.
-     * @param Align|null       $align     Requested text alignment. If null, column's alignment will be used.
+     * @param Align|null       $align     Requested text alignment. If null, column's alignment
+     *                                    will be used.
      *
      * @throws ColumnKeyNotFoundException
      */
@@ -329,10 +331,10 @@ abstract class AsciiTableRenderer implements RendererContract
         $maxWidth = $this->getColumnWidth($columns, $columnKey);
 
         $padType = match ($align) {
-            Align::RIGHT => \STR_PAD_LEFT,
-            Align::LEFT => \STR_PAD_RIGHT,
+            Align::RIGHT  => \STR_PAD_LEFT,
+            Align::LEFT   => \STR_PAD_RIGHT,
             Align::CENTER => \STR_PAD_BOTH,
-            Align::AUTO => \STR_PAD_RIGHT,
+            Align::AUTO   => \STR_PAD_RIGHT,
         };
 
         $strLen = \mb_strlen($value);
