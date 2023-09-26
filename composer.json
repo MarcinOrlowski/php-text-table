@@ -41,7 +41,7 @@
         "marcin-orlowski/lombok-php": "^1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^10.0",
+        "phpunit/phpunit": "^10.3",
         "phpstan/phpstan": "^1.8",
         "marcin-orlowski/phpunit-extra-asserts": "^5.0"
     },
