@@ -2,7 +2,7 @@
     "name": "marcin-orlowski/text-table",
     "description": "Fast and flexible PHP library for text tables.",
     "homepage": "https://github.com/MarcinOrlowski/php-text-table",
-    "version": "2.5.0",
+    "version": "2.5.1",
     "keywords": [
         "php",
         "php8",
@@ -47,6 +47,7 @@
     },
     "scripts": {
         "test": "vendor/bin/phpunit -c phpunit.xml -c phpunit.xml.dist",
-        "lint": "vendor/bin/phpstan analyse -c phpstan.neon -c phpstan.neon.dist src tests"
+        "lint": "vendor/bin/phpstan analyse -c phpstan.neon -c phpstan.neon.dist src tests",
+        "mdlint": "markdownlint -c .markdownlint.yaml.dist docs *.md --ignore LICENSE.md --ignore NOTES.md"
     }
 }

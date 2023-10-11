@@ -52,8 +52,8 @@ which in turn should produce this table:
 
 ### Use different table renderer
 
-The primary use of the `TextTable` library is to present the table's content in a visually appealing
-tabular form. Since the table is merely a data structure, its "visualization" is performed via a
+The primary use of the `TextTable` library is to present table content in a visually appealing
+tabular form. Since the table is merely a data structure, its "visualization" is handled by a
 dedicated renderer that returns the table as a string. This can influence the final appearance of
 the table, including its formatting.
 
@@ -103,8 +103,8 @@ reference.
 ### Custom align and cells' width limit
 
 ```php
-// Create the table with 3 columns, where the IDs will be their values.
-// The definition of the 2nd column is created explicitly, using an instance 
+// Create a table with 3 columns, where the values will be the IDs.
+// The 2nd column's definition is created explicitly using an instance 
 // of the Column class. Instances for the other columns are created automatically.
 $table = new TextTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
 

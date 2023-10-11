@@ -15,10 +15,13 @@ use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
 
+/**
+ * Class contains definitions of columns used by the table.
+ */
 class ColumnsContainer extends BaseContainer
 {
     /** @var Column[] $container */
-    protected array $container = [];
+    protected mixed $container = [];
 
     /**
      * Returns instance of `Column` for given key, or throws exception is no such column exists.

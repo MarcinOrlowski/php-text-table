@@ -16,6 +16,8 @@ use Lombok\Setter;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 
 /**
+ * Class represents single row of cells of the table.
+ *
  * @method CellsContainer getContainer()
  */
 #[Getter]
@@ -40,11 +42,18 @@ class Row extends BaseContainer
 
     /* ****************************************************************************************** */
 
-    /** Contains all cells of given row. */
-    protected CellsContainer $container;
+    /** Contains all cells of given row.
+     *
+     * @var CellsContainer $container
+     * */
+    protected mixed $container;
 
     /**
-     * @param array<string|int, Cell|string|int|float|bool|null> $cells
+     * Adds multiple cells to the row at once. If no explicit cell indices or column keys are
+     * specified, cells are added in the same order as they are defined in the array passed as
+     * argument.
+     *
+     * @param array<string|int, Cell|string|int|float|bool|null> $cells Array of cells to be added.
      *
      * @throws DuplicateColumnKeyException
      */
@@ -58,11 +67,14 @@ class Row extends BaseContainer
     }
 
     /**
-     * @param string|int            $columnKey
-     * @param Cell|string|float|int $cell
-     * @param Align                 $align
+     * Adds single cell to the table row.
      *
-     * @return $this
+     * @param string|int            $columnKey Column key or index we are going to populate.
+     * @param Cell|string|float|int $cell      Cell value to be added.
+     * @param Align                 $align     Cell content alignment.
+     *
+     * @return $this Returns instance of self to allow chaining.
+     *
      * @throws DuplicateColumnKeyException
      */
     public function addCell(string|int            $columnKey,

@@ -17,10 +17,13 @@ Fast and flexible PHP library for text tables.
 ## Requirements
 
 ### Runtime Environment
-- PHP v8.1 or higher
+
+* PHP v8.1 or higher
 
 ### Package Manager
-- Composer, for dependency management
+
+*Composer, for dependency management
+
 ---
 
 ## Installation
@@ -28,7 +31,7 @@ Fast and flexible PHP library for text tables.
 ### Using Composer
 
 If you don't have Composer installed, first download and install it by following the [instructions
-here](https://getcomposer.org/). 
+here](https://getcomposer.org/).
 
 Then, you can install the package using the following command:
 

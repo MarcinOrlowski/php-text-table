@@ -11,7 +11,10 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTable;
 
+/**
+ * Contract for container classes
+ */
 interface ContainerContract extends \ArrayAccess, \Countable, \IteratorAggregate, ArrayableContract
 {
-
+    // nothing special yet.
 }

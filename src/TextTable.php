@@ -273,6 +273,7 @@ class TextTable extends \Lombok\Helper
     public function render(?RendererContract $renderer = null): array
     {
         $renderer ??= new FancyRenderer();
+
         return $renderer->render($this);
     }
 
@@ -300,6 +301,13 @@ class TextTable extends \Lombok\Helper
         return $this->columns->getColumn($columnKey);
     }
 
+    /**
+     * Returns `TRUE` if column referenced by specified key exists, `FALSE` otherwise.
+     *
+     * @param string|int $columnKey Column key or index to be checked.
+     *
+     * @return bool `TRUE` if column exists, `FALSE` otherwise.
+     */
     public function hasColumn(string|int $columnKey): bool
     {
         return $this->columns->hasColumn($columnKey);
@@ -334,6 +342,7 @@ class TextTable extends \Lombok\Helper
     public function setCellAlign(string|int $columnKey, Align $align): self
     {
         $this->getColumn($columnKey)->setCellAlign($align);
+
         return $this;
     }
 
@@ -348,6 +357,7 @@ class TextTable extends \Lombok\Helper
     public function setTitleAlign(string|int $columnKey, Align $align): self
     {
         $this->getColumn($columnKey)->setTitleAlign($align);
+
         return $this;
     }
 

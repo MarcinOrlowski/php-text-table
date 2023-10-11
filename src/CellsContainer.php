@@ -14,13 +14,17 @@ namespace MarcinOrlowski\TextTable;
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 
+/**
+ * This class is used to store cells for given row.
+ */
 class CellsContainer extends BaseContainer
 {
     /** @var Cell[] $container */
-    protected array $container = [];
+    protected mixed $container = [];
 
     /**
-     * Adds new cell to the row's cell container. Throws exception if cell with given key already exists.
+     * Adds new cell to the row's cell container. Throws exception if cell with given key already
+     * exists.
      *
      * @param string|float|int $columnKey Key of the column we want this cell to belong to.
      * @param Cell             $cell      Instance of `Cell` to be added.
@@ -33,7 +37,8 @@ class CellsContainer extends BaseContainer
             throw DuplicateColumnKeyException::forColumnKey($columnKey);
         }
 
-        $this->container[ $columnKey ] = $cell;
+        $this->container[$columnKey] = $cell;
+
         return $this;
     }
 
@@ -49,7 +54,8 @@ class CellsContainer extends BaseContainer
         if (!$this->offsetExists($columnKey)) {
             throw ColumnKeyNotFoundException::forColumnKey($columnKey);
         }
-        return $this->container[ $columnKey ];
+
+        return $this->container[$columnKey];
     }
 
     /**

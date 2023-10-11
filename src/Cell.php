@@ -37,6 +37,14 @@ class Cell extends \Lombok\Helper
     /** String representation of cell's value. */
     protected string $value;
 
+
+    /**
+     * Sets cell's value.
+     *
+     * @param null|\Stringable|string|int|float|bool $value Value to be set as cell's value.
+     *
+     * @return $this Self reference for fluent interface.
+     */
     protected function setValue(\Stringable|string|int|float|bool|null $value): self
     {
         if ($value === null) {
