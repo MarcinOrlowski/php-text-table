@@ -48,6 +48,6 @@
     "scripts": {
         "test": "vendor/bin/phpunit -c phpunit.xml -c phpunit.xml.dist",
         "lint": "vendor/bin/phpstan analyse -c phpstan.neon -c phpstan.neon.dist src tests",
-        "mdlint": "markdownlint -c .markdownlint.yaml.dist docs *.md --ignore LICENSE.md"
+        "mdlint": "markdownlint -c .markdownlint.yaml.dist docs *.md --ignore LICENSE.md --ignore NOTES.md"
     }
 }
