@@ -32,22 +32,24 @@ use Lombok\Setter;
 class Column extends \Lombok\Helper
 {
     /**
-     * @param string $title      Column title string
-     * @param Align  $align      Column text alignment. Shortcut to apply to both title and cell
-     *                           content.
-     * @param int    $maxWidth   Max allowed width of the column. Content longer than `$maxWidth`
-     *                           will be automatically truncated
-     * @param Align  $cellAlign  Default column content alignment. Will be used for each cell in
-     *                           that column unless custom cell has own (non Align::AUTO) alignment
-     *                           specified.
-     * @param Align  $titleAlign Column title text alignment
-     * @param bool   $visible    If set to `false`, column will be skipped when rendering table.
+     * @param string     $title      Column title string
+     * @param Align      $align      Column text alignment. Shortcut to apply to both title and
+     *                               cell
+     *                               content.
+     * @param int        $maxWidth   Max allowed width of the column. Content longer than
+     *                               `$maxWidth` will be automatically truncated
+     * @param Align|null $cellAlign  Default column content alignment. Will be used for each cell
+     *                               in that column unless custom cell has own (non Align::AUTO)
+     *                               alignment specified. By default inherits from `$align`.
+     * @param Align|null $titleAlign Column title text alignment. By default inherits from `$align`.
+     * @param bool       $visible    If set to `false`, column will be skipped when rendering
+     *                               table.
      */
     public function __construct(string $title,
                                 Align  $align = Align::AUTO,
                                 int    $maxWidth = 0,
-                                Align  $cellAlign = Align::AUTO,
-                                Align  $titleAlign = Align::AUTO,
+                                Align  $cellAlign = null,
+                                Align  $titleAlign = null,
                                 bool   $visible = true)
     {
         parent::__construct();

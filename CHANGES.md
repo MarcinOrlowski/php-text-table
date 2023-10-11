@@ -16,6 +16,10 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
+* 2.5.1 (2023-10-11)
+    * Fixed `Column` c'tor overwriting inherited data/header align parameter. 
+
+
 * 2.5.0 (2023-09-26)
     * `TextTable` c'tor now also accepts rows for instant initialization.
     * Centering in odd-character width column now puts content closed to left edge.
