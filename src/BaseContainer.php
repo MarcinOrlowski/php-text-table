@@ -18,8 +18,6 @@ abstract class BaseContainer extends \Lombok\Helper implements ContainerContract
     /**
      * Type of container depends on the class extending this base class.
      * This declaration here is to make linters happy.
-     *
-     * @var mixed
      */
     protected mixed $container;
 
@@ -44,7 +42,13 @@ abstract class BaseContainer extends \Lombok\Helper implements ContainerContract
 
     public function toArray(): array
     {
-        return $this->container->toArray();
+        if ($this->container instanceof ArrayableContract) {
+            return $this->container->toArray();
+        } elseif (\is_array($this->container)) {
+            return $this->container;
+        } else {
+            throw new \RuntimeException('Container is not arrayable');
+        }
     }
 
     /* **[ ArrayAccess ]************************************************************************* */
