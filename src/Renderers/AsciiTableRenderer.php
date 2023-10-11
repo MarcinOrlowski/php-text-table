@@ -23,6 +23,12 @@ use MarcinOrlowski\TextTable\Utils\StringUtils;
 
 abstract class AsciiTableRenderer implements RendererContract
 {
+    public const RENDER_TOP_SEPARATOR    = true;
+    public const RENDER_MIDDLE_SEPARATOR = true;
+    public const RENDER_BOTTOM_SEPARATOR = true;
+
+    /* ****************************************************************************************** */
+
     public function render(TextTable $table): array
     {
         $ctx = new RenderContext($table);
@@ -34,9 +40,17 @@ abstract class AsciiTableRenderer implements RendererContract
 
         $result = [];
 
-        $result[] = $this->renderTopSeparator($ctx);
-        $result[] = $this->renderHeader($ctx);
-        $result[] = $this->renderSeparator($ctx);
+        if (static::RENDER_TOP_SEPARATOR) {
+            $result[] = $this->renderTopSeparator($ctx);
+        }
+
+        if ($table->isHeaderVisible()) {
+            $result[] = $this->renderHeader($ctx);
+            if (static::RENDER_MIDDLE_SEPARATOR) {
+                $result[] = $this->renderSeparator($ctx);
+            }
+        }
+
         if ($table->getRowCount() > 0) {
             foreach ($table->getRows() as $row) {
                 /** @var Row $row */
@@ -46,7 +60,9 @@ abstract class AsciiTableRenderer implements RendererContract
             $result[] = $this->renderNoDataRow($ctx);
             $ctx->incRenderedRowIdx();
         }
-        $result[] = $this->renderBottomSeparator($ctx);
+        if (static::RENDER_BOTTOM_SEPARATOR) {
+            $result[] = $this->renderBottomSeparator($ctx);
+        }
 
         return $result;
     }
@@ -226,6 +242,10 @@ abstract class AsciiTableRenderer implements RendererContract
      */
     protected function renderSeparator(RenderContext $ctx): string
     {
+        if (!static::RENDER_MIDDLE_SEPARATOR) {
+            return '';
+        }
+
         $columns = $ctx->getTable()->getColumns();
 
         $result = '';
