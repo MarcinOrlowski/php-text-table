@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace MarcinOrlowski\TextTable;
 
 use Lombok\Getter;
+use Lombok\Setter;
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
@@ -23,6 +24,8 @@ use MarcinOrlowski\TextTable\Utils\StringUtils;
 /**
  * @method ColumnsContainer getColumns()
  * @method RowsContainer getRows()
+ * @method bool isHeaderVisible()
+ * @method self setHeaderVisible(bool $headerVisible)
  */
 #[Getter]
 class TextTable extends \Lombok\Helper
@@ -69,6 +72,31 @@ class TextTable extends \Lombok\Helper
         $this->rows = new RowsContainer();
         $this->addColumns($headerColumns);
         $this->addRows($rows);
+
+        return $this;
+    }
+
+    /* ****************************************************************************************** */
+
+    #[Getter, Setter]
+    protected bool $headerVisible = true;
+
+    /**
+     * Enables table header (column names) rendering.
+     */
+    public function showHeader(): self
+    {
+        $this->setHeaderVisible(true);
+
+        return $this;
+    }
+
+    /**
+     * Disables table header (column names) rendering.
+     */
+    public function hideHeader(): self
+    {
+        $this->setHeaderVisible(false);
 
         return $this;
     }
