@@ -17,7 +17,9 @@ Fast and flexible PHP library for text tables.
 ## Changes
 
 * 2.5.1 (2023-10-11)
-    * Fixed `Column` c'tor overwriting inherited data/header align parameter. 
+    * Fixed `Column` c'tor overwriting inherited data/header align parameter.
+    * Improved `BaseContainer`'s `toArray()` implementation.
+    * Fixed internal data container typehints.
 
 
 * 2.5.0 (2023-09-26)

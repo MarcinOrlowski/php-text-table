@@ -20,7 +20,7 @@ use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 class CellsContainer extends BaseContainer
 {
     /** @var Cell[] $container */
-    protected array $container = [];
+    protected mixed $container = [];
 
     /**
      * Adds new cell to the row's cell container. Throws exception if cell with given key already

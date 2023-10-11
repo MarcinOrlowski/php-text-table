@@ -21,7 +21,7 @@ use MarcinOrlowski\TextTable\Utils\StringUtils;
 class ColumnsContainer extends BaseContainer
 {
     /** @var Column[] $container */
-    protected array $container = [];
+    protected mixed $container = [];
 
     /**
      * Returns instance of `Column` for given key, or throws exception is no such column exists.

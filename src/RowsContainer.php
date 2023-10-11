@@ -17,5 +17,5 @@ namespace MarcinOrlowski\TextTable;
 class RowsContainer extends BaseContainer
 {
     /** @var Row[] $container */
-    protected array $container = [];
+    protected mixed $container = [];
 }

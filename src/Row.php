@@ -42,8 +42,11 @@ class Row extends BaseContainer
 
     /* ****************************************************************************************** */
 
-    /** Contains all cells of given row. */
-    protected CellsContainer $container;
+    /** Contains all cells of given row.
+     *
+     * @var CellsContainer $container
+     * */
+    protected mixed $container;
 
     /**
      * Adds multiple cells to the row at once. If no explicit cell indices or column keys are
