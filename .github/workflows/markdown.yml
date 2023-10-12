@@ -31,5 +31,5 @@ jobs:
         uses: ruzickap/action-my-markdown-linter@v1
         with:
           exclude: vendor
-          config_file: .markdownlint.yaml
+          config_file: .markdownlint.yaml.dist
 
