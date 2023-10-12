@@ -53,7 +53,8 @@ class Row extends BaseContainer
      * specified, cells are added in the same order as they are defined in the array passed as
      * argument.
      *
-     * @param array<string|int, Cell|string|int|float|bool|null> $cells Array of cells to be added.
+     * @param array<\Stringable|string|int, Cell|string|int|float|bool|null> $cells Array of cells
+     *                                                                              to be added.
      *
      * @throws DuplicateColumnKeyException
      */
@@ -69,20 +70,27 @@ class Row extends BaseContainer
     /**
      * Adds single cell to the table row.
      *
-     * @param string|int            $columnKey Column key or index we are going to populate.
-     * @param Cell|string|float|int $cell      Cell value to be added.
-     * @param Align                 $align     Cell content alignment.
+     * @param \Stringable|string|int            $columnKey Column key or index we are going to
+     *                                                     populate.
+     * @param Cell|\Stringable|string|float|int $cell      Cell value to be added.
+     * @param Align                             $align     Cell content alignment.
      *
      * @return $this Returns instance of self to allow chaining.
      *
      * @throws DuplicateColumnKeyException
      */
-    public function addCell(string|int            $columnKey,
-                            Cell|string|float|int $cell,
-                            Align                 $align = Align::AUTO): self
+    public function addCell(\Stringable|string|int            $columnKey,
+                            Cell|\Stringable|string|float|int $cell,
+                            Align                             $align = Align::AUTO): self
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
+
         if (!($cell instanceof Cell)) {
             $cell = new Cell($cell, $align);
+        } elseif ($cell instanceof \Stringable) {
+            $cell = $cell->__toString();
         }
         $this->getContainer()->addCell($columnKey, $cell);
 

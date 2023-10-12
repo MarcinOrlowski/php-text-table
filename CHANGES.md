@@ -20,6 +20,7 @@ Fast and flexible PHP library for text tables.
   * Added `CompactRenderer`.
   * Renderers can now control rendering of top/bottom/separator rows.
   * [experimental] Added `hideHeader()` and `showHeader()` methods to `TextTable`.
+  * Any method that accepts `string` acceprts objects implementing `\Stringable` interface too.
 
 
 * 2.5.1 (2023-10-11)

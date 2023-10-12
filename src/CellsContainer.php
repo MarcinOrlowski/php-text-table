@@ -26,13 +26,18 @@ class CellsContainer extends BaseContainer
      * Adds new cell to the row's cell container. Throws exception if cell with given key already
      * exists.
      *
-     * @param string|float|int $columnKey Key of the column we want this cell to belong to.
-     * @param Cell             $cell      Instance of `Cell` to be added.
+     * @param \Stringable|string|float|int $columnKey Key of the column we want it to belong to.
+     * @param Cell                         $cell      Instance of `Cell` to be added.
      *
+     * @return CellsContainer
      * @throws DuplicateColumnKeyException
      */
-    public function addCell(string|float|int $columnKey, Cell $cell): self
+    public function addCell(\Stringable|string|float|int $columnKey, Cell $cell): self
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
+
         if ($this->offsetExists($columnKey)) {
             throw DuplicateColumnKeyException::forColumnKey($columnKey);
         }
@@ -45,12 +50,16 @@ class CellsContainer extends BaseContainer
     /**
      * Returns cell for given column key. Throws exception if cell with given key does not exist.
      *
-     * @param string|int $columnKey Key of the column we want this cell to belong to.
+     * @param \Stringable|string|int $columnKey Key of the column we want this cell to belong to.
      *
+     * @return Cell
      * @throws ColumnKeyNotFoundException
      */
-    public function getCell(string|int $columnKey): Cell
+    public function getCell(\Stringable|string|int $columnKey): Cell
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
         if (!$this->offsetExists($columnKey)) {
             throw ColumnKeyNotFoundException::forColumnKey($columnKey);
         }
@@ -61,12 +70,15 @@ class CellsContainer extends BaseContainer
     /**
      * Returns cell for given column key. Returns null if cell with given key does not exist.
      *
-     * @param string|int $columnKey Key of the column we want this cell to belong to.
+     * @param \Stringable|string|int $columnKey Key of the column we want this cell to belong to.
      *
      * @return bool
      */
-    public function hasCell(string|int $columnKey): bool
+    public function hasCell(\Stringable|string|int $columnKey): bool
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
         return $this->offsetExists($columnKey);
     }
 

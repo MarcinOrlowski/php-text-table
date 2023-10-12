@@ -47,9 +47,16 @@ class RenderContext extends \Lombok\Helper
 
     /* ****************************************************************************************** */
 
-    /** Returns `TRUE` if specified data column is first one to be rendered in a row. */
-    public function isFirstVisibleColumn(string|int $columnKey): bool
+    /**
+     * @param \Stringable|string|int $columnKey Column key to be checked.
+     *
+     * @return bool `TRUE` if specified data column is first one to be rendered in a row.
+     */
+    public function isFirstVisibleColumn(\Stringable|string|int $columnKey): bool
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
         foreach ($this->getTable()->getColumns() as $key => $column) {
             if ($column->isVisible()) {
                 return $key === $columnKey;
@@ -58,9 +65,17 @@ class RenderContext extends \Lombok\Helper
         return false;
     }
 
-    /** Returns `TRUE` if specified data column is last one to be rendered in a row. */
-    public function isLastVisibleColumn(string|int $columnKey): bool
+    /**
+     * @param \Stringable|string|int $columnKey Column key to be checked.
+     *
+     * @return bool `TRUE` if specified data column is last one to be rendered in a row.
+     */
+    public function isLastVisibleColumn(\Stringable|string|int $columnKey): bool
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
+
         $lastVisibleColumnKey = null;
         foreach ($this->getTable()->getColumns() as $key => $column) {
             if (!$column->isVisible()) {

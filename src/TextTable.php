@@ -111,10 +111,10 @@ class TextTable extends \Lombok\Helper
      * Adds new column with specific key. Note columns are registered in the order they are
      * added.
      *
-     * @param string|int    $columnKey Unique column key to be assigned to this column.
-     * @param Column|string $columnVal Either instance of `Column` or string to be used as column
-     *                                 title (for which instance of `Column` will be automatically
-     *                                 created).
+     * @param \Stringable|string|int $columnKey Unique column key to be assigned to this column.
+     * @param Column|string          $columnVal Either instance of `Column` or string to be used as
+     *                                          column title (for which instance of `Column` will
+     *                                          be automatically created).
      *
      * @return self
      *
@@ -122,8 +122,11 @@ class TextTable extends \Lombok\Helper
      * @throws DuplicateColumnKeyException
      * @throws UnsupportedColumnTypeException
      */
-    public function addColumn(string|int $columnKey, Column|string $columnVal): self
+    public function addColumn(\Stringable|string|int $columnKey, Column|string $columnVal): self
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
         $columnKey = StringUtils::sanitizeColumnKey($columnKey);
         if (\is_string($columnVal)) {
             $columnVal = new Column($columnVal);
@@ -318,13 +321,13 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param string|int $columnKey Key of column to be obtained.
+     * @param \Stringable|string|int $columnKey Key of column to be obtained.
      *
      * @return Column
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function getColumn(string|int $columnKey): Column
+    public function getColumn(\Stringable|string|int $columnKey): Column
     {
         return $this->columns->getColumn($columnKey);
     }
@@ -332,11 +335,11 @@ class TextTable extends \Lombok\Helper
     /**
      * Returns `TRUE` if column referenced by specified key exists, `FALSE` otherwise.
      *
-     * @param string|int $columnKey Column key or index to be checked.
+     * @param \Stringable|string|int $columnKey Column key or index to be checked.
      *
      * @return bool `TRUE` if column exists, `FALSE` otherwise.
      */
-    public function hasColumn(string|int $columnKey): bool
+    public function hasColumn(\Stringable|string|int $columnKey): bool
     {
         return $this->columns->hasColumn($columnKey);
     }
@@ -344,14 +347,14 @@ class TextTable extends \Lombok\Helper
     /**
      * Sets specified align to be default align for column header and column cells.
      *
-     * @param string|int $columnKey Unique column key to be assigned to this column
-     * @param Align      $align     Align to be set.
+     * @param \Stringable|string|int $columnKey Unique column key to be assigned to this column
+     * @param Align                  $align     Align to be set.
      *
      * @return self
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function setColumnAlign(string|int $columnKey, Align $align): self
+    public function setColumnAlign(\Stringable|string|int $columnKey, Align $align): self
     {
         $this->setCellAlign($columnKey, $align);
         $this->setTitleAlign($columnKey, $align);
@@ -360,14 +363,14 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param string|int $columnKey Unique column key to be assigned to this column
-     * @param Align      $align     Alignment to be set for the column cell's text
+     * @param \Stringable|string|int $columnKey Unique column key to be assigned to this column
+     * @param Align                  $align     Alignment to be set for the column cell's text
      *
      * @return $this
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function setCellAlign(string|int $columnKey, Align $align): self
+    public function setCellAlign(\Stringable|string|int $columnKey, Align $align): self
     {
         $this->getColumn($columnKey)->setCellAlign($align);
 
@@ -375,14 +378,14 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param string|int $columnKey Unique column key to be assigned to this column
-     * @param Align      $align     Alignment to be set for the column's title text
+     * @param \Stringable|string|int $columnKey Unique column key to be assigned to this column
+     * @param Align                  $align     Alignment to be set for the column's title text
      *
      * @return $this
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function setTitleAlign(string|int $columnKey, Align $align): self
+    public function setTitleAlign(\Stringable|string|int $columnKey, Align $align): self
     {
         $this->getColumn($columnKey)->setTitleAlign($align);
 
@@ -390,14 +393,14 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param string|int $columnKey Unique column key to be assigned to this column
-     * @param int        $width
+     * @param \Stringable|string|int $columnKey Unique column key to be assigned to this column
+     * @param int                    $width     Max width to be set for the column
      *
      * @return self
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function setColumnMaxWidth(string|int $columnKey, int $width): self
+    public function setColumnMaxWidth(\Stringable|string|int $columnKey, int $width): self
     {
         $this->getColumn($columnKey)->setMaxWidth($width);
 
@@ -405,13 +408,13 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param string|int $columnKey
-     * @param bool       $visible
+     * @param \Stringable|string|int $columnKey Unique column key to be assigned to this column
+     * @param bool                   $visible   `TRUE` to make column visible, `FALSE` to hide it.
      *
      * @return $this
      * @throws ColumnKeyNotFoundException
      */
-    public function setColumnVisibility(string|int $columnKey, bool $visible): self
+    public function setColumnVisibility(\Stringable|string|int $columnKey, bool $visible): self
     {
         $this->getColumn($columnKey)->setVisible($visible);
 
@@ -419,15 +422,19 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param array|string|int $columnKey Key of the column to be hidden. Hiding hidden column has
-     *                                    no effect.
+     * @param array|\Stringable|string|int $columnKey Key of the column to be hidden. Hiding hidden
+     *                                                column has no effect.
      *
      * @return $this
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function hideColumn(array|string|int $columnKey): self
+    public function hideColumn(array|\Stringable|string|int $columnKey): self
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
+
         $keys = \is_array($columnKey)
             ? $columnKey
             : (array)$columnKey;
@@ -440,14 +447,14 @@ class TextTable extends \Lombok\Helper
     }
 
     /**
-     * @param string|int $columnKey Key of the column to be shown. Showing visible column has no
-     *                              effect.
+     * @param \Stringable|string|int $columnKey Key of the column to be shown. Showing visible
+     *                                          column has no effect.
      *
      * @return $this
      *
      * @throws ColumnKeyNotFoundException
      */
-    public function showColumn(string|int $columnKey): self
+    public function showColumn(\Stringable|string|int $columnKey): self
     {
         $this->getColumn($columnKey)->setVisible(true);
 

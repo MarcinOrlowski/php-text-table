@@ -26,12 +26,16 @@ class ColumnsContainer extends BaseContainer
     /**
      * Returns instance of `Column` for given key, or throws exception is no such column exists.
      *
-     * @param string|int $columnKey Column key we are going to populate.
+     * @param \Stringable|string|int $columnKey Column key we are going to populate.
      *
+     * @return Column
      * @throws ColumnKeyNotFoundException
      */
-    public function getColumn(string|int $columnKey): Column
+    public function getColumn(\Stringable|string|int $columnKey): Column
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
         $columnKey = StringUtils::sanitizeColumnKey($columnKey);
         if (!$this->hasColumn($columnKey)) {
             throw ColumnKeyNotFoundException::forColumnKey($columnKey);
@@ -43,12 +47,15 @@ class ColumnsContainer extends BaseContainer
     /**
      * Returns `TRUE` if column referenced by specified key exists, `FALSE` otherwise.
      *
-     * @param string|int $columnKey Column key we are going to populate.
+     * @param \Stringable|string|int $columnKey Column key we are going to populate.
      *
      * @return bool
      */
-    public function hasColumn(string|int $columnKey): bool
+    public function hasColumn(\Stringable|string|int $columnKey): bool
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
         $columnKey = StringUtils::sanitizeColumnKey($columnKey);
 
         return $this->offsetExists($columnKey);
@@ -57,16 +64,20 @@ class ColumnsContainer extends BaseContainer
     /**
      * Adds new column definition to the container.
      *
-     * @param string|int $columnKey Column key we are going to populate.
-     * @param Column     $column
+     * @param \Stringable|string|int $columnKey Column key we are going to populate.
+     * @param Column                 $column
      *
      * @return self
      *
      * @throws ColumnKeyNotFoundException
      * @throws DuplicateColumnKeyException
      */
-    public function addColumn(string|int $columnKey, Column $column): self
+    public function addColumn(\Stringable|string|int $columnKey, Column $column): self
     {
+        if ($columnKey instanceof \Stringable) {
+            $columnKey = $columnKey->__toString();
+        }
+
         $columnKey = StringUtils::sanitizeColumnKey($columnKey);
 
         if ($this->hasColumn($columnKey)) {

@@ -362,12 +362,13 @@ abstract class AsciiTableRenderer implements RendererContract
     /**
      * Helper method returning width of column referenced by `$columnKey`.
      *
-     * @param ColumnsContainer $columns   Table column definition container.
-     * @param string|int       $columnKey Column key we are going to populate.
+     * @param ColumnsContainer       $columns   Table column definition container.
+     * @param \Stringable|string|int $columnKey Column key we are going to populate.
      *
+     * @return int
      * @throws ColumnKeyNotFoundException
      */
-    protected function getColumnWidth(ColumnsContainer $columns, string|int $columnKey): int
+    protected function getColumnWidth(ColumnsContainer $columns, \Stringable|string|int $columnKey): int
     {
         return $columns->getColumn($columnKey)->getWidth();
     }
@@ -375,12 +376,13 @@ abstract class AsciiTableRenderer implements RendererContract
     /**
      * Helper method returning alignment of column referenced by `$columnKey`.
      *
-     * @param ColumnsContainer $columns   Table column definition container.
-     * @param string|int       $columnKey Column key we are going to populate.
+     * @param ColumnsContainer       $columns   Table column definition container.
+     * @param \Stringable|string|int $columnKey Column key we are going to populate.
      *
+     * @return Align
      * @throws ColumnKeyNotFoundException
      */
-    protected function getColumnAlign(ColumnsContainer $columns, string|int $columnKey): Align
+    protected function getColumnAlign(ColumnsContainer $columns, \Stringable|string|int $columnKey): Align
     {
         return $columns->getColumn($columnKey)->getCellAlign();
     }
@@ -388,12 +390,13 @@ abstract class AsciiTableRenderer implements RendererContract
     /**
      * Helper method returning alignment of title string for colum referenced by `$columnKey`.
      *
-     * @param ColumnsContainer $columns   Table column definition container.
-     * @param string|int       $columnKey Column key we are going to populate.
+     * @param ColumnsContainer       $columns   Table column definition container.
+     * @param \Stringable|string|int $columnKey Column key we are going to populate.
      *
+     * @return Align
      * @throws ColumnKeyNotFoundException
      */
-    protected function getColumnTitleAlign(ColumnsContainer $columns, string|int $columnKey): Align
+    protected function getColumnTitleAlign(ColumnsContainer $columns, \Stringable|string|int $columnKey): Align
     {
         return $columns->getColumn($columnKey)->getTitleAlign();
     }
