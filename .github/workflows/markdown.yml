@@ -30,6 +30,6 @@ jobs:
       - name: "Running markdown linter..."
         uses: ruzickap/action-my-markdown-linter@v1
         with:
-          exclude: vendor
+          exclude: vendor LICENSE.md
           config_file: .markdownlint.yaml.dist
 
