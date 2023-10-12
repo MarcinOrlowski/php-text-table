@@ -18,6 +18,7 @@ use MarcinOrlowski\TextTable\ColumnsContainer;
 use MarcinOrlowski\TextTable\Exceptions\ColumnKeyNotFoundException;
 use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Row;
+use MarcinOrlowski\TextTable\Separator;
 use MarcinOrlowski\TextTable\TextTable;
 use MarcinOrlowski\TextTable\Utils\StringUtils;
 
@@ -54,7 +55,9 @@ abstract class AsciiTableRenderer implements RendererContract
         if ($table->getRowCount() > 0) {
             foreach ($table->getRows() as $row) {
                 /** @var Row $row */
-                $result[] = $this->renderDataRow($ctx, $row);
+                $result[] = ($row instanceof Separator)
+                    ? $this->renderSeparator($ctx)
+                    : $this->renderDataRow($ctx, $row);
             }
         } else {
             $result[] = $this->renderNoDataRow($ctx);
