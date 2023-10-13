@@ -16,18 +16,14 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
-* dev
-  * Added `Separator` row class, and `Table::addSeparator()` helper method.
-  * Fixed `DuplicateColumnException` and `UnsupportedColumnAlignException` exceptions
-  * Improved documentation.
-
-
-* 2.6.0 (2023-10-12)
+* 2.6.0 (2023-10-13)
   * Added `CompactRenderer`.
   * Renderers can now control rendering of top/bottom/separator rows.
   * [experimental] Added `hideHeader()` and `showHeader()` methods to `TextTable`.
   * Any method that accepts `string` acceprts objects implementing `\Stringable` interface too.
-
+  * Added `Separator` row class, and `Table::addSeparator()` helper method.
+  * Fixed `DuplicateColumnException` and `UnsupportedColumnAlignException` exceptions
+  * Improved documentation.
 
 * 2.5.1 (2023-10-11)
   * Fixed `Column` c'tor overwriting inherited data/header align parameter.
