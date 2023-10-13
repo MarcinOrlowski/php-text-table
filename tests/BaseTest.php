@@ -8,6 +8,7 @@ use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use MarcinOrlowski\TextTable\Align;
 use MarcinOrlowski\TextTable\Cell;
 use MarcinOrlowski\TextTable\Column;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Renderers\MsDosRenderer;
 use MarcinOrlowski\TextTable\TextTable;
@@ -865,6 +866,14 @@ class BaseTest extends TestCase
             '╚═══╩═══╩═══╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
+    }
+
+    /* ****************************************************************************************** */
+
+    public function testDuplicateColumns(): void
+    {
+        $this->expectException(DuplicateColumnKeyException::class);
+        new TextTable(['FOO', '1', 'FOO']);
     }
 }
 
