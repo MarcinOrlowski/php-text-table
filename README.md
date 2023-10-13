@@ -17,30 +17,21 @@ Fast and flexible PHP library for text tables.
 [![License](http://poser.pugx.org/marcin-orlowski/text-table/license)](https://packagist.org/packages/marcin-orlowski/text-table)
 [![PHP Version Require](http://poser.pugx.org/marcin-orlowski/text-table/require/php)](https://packagist.org/packages/marcin-orlowski/text-table)
 
-Also available as [Python package](https://github.com/MarcinOrlowski/python-flex-text-table/).
-
----
-
-Table of contents
-
-1. [Features](#features)
-1. [Installation & requirements](docs/setup.md)
-1. [Examples](docs/examples.md)
-1. [License](#license)
+There's also
+a [Python version of this library](https://github.com/MarcinOrlowski/python-flex-text-table/).
 
 ---
 
 ## Features
 
-1. Simple API, easy to use,
-1. Lightweight (no additional dependencies),
-1. Production ready.
+1. Production ready,
+1. Easy to use,
+1. No additional dependencies,
+1. [Documented](docs/README.md).
 
 ---
 
 ## Usage examples
-
-Simples possible usage:
 
 ```php
 $table = new TextTable(['ID', 'NAME', 'SCORE']);
@@ -62,7 +53,7 @@ would produce nice text table:
 └────┴───────┴───────┘
 ```
 
-See more [usage examples](docs/examples.md).
+Check docs for more [usage examples](docs/README.md).
 
 ---
 
