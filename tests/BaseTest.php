@@ -8,6 +8,7 @@ use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use MarcinOrlowski\TextTable\Align;
 use MarcinOrlowski\TextTable\Cell;
 use MarcinOrlowski\TextTable\Column;
+use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 use MarcinOrlowski\TextTable\Exceptions\NoVisibleColumnsException;
 use MarcinOrlowski\TextTable\Renderers\MsDosRenderer;
 use MarcinOrlowski\TextTable\TextTable;
@@ -663,6 +664,91 @@ class BaseTest extends TestCase
 
     /* ****************************************************************************************** */
 
+    public function testSeparatorRow(): void
+    {
+        $table = new TextTable();
+        $table->addColumns([
+            'A',
+            'B',
+            'C',
+        ]);
+        $table->addRow([
+            'c',
+            'b',
+            'a',
+        ]);
+        $table->addRow([
+            'A',
+            'B',
+            'C',
+        ]);
+        $table->addSeparator();
+
+        $table->addRow([
+            '1',
+            '2',
+            '3',
+        ]);
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '╔═══╦═══╦═══╗',
+            '║ A ║ B ║ C ║',
+            '╠═══╬═══╬═══╣',
+            '║ c ║ b ║ a ║',
+            '║ A ║ B ║ C ║',
+            '╠═══╬═══╬═══╣',
+            '║ 1 ║ 2 ║ 3 ║',
+            '╚═══╩═══╩═══╝',
+        ];
+
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+    public function testSeparatorWithValue(): void
+    {
+        $table = new TextTable();
+        $table->addColumns([
+            'A',
+            'B',
+            'C',
+        ]);
+        $table->addRow([
+            'c',
+            'b',
+            'a',
+        ]);
+        $table->addRow([
+            'A',
+            'B',
+            'C',
+        ]);
+        $table->addSeparator();
+
+        $table->addRow([
+            'B' => '2',
+        ]);
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '╔═══╦═══╦═══╗',
+            '║ A ║ B ║ C ║',
+            '╠═══╬═══╬═══╣',
+            '║ c ║ b ║ a ║',
+            '║ A ║ B ║ C ║',
+            '╠═══╬═══╬═══╣',
+            '║   ║ 2 ║   ║',
+            '╚═══╩═══╩═══╝',
+        ];
+
+        Assert::assertEquals($expected, $renderedTable);
+
+    }
+
+    /* ****************************************************************************************** */
+
     /**
      * Tests if missing column values in rows are correctly handled.
      */
@@ -780,6 +866,14 @@ class BaseTest extends TestCase
             '╚═══╩═══╩═══╝',
         ];
         Assert::assertEquals($expected, $renderedTable);
+    }
+
+    /* ****************************************************************************************** */
+
+    public function testDuplicateColumns(): void
+    {
+        $this->expectException(DuplicateColumnKeyException::class);
+        new TextTable(['FOO', '1', 'FOO']);
     }
 }
 

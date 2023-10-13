@@ -469,4 +469,14 @@ class TextTable extends \Lombok\Helper
         return \count(\array_filter($this->columns->toArray(), static fn(Column $column): bool => $column->isVisible()));
     }
 
+    /**
+     * Adds horizontal separator line to the table
+     */
+    public function addSeparator(): self
+    {
+        $this->addRow(new Separator());
+
+        return $this;
+    }
+
 }

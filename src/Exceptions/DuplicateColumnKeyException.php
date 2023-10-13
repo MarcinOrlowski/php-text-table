@@ -19,6 +19,6 @@ class DuplicateColumnKeyException extends \Exception
             $columnKey = $columnKey->__toString();
         }
         $msg = \sprintf('Duplicate column key: %s', $columnKey);
-        return self($msg);
+        return new self($msg);
     }
 }
