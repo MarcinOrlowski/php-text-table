@@ -18,6 +18,7 @@ Fast and flexible PHP library for text tables.
 
 * dev
   * Added `Separator` row class, and `Table::addSeparator()` helper method.
+  * Fixed `DuplicateColumnException` and `UnsupportedColumnAlignException` exceptions
 
 
 * 2.6.0 (2023-10-12)
