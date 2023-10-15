@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf170bd5f0de3472a80d65e18d2897d0",
+    "content-hash": "f63a3549b1b032d45babdbfb9635be13",
     "packages": [
         {
             "name": "marcin-orlowski/lombok-php",
@@ -64,6 +64,63 @@
         }
     ],
     "packages-dev": [
+        {
+            "name": "marcin-orlowski/lockpick",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/MarcinOrlowski/php-lockpick.git",
+                "reference": "3dcd724d1af44641bfd2ef8941d42d3643f4e54c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/MarcinOrlowski/php-lockpick/zipball/3dcd724d1af44641bfd2ef8941d42d3643f4e54c",
+                "reference": "3dcd724d1af44641bfd2ef8941d42d3643f4e54c",
+                "shasum": ""
+            },
+            "require": {
+                "marcin-orlowski/type-asserts": "^2.0.0",
+                "php": "^8.0||^8.1"
+            },
+            "replace": {
+                "marcin-orlowski/php-lockpick": "*"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.8",
+                "phpunit/php-code-coverage": "^9.0",
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MarcinOrlowski\\Lockpick\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcin Orlowski",
+                    "homepage": "https://MarcinOrlowski.com/"
+                }
+            ],
+            "description": "Helps accessing protected/private members/consts of foreign objects.",
+            "homepage": "https://github.com/MarcinOrlowski/php-lockpick",
+            "keywords": [
+                "constants",
+                "helper",
+                "php8",
+                "private",
+                "protected"
+            ],
+            "support": {
+                "issues": "https://github.com/MarcinOrlowski/php-lockpick/issues",
+                "source": "https://github.com/MarcinOrlowski/php-lockpick/"
+            },
+            "time": "2023-04-14T06:22:30+00:00"
+        },
         {
             "name": "marcin-orlowski/phpunit-extra-asserts",
             "version": "5.2.0",
@@ -1861,5 +1918,5 @@
         "ext-mbstring": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
