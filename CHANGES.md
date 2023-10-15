@@ -16,7 +16,7 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
-* dev
+* 2.7.0 (2023-10-15)
   * Added `setNoDataLabel()` to override default `NO DATA` string shown when rendering empty table.
   * Added `getContentTotalWidth()` method to the `TextTable`.
   * Added option to control column title visibility.
