@@ -60,7 +60,7 @@ abstract class AsciiTableRenderer implements RendererContract
                     : $this->renderDataRow($ctx, $row);
             }
         } else {
-            $result[] = $this->renderNoDataRow($ctx);
+            $result[] = $this->renderNoDataRow($ctx, $table->getNoDataLabel());
             $ctx->incRenderedRowIdx();
         }
         if (static::RENDER_BOTTOM_SEPARATOR) {
@@ -77,11 +77,10 @@ abstract class AsciiTableRenderer implements RendererContract
 
     /* ****************************************************************************************** */
 
-    protected function renderNoDataRow(RenderContext $ctx): string
+    protected function renderNoDataRow(RenderContext $ctx, string $label = 'NO DATA'): string
     {
         $table = $ctx->getTable();
 
-        $label = 'NO DATA';
         $tableTotalWidth = $this->getTableTotalWidth($table);
         $label = (\mb_strlen($label) > $tableTotalWidth)
             ? \mb_substr($label, 0, $tableTotalWidth - 1) . '…'
@@ -407,21 +406,12 @@ abstract class AsciiTableRenderer implements RendererContract
     /* ****************************************************************************************** */
 
     /**
-     * Get total width of the visible table WITHOUT edges (so the full table width
-     * in output is then 2 (for left edge) + getTotalWidth() + 2 (for right edge).
+     * Get total width of the visible table without frame (with with column separators).
      */
     protected function getTableTotalWidth(TextTable $table): int
     {
-        $totalWidth = 0;
-
-        foreach ($table->getColumns() as $column) {
-            /** @var Column $column */
-            if ($column->isVisible()) {
-                $totalWidth += $column->getWidth();
-            }
-        }
-
-        // Next, we need to account column separators as well.
+        $totalWidth = $table->getContentTotalWidth();
+        // Next, we need to account column dividers as well.
         $totalWidth += ($table->getVisibleColumnCount() - 1) * \mb_strlen(static::ROW_FRAME_CENTER);
 
         return $totalWidth;

@@ -26,6 +26,8 @@ use MarcinOrlowski\TextTable\Utils\StringUtils;
  * @method RowsContainer getRows()
  * @method bool isHeaderVisible()
  * @method self setHeaderVisible(bool $headerVisible)
+ * @method string getNoDataLabel()
+ * @method self setNoDataLabel(string $noDataLabel)
  */
 #[Getter]
 class TextTable extends \Lombok\Helper
@@ -75,6 +77,16 @@ class TextTable extends \Lombok\Helper
 
         return $this;
     }
+
+    /* ****************************************************************************************** */
+
+    /**
+     * String label to be shown when rendering empty table
+     *
+     * @var string
+     */
+    #[Getter, Setter]
+    protected string $noDataLabel = 'NO DATA';
 
     /* ****************************************************************************************** */
 
