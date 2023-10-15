@@ -19,6 +19,8 @@ Fast and flexible PHP library for text tables.
 * dev
   * Added `setNoDataLabel()` to override default `NO DATA` string shown when rendering empty table.
   * Added `getContentTotalWidth()` method to the `TextTable`.
+  * Added option to control column title visibility.
+
 
 * 2.6.0 (2023-10-13)
   * Added `CompactRenderer`.
@@ -28,6 +30,7 @@ Fast and flexible PHP library for text tables.
   * Added `Separator` row class, and `Table::addSeparator()` helper method.
   * Fixed `DuplicateColumnException` and `UnsupportedColumnAlignException` exceptions
   * Improved documentation.
+
 
 * 2.5.1 (2023-10-11)
   * Fixed `Column` c'tor overwriting inherited data/header align parameter.

@@ -164,7 +164,11 @@ abstract class AsciiTableRenderer implements RendererContract
                 $result .= static::ROW_FRAME_LEFT;
             }
 
-            $result .= $this->pad($columns, $columnKey, $column->getTitle(), $column->getTitleAlign());
+            $title = $column->isTitleVisible()
+                ? $column->getTitle()
+                : '';
+
+            $result .= $this->pad($columns, $columnKey, $title, $column->getTitleAlign());
             $result .= $ctx->isLastVisibleColumn($columnKey)
                 ? static::ROW_FRAME_RIGHT
                 : static::ROW_FRAME_CENTER;

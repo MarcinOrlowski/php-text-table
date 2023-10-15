@@ -897,5 +897,37 @@ class BaseTest extends TestCase
         $this->expectException(DuplicateColumnKeyException::class);
         new TextTable(['FOO', '1', 'FOO']);
     }
+
+    /* ****************************************************************************************** */
+
+    /* ****************************************************************************************** */
+
+    public function testColumnTitleVisibility(): void
+    {
+        $table = new TextTable([
+            'ID',
+            new Column('NAME', titleVisible: false),
+            'SCORE'
+        ]);
+        $table->addRows([
+            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
+        ]);
+
+        $table->setColumnAlign('ID', Align::RIGHT);
+        $table->setColumnAlign('SCORE', Align::RIGHT);
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '╔════╦═══════╦═══════╗',
+            '║ ID ║       ║ SCORE ║',
+            '╠════╬═══════╬═══════╣',
+            '║  1 ║ John  ║    12 ║',
+            '║  2 ║ Tommy ║    15 ║',
+            '╚════╩═══════╩═══════╝',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
 }
 
