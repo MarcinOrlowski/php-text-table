@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace MarcinOrlowski\TextTableTests;
 
+use MarcinOrlowski\Lockpick\Lockpick;
 use MarcinOrlowski\PhpunitExtraAsserts\Generator;
 use MarcinOrlowski\TextTable\Align;
 use MarcinOrlowski\TextTable\Cell;
@@ -433,6 +434,28 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 
+    public function testCustomNoDataLabel(): void
+    {
+        $label = 'FAKE LABEL';
+        $table = new TextTable(['ID', new Column('NAME', maxWidth: 20), 'SCORE']);
+        $table->setNoDataLabel($label);
+
+        $renderer = new MsDosRenderer();
+        $tableTotalWidth = Lockpick::call($renderer, 'getTableTotalWidth', [$table]);
+        $renderedTable = $renderer->render($table);
+        $noDataLabelPadded = StringUtils::pad($label, $tableTotalWidth, ' ', \STR_PAD_BOTH);
+
+        $expected = [
+            '╔════╦══════════════════════╦═══════╗',
+            '║ ID ║ NAME                 ║ SCORE ║',
+            '╠════╬══════════════════════╬═══════╣',
+            "║ {$noDataLabelPadded} ║",
+            '╚════╩══════════════════════╩═══════╝',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
+
     public function testNoDataWithClipping(): void
     {
         $maxLength = Generator::getRandomInt(10, 20);
@@ -536,7 +559,6 @@ class BaseTest extends TestCase
         $this->expectException(NoVisibleColumnsException::class);
         $renderedTable = $this->renderTable($table);
     }
-
 
     protected function formatNoData(int $maxLength): string
     {
@@ -874,6 +896,38 @@ class BaseTest extends TestCase
     {
         $this->expectException(DuplicateColumnKeyException::class);
         new TextTable(['FOO', '1', 'FOO']);
+    }
+
+    /* ****************************************************************************************** */
+
+    /* ****************************************************************************************** */
+
+    public function testColumnTitleVisibility(): void
+    {
+        $table = new TextTable([
+            'ID',
+            new Column('NAME', titleVisible: false),
+            'SCORE'
+        ]);
+        $table->addRows([
+            ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
+            ['SCORE' => 15, 'ID' => 2, 'NAME' => 'Tommy'],
+        ]);
+
+        $table->setColumnAlign('ID', Align::RIGHT);
+        $table->setColumnAlign('SCORE', Align::RIGHT);
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '╔════╦═══════╦═══════╗',
+            '║ ID ║       ║ SCORE ║',
+            '╠════╬═══════╬═══════╣',
+            '║  1 ║ John  ║    12 ║',
+            '║  2 ║ Tommy ║    15 ║',
+            '╚════╩═══════╩═══════╝',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
     }
 }
 

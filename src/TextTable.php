@@ -26,6 +26,8 @@ use MarcinOrlowski\TextTable\Utils\StringUtils;
  * @method RowsContainer getRows()
  * @method bool isHeaderVisible()
  * @method self setHeaderVisible(bool $headerVisible)
+ * @method string getNoDataLabel()
+ * @method self setNoDataLabel(string $noDataLabel)
  */
 #[Getter]
 class TextTable extends \Lombok\Helper
@@ -75,6 +77,16 @@ class TextTable extends \Lombok\Helper
 
         return $this;
     }
+
+    /* ****************************************************************************************** */
+
+    /**
+     * String label to be shown when rendering empty table
+     *
+     * @var string
+     */
+    #[Getter, Setter]
+    protected string $noDataLabel = 'NO DATA';
 
     /* ****************************************************************************************** */
 
@@ -479,4 +491,21 @@ class TextTable extends \Lombok\Helper
         return $this;
     }
 
+    /**
+     * Get total width of the visible table columns' content (note this does not include column
+     * padding, nor separators etc as this is not part of the table data but belongs to renderer).
+     */
+    public function getContentTotalWidth(): int
+    {
+        $totalWidth = 0;
+
+        foreach ($this->getColumns() as $column) {
+            /** @var Column $column */
+            if ($column->isVisible()) {
+                $totalWidth += $column->getWidth();
+            }
+        }
+
+        return $totalWidth;
+    }
 }

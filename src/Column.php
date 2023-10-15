@@ -26,31 +26,37 @@ use Lombok\Setter;
  * @method self setMaxWidth(int $width)
  * @method self setVisible(bool $visible)
  * @method bool isVisible()
+ * @method self setTitleVisible(bool $visible)
+ * @method bool isTitleVisible()
  */
 #[Getter]
 #[Setter]
 class Column extends \Lombok\Helper
 {
     /**
-     * @param string     $title      Column title string
-     * @param Align      $align      Column text alignment. Shortcut to apply to both title and
-     *                               cell
-     *                               content.
-     * @param int        $maxWidth   Max allowed width of the column. Content longer than
-     *                               `$maxWidth` will be automatically truncated
-     * @param Align|null $cellAlign  Default column content alignment. Will be used for each cell
-     *                               in that column unless custom cell has own (non Align::AUTO)
-     *                               alignment specified. By default inherits from `$align`.
-     * @param Align|null $titleAlign Column title text alignment. By default inherits from `$align`.
-     * @param bool       $visible    If set to `false`, column will be skipped when rendering
-     *                               table.
+     * @param string     $title        Column title string
+     * @param Align      $align        Column text alignment. Shortcut to apply to both title and
+     *                                 cell
+     *                                 content.
+     * @param int        $maxWidth     Max allowed width of the column. Content longer than
+     *                                 `$maxWidth` will be automatically truncated
+     * @param Align|null $cellAlign    Default column content alignment. Will be used for each cell
+     *                                 in that column unless custom cell has own (non Align::AUTO)
+     *                                 alignment specified. By default inherits from `$align`.
+     * @param Align|null $titleAlign   Column title text alignment. By default inherits from
+     *                                 `$align`.
+     * @param bool       $visible      If set to `false`, column will be skipped when rendering
+     *                                 table.
+     * @param bool       $titleVisible If set to `false`, column title will be not rendered when
+     *                                 rendering table.
      */
     public function __construct(string $title,
                                 Align  $align = Align::AUTO,
                                 int    $maxWidth = 0,
                                 Align  $cellAlign = null,
                                 Align  $titleAlign = null,
-                                bool   $visible = true)
+                                bool   $visible = true,
+                                bool   $titleVisible = true)
     {
         parent::__construct();
 
@@ -64,6 +70,7 @@ class Column extends \Lombok\Helper
             $this->setTitleAlign($titleAlign);
         }
         $this->setVisible($visible);
+        $this->setTitleVisible($titleVisible);
     }
 
     /* ****************************************************************************************** */
@@ -95,6 +102,14 @@ class Column extends \Lombok\Helper
 
         return $this;
     }
+
+    /* ****************************************************************************************** */
+
+    /**
+     * Determines visibility of visible column's title.
+     */
+    #[Getter, Setter]
+    protected bool $titleVisible = true;
 
     /* ****************************************************************************************** */
 
