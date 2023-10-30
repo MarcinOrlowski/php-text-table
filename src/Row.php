@@ -79,15 +79,17 @@ class Row extends BaseContainer
      *
      * @throws DuplicateColumnKeyException
      */
-    public function addCell(\Stringable|string|int            $columnKey,
-                            Cell|\Stringable|string|float|int $cell,
-                            Align                             $align = Align::AUTO): self
+    public function addCell(\Stringable|string|int                 $columnKey,
+                            Cell|\Stringable|string|float|int|null $cell,
+                            Align                                  $align = Align::AUTO): self
     {
         if ($columnKey instanceof \Stringable) {
             $columnKey = $columnKey->__toString();
         }
 
-        if (!($cell instanceof Cell)) {
+        if ($cell === null) {
+            $cell = new CellNull($align);
+        } elseif (!($cell instanceof Cell)) {
             $cell = new Cell($cell, $align);
         } elseif ($cell instanceof \Stringable) {
             $cell = $cell->__toString();

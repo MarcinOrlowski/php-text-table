@@ -900,6 +900,23 @@ class BaseTest extends TestCase
 
     /* ****************************************************************************************** */
 
+    public function testNullValueInCells(): void
+    {
+        $table = new TextTable(['ID', 'NAME', 'SCORE']);
+        $table->addRow([1, null, 12]);
+
+        $renderedTable = $this->renderTable($table);
+
+        $expected = [
+            '╔════╦══════╦═══════╗',
+            '║ ID ║ NAME ║ SCORE ║',
+            '╠════╬══════╬═══════╣',
+            '║ 1  ║ NULL ║ 12    ║',
+            '╚════╩══════╩═══════╝',
+        ];
+        Assert::assertEquals($expected, $renderedTable);
+    }
+
     /* ****************************************************************************************** */
 
     public function testColumnTitleVisibility(): void
@@ -907,7 +924,7 @@ class BaseTest extends TestCase
         $table = new TextTable([
             'ID',
             new Column('NAME', titleVisible: false),
-            'SCORE'
+            'SCORE',
         ]);
         $table->addRows([
             ['ID' => 1, 'SCORE' => 12, 'NAME' => 'John'],
