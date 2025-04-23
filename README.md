@@ -33,6 +33,9 @@ a [Python version of this library](https://github.com/MarcinOrlowski/python-flex
 
 ## Usage examples
 
+**NOTE:** For proper rendering in environments like web browsers, ensure you are using a monospace
+font or wrap the output in `<pre>` tags.
+
 ```php
 $table = new TextTable(['ID', 'NAME', 'SCORE']);
 $table->addRows([

@@ -19,6 +19,9 @@ Fast and flexible PHP library for text tables.
 1. Simplest use case
 1. Custom align & and cells' width limit
 
+**NOTE:** For proper rendering in environments like web browsers, ensure you are using a monospace
+font or wrap the output in `<pre>` tags.
+
 ### Simplest use case
 
 This is likely the most common and yet the simplest possible usage:
