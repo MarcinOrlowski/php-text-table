@@ -143,4 +143,4 @@ would produce this nicely formatted text table:
 
 * Written and copyrighted &copy;2022-2025 by Marcin Orlowski
 * Text Table is open-sourced software licensed under
-  the [MIT license](http://opensource.org/licenses/MIT)
+  the [MIT license](https://opensource.org/license/mit)

@@ -64,4 +64,4 @@ Check docs for more [usage examples](docs/README.md).
 
 * Written and copyrighted &copy;2022-2025 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
 * Text Table is open-sourced software licensed under
-  the [MIT license](http://opensource.org/licenses/MIT)
+  the [MIT license](https://opensource.org/license/mit)
