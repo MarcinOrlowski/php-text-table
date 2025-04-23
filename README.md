@@ -33,6 +33,9 @@ a [Python version of this library](https://github.com/MarcinOrlowski/python-flex
 
 ## Usage examples
 
+**NOTE:** For proper rendering in environments like web browsers, ensure you are using a monospace
+font or wrap the output in `<pre>` tags.
+
 ```php
 $table = new TextTable(['ID', 'NAME', 'SCORE']);
 $table->addRows([
@@ -59,6 +62,6 @@ Check docs for more [usage examples](docs/README.md).
 
 ## License
 
-* Written and copyrighted &copy;2022-2023 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
+* Written and copyrighted &copy;2022-2025 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
 * Text Table is open-sourced software licensed under
-  the [MIT license](http://opensource.org/licenses/MIT)
+  the [MIT license](https://opensource.org/license/mit)

@@ -27,28 +27,26 @@ jobs:
       # do not stop the workflow if single run failed
       fail-fast: false
       matrix:
-        # quotes are needed it is treated as a number and zero at decimal part is gone at runtime
-        php: ["8.1"]
+        # quotes are needed it is treated as a number and zero at decimal part is gone
+        # at runtime i.e. 8.10 -> 8.1, while "8.10" => "8.10".
+        php: ["8.1", "8.2", "8.3", "8.4"]
 
     runs-on: ubuntu-latest
 
     steps:
+      # https://github.com/marketplace/actions/setup-php-action
+      - name: "Setup PHP ${{ matrix.php }}"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "${{ matrix.php }}"
+
+      # https://github.com/marketplace/actions/checkout
       - name: "Checkout repository..."
         uses: actions/checkout@v4
 
-      # https://github.com/marketplace/actions/composer-php-actions
-      - name: "Installing dependencies..."
-        uses: php-actions/composer@v6
-        with:
-          version: 2
-          php_version: "${{ matrix.php }}"
-          dev: yes
-
-      # https://github.com/marketplace/actions/phpunit-php-actions
       - name: "Running PHPUnit..."
-        uses: php-actions/phpunit@v3
-        with:
-          bootstrap: "vendor/autoload.php"
-          configuration: "phpunit.xml.dist"
-          memory_limit: "16M"
-          php_version: "${{ matrix.php }}"
+        shell: bash
+        run: |
+          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          /usr/local/bin/composer install --no-interaction
+          /usr/local/bin/composer test

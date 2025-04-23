@@ -48,6 +48,6 @@ jobs:
       - name: "Running PHPStan..."
         uses: php-actions/phpstan@v3
         with:
-          configuration: "phpstan.neon"
+          configuration: "phpstan.neon.dist"
           php_version: "${{ matrix.php }}"
           memory_limit: "16M"

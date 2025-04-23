@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Text Table
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @license   https://opensource.org/license/mit
  * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
@@ -19,6 +19,8 @@ interface RendererContract
      * Renders provided `Table` using provided output writer.
      *
      * @param TextTable $table Instance of `TextTable` to render.
+     *
+     * @return string[]
      */
     public function render(TextTable $table): array;
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Text Table
  *
  * @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
+ * @license   https://opensource.org/license/mit
  * @link      https://github.com/MarcinOrlowski/php-text-table
  */
 
@@ -25,7 +25,7 @@ use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 class Row extends BaseContainer
 {
     /**
-     * @param array|null $cells Optional list of cells to be added to the newly created row.
+     * @param array<\Stringable|string|int, Cell|string|int|float|bool|null>|null $cells Optional list of cells to be added to the newly created row.
      *
      * @throws DuplicateColumnKeyException
      */
@@ -42,10 +42,11 @@ class Row extends BaseContainer
 
     /* ****************************************************************************************** */
 
-    /** Contains all cells of given row.
+    /**
+     * Contains all cells of given row.
      *
      * @var CellsContainer $container
-     * */
+     */
     protected mixed $container;
 
     /**
