@@ -43,9 +43,8 @@ class Row extends BaseContainer
     /* ****************************************************************************************** */
 
     /** Contains all cells of given row.
-     *
      * @var CellsContainer $container
-     * */
+     */
     protected mixed $container;
 
     /**

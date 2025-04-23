@@ -13,3 +13,6 @@
 /.phpunit.cache/
 
 /NOTES.md
+# Do not add trailing slash for .roo entry, it will not work for symlinked folders
+.roo
+.roomodes
