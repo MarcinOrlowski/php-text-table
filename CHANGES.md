@@ -16,6 +16,11 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
+* dev
+  * Added tests for renderers.
+  * Updated documentation.
+
+
 * 2.8.0 (2023-10-30)
   * Added support for `NULL` as cell value.
 
