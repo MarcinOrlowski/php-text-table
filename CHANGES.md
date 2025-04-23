@@ -16,9 +16,10 @@ Fast and flexible PHP library for text tables.
 
 ## Changes
 
-* dev
+* 2.8.1 (2025-04-23)
   * Added tests for renderers.
   * Updated documentation.
+  * Extended Github Actions test runners to use more PHP versions
 
 
 * 2.8.0 (2023-10-30)
