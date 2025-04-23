@@ -25,7 +25,7 @@ use MarcinOrlowski\TextTable\Exceptions\DuplicateColumnKeyException;
 class Row extends BaseContainer
 {
     /**
-     * @param array|null $cells Optional list of cells to be added to the newly created row.
+     * @param array<\Stringable|string|int, Cell|string|int|float|bool|null>|null $cells Optional list of cells to be added to the newly created row.
      *
      * @throws DuplicateColumnKeyException
      */
@@ -42,7 +42,9 @@ class Row extends BaseContainer
 
     /* ****************************************************************************************** */
 
-    /** Contains all cells of given row.
+    /**
+     * Contains all cells of given row.
+     *
      * @var CellsContainer $container
      */
     protected mixed $container;

@@ -13,7 +13,7 @@ namespace MarcinOrlowski\TextTable\Exceptions;
 
 class UnsupportedColumnTypeException extends \Exception
 {
-    public static function forColumnKeyVal(string $columnKey, mixed $columnVal): static
+    public static function forColumnKeyVal(string $columnKey, mixed $columnVal): self
     {
         $msg = \sprintf('Unsupported column type (%s): %s', \get_debug_type($columnVal), $columnKey);
         return new self($msg);

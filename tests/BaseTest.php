@@ -21,6 +21,14 @@ use PHPUnit\Framework\TestCase;
 
 class BaseTest extends TestCase
 {
+    /**
+     * @param TextTable $table Table to render
+     * @param bool      $echoTable If true, table will be echoed to output, otherwise it will be
+     *                             returned as an array of strings.
+     *
+     * @return string[]
+     * @throws NoVisibleColumnsException
+     */
     protected function renderTable(TextTable $table, bool $echoTable = false): array
     {
         $renderer = new MsDosRenderer();
@@ -955,4 +963,3 @@ class BaseTest extends TestCase
         Assert::assertEquals($expected, $renderedTable);
     }
 }
-

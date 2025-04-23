@@ -19,6 +19,8 @@ interface RendererContract
      * Renders provided `Table` using provided output writer.
      *
      * @param TextTable $table Instance of `TextTable` to render.
+     *
+     * @return string[]
      */
     public function render(TextTable $table): array;
 

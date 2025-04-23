@@ -15,6 +15,8 @@ interface ArrayableContract
 {
     /**
      * Returns array representation of the object.
+     *
+     * @return array<string, mixed>
      */
     public function toArray(): array;
 

@@ -13,7 +13,7 @@ namespace MarcinOrlowski\TextTable\Exceptions;
 
 class ColumnKeyNotFoundException extends \Exception
 {
-    public static function forColumnKey(\Stringable|string|int $columnKey): static
+    public static function forColumnKey(\Stringable|string|int $columnKey): self
     {
         if ($columnKey instanceof \Stringable) {
             $columnKey = $columnKey->__toString();
